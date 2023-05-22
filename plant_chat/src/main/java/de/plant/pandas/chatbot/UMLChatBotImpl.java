@@ -1,14 +1,14 @@
-package de.plant.pandas;
+package de.plant.pandas.chatbot;
 
 import de.plant.pandas.llm.LLM;
 
 import java.util.List;
 
-public class UMLChatBot
+public class UMLChatBotImpl implements UMLChatBot
 {
    private final LLM llm;
 
-    public UMLChatBot(LLM llm) {
+    public UMLChatBotImpl(LLM llm) {
         this.llm = llm;
     }
 
