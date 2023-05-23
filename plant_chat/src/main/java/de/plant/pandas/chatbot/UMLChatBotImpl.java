@@ -16,7 +16,7 @@ public class UMLChatBotImpl implements UMLChatBot
     {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("You are an assisten for helping people with UML class diagrams.\n");
+        builder.append("You are an assistant for helping people with UML class diagrams.\n");
         builder.append("You are controlled through the PlantUML language\n");
 
         if(plantUMLs.isEmpty())
