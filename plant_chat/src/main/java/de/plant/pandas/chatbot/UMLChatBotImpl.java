@@ -4,29 +4,25 @@ import de.plant.pandas.llm.LLM;
 
 import java.util.List;
 
-public class UMLChatBotImpl implements UMLChatBot
-{
-   private final LLM llm;
+public class UMLChatBotImpl implements UMLChatBot {
+    private final LLM llm;
 
     public UMLChatBotImpl(LLM llm) {
         this.llm = llm;
     }
 
-    public String askQuestion(List<String> plantUMLs, String task)
-    {
+    public String askQuestion(List<String> plantUMLs, String task) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("You are an assistant for helping people with UML class diagrams.\n");
         builder.append("You are controlled through the PlantUML language.\n");
 
-        if(plantUMLs.isEmpty())
-        {
+        if (plantUMLs.isEmpty()) {
             builder.append("Currently there are no UML diagrams created.\n");
-        }
-        else {
+        } else {
             builder.append("The current UML can be described with PlantUML as:\n");
 
-            for (String uml:plantUMLs) {
+            for (String uml : plantUMLs) {
                 builder.append(uml);
                 builder.append("\n");
             }

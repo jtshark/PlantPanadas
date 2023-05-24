@@ -15,15 +15,14 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 
-public class OpenAILLM implements LLM{
+public class OpenAILLM implements LLM {
     private final Gson gson = new Gson();
 
 
-    private String getRequestBody(String input)
-    {
+    private String getRequestBody(String input) {
         JsonObject json = new JsonObject();
 
-        json.addProperty("model","text-davinci-003");
+        json.addProperty("model", "text-davinci-003");
         json.addProperty("prompt", input);
         json.addProperty("max_tokens", 200);
         json.addProperty("temperature", 0);
@@ -37,7 +36,7 @@ public class OpenAILLM implements LLM{
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer "+ Keys.getProperty("OPENAI_KEY"));
+        connection.setRequestProperty("Authorization", "Bearer " + Keys.getProperty("OPENAI_KEY"));
         connection.setDoOutput(true);
 
         return connection;
@@ -60,14 +59,13 @@ public class OpenAILLM implements LLM{
             content.append(inputLine);
         }
         in.close();
-        return  content.toString();
+        return content.toString();
     }
 
-    String parseTextFromOpenAI(String openAIResponse)
-    {
+    String parseTextFromOpenAI(String openAIResponse) {
         Map data = gson.fromJson(String.valueOf(openAIResponse), Map.class);
         List choices = (List) data.get("choices");
-        Map choicesMap= (Map) choices.get(0);
+        Map choicesMap = (Map) choices.get(0);
         return (String) choicesMap.get("text");
     }
 
@@ -77,7 +75,7 @@ public class OpenAILLM implements LLM{
 
             HttpURLConnection openAIConnection = openConnectionToOpenAI();
             String query = getRequestBody(input);
-            sendTextToOpenAI(query,openAIConnection);
+            sendTextToOpenAI(query, openAIConnection);
             String openAIResponse = readInputFromOpenAI(openAIConnection);
             openAIConnection.disconnect();
             return parseTextFromOpenAI(openAIResponse);
