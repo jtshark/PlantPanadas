@@ -17,7 +17,7 @@ public class UMLChatBotImpl implements UMLChatBot
         StringBuilder builder = new StringBuilder();
 
         builder.append("You are an assistant for helping people with UML class diagrams.\n");
-        builder.append("You are controlled through the PlantUML language\n");
+        builder.append("You are controlled through the PlantUML language.\n");
 
         if(plantUMLs.isEmpty())
         {
@@ -32,7 +32,7 @@ public class UMLChatBotImpl implements UMLChatBot
             }
         }
 
-        builder.append("You Task is:\n");
+        builder.append("Your task is:\n");
         builder.append(task);
         builder.append("\n");
         builder.append("You should output your answer as PlantUML and you should only output PlantUML commands.\n");
