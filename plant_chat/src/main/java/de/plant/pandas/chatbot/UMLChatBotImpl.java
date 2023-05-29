@@ -26,12 +26,19 @@ public class UMLChatBotImpl implements UMLChatBot {
                 builder.append(uml);
                 builder.append("\n");
             }
+            builder.append("output existing diagrams only, if there have been any changes.\n");
         }
 
         builder.append("Your task is:\n");
         builder.append(task);
         builder.append("\n");
         builder.append("You should output your answer as PlantUML and you should only output PlantUML commands.\n");
+        builder.append("Start your output with a meaningful filename.\n");
+        builder.append("Do not change existing filenames.\n");
+        builder.append("<FILENAME>.puml\n");
+        builder.append("@startuml\n");
+        builder.append("...");
+        builder.append("@enduml\n");
 
         return llm.prompt(builder.toString());
 
