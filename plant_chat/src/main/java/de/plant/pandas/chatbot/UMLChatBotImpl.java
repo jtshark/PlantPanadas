@@ -2,7 +2,11 @@ package de.plant.pandas.chatbot;
 
 import de.plant.pandas.llm.LLM;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UMLChatBotImpl implements UMLChatBot {
     private final LLM llm;
@@ -11,7 +15,23 @@ public class UMLChatBotImpl implements UMLChatBot {
         this.llm = llm;
     }
 
-    public String askQuestion(List<String> plantUMLs, String task) {
+    private Map<String, String> umlStringToMap(String umlString) {
+        Map<String, String> umlMap = new HashMap<>();
+
+        // Regex pattern to match filename and corresponding UML content
+        Pattern p = Pattern.compile("(\\w+\\.puml)\\n(@startuml\\n[\\s\\S]*?@enduml)", Pattern.DOTALL);
+        Matcher m = p.matcher(umlString);
+
+        while (m.find()) {
+            String filename = m.group(1);
+            String content = m.group(2);
+            umlMap.put(filename, content);
+        }
+
+        return umlMap;
+    }
+
+    public Map<String, String> askQuestion(List<String> plantUMLs, String task) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("You are an assistant for helping people with UML class diagrams.\n");
@@ -40,7 +60,10 @@ public class UMLChatBotImpl implements UMLChatBot {
         builder.append("...");
         builder.append("@enduml\n");
 
-        return llm.prompt(builder.toString());
+        String output = llm.prompt(builder.toString());
+
+
+        return umlStringToMap(output);
 
     }
 }
