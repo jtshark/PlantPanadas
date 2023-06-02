@@ -13,7 +13,7 @@ public class Main {
         LLM llm = new OpenAILLM();
 
         UMLChatBot umlChatBot = new UMLChatBotImpl(llm);
-        Map<String, String> umlDiagram = umlChatBot.askQuestion(Collections.emptyList(), "Can you create me a Pizzashop and a seperate Iceshop?.");
+        Map<String, String> umlDiagram = umlChatBot.askQuestion(Collections.emptyList(), "SushiShop");
         System.out.println(umlDiagram);
     }
 }

@@ -1,5 +1,6 @@
 package de.plant.pandas.llm;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.plant.pandas.Keys;
 
@@ -31,9 +32,15 @@ public class OpenAILLM implements LLM {
     private String getRequestBody(String input) {
         JsonObject json = new JsonObject();
 
-        json.addProperty("model", "text-davinci-003");
-        json.addProperty("prompt", input);
-        json.addProperty("max_tokens", 200);
+        json.addProperty("model", "gpt-3.5-turbo");
+
+        JsonArray messages = new JsonArray();
+        JsonObject message = new JsonObject();
+        message.addProperty("role", "user");
+        message.addProperty("content", input);
+        messages.add(message);
+        json.add("messages", messages);
+        json.addProperty("max_tokens", 2000);
         json.addProperty("temperature", 0);
 
         return json.toString();
@@ -41,7 +48,7 @@ public class OpenAILLM implements LLM {
 
 
     HttpURLConnection openConnectionToOpenAI() throws IOException {
-        URL url = new URL("https://api.openai.com/v1/completions");
+        URL url = new URL("https://api.openai.com/v1/chat/completions");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
@@ -75,7 +82,8 @@ public class OpenAILLM implements LLM {
         Map data = gson.fromJson(String.valueOf(openAIResponse), Map.class);
         List choices = (List) data.get("choices");
         Map choicesMap = (Map) choices.get(0);
-        return (String) choicesMap.get("text");
+        Map message = (Map) choicesMap.get("message");
+        return (String) message.get("content");
     }
 
     @Override
