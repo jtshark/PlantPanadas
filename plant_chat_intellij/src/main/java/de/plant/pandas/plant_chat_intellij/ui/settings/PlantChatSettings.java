@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 @Service(Service.Level.PROJECT)
 @State(name = "PlantChatSettings", storages = {@Storage("PlantChat.xml")})
 public class PlantChatSettings implements PersistentStateComponent<PlantChatSettings> {
-    public String token;
+    public String openAIToken;
 
     public static PlantChatSettings getInstance() {
         Application app = ApplicationManager.getApplication();

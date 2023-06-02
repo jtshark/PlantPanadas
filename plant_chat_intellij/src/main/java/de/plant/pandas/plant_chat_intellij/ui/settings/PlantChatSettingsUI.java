@@ -22,7 +22,7 @@ public class PlantChatSettingsUI implements Configurable {
         panel = new JPanel(new FlowLayout());
         textField = new JTextField(20);
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        textField.setText(settings.token);
+        textField.setText(settings.openAIToken);
         panel.add(new JLabel("Enter your OpenAI Key:"));
         panel.add(textField);
         return panel;
@@ -31,20 +31,20 @@ public class PlantChatSettingsUI implements Configurable {
     @Override
     public boolean isModified() {
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        return !textField.getText().equals(settings.token);
+        return !textField.getText().equals(settings.openAIToken);
     }
 
     @Override
     public void apply() {
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        settings.token = textField.getText();
+        settings.openAIToken = textField.getText();
     }
 
     @Override
     public void reset() {
         // Reset the text field to the saved setting value
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        textField.setText(settings.token);
+        textField.setText(settings.openAIToken);
     }
 
     @Override

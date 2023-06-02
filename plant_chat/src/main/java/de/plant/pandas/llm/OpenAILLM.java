@@ -17,6 +17,15 @@ import com.google.gson.Gson;
 
 public class OpenAILLM implements LLM {
     private final Gson gson = new Gson();
+    private final String openAIKey;
+
+    public OpenAILLM(String openAIKey) {
+        this.openAIKey = openAIKey;
+    }
+
+    public OpenAILLM() {
+        this(Keys.getProperty("OPENAI_KEY"));
+    }
 
 
     private String getRequestBody(String input) {
@@ -36,7 +45,7 @@ public class OpenAILLM implements LLM {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer " + Keys.getProperty("OPENAI_KEY"));
+        connection.setRequestProperty("Authorization", "Bearer " + openAIKey);
         connection.setDoOutput(true);
 
         return connection;

@@ -11,12 +11,16 @@ repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
     implementation(
             fileTree(
                     "lib/",
             )
     )
+    implementation(project(":plant_chat"))
+    implementation(project(mapOf("path" to ":plant_chat")))
 }
 
 
