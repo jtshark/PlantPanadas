@@ -31,10 +31,9 @@ public class UMLChatBotImpl implements UMLChatBot {
         return umlMap;
     }
 
-    public Map<String, String> askQuestion(Collection<String> plantUMLs, String task) {
+    public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Client: ").append(task).append("\n");
         builder.append("Imagine three UML Experts discussing how they design an UML diagram fulfilling the request from the client.\n");
 
 
@@ -50,16 +49,21 @@ public class UMLChatBotImpl implements UMLChatBot {
         }
 
         builder.append("If something is unclear for the Experts they can ask questions to the client.\n");
-        builder.append("If one of them wants to ask a question they must ask with:\n");
+        builder.append("If one of them wants to ask a question they must definitely in every situation ask with:\n");
         builder.append("QUESTION: <question> <EOQ>\n");
 
-        List<Message> messages = new ArrayList<>();
-        messages.add(new Message(builder.toString(), MessageRole.HUMAN));
+        messages.add(0, new Message(builder.toString(), MessageRole.SYSTEM));
 
         String output = llm.prompt(messages);
-        System.out.println(output);
-
-        return umlStringToMap(output);
+        messages.remove(0);
+        if (output.contains("QUESTION:")) {
+            String[] questions = output.split("QUESTION: ");
+            String question = questions[questions.length - 1];
+            return new UMLChatBotResults.ChatBotQuestions(question);
+        } else {
+            System.out.println(output);
+            return new UMLChatBotResults.GeneratedUML(umlStringToMap(output));
+        }
 
     }
 }
