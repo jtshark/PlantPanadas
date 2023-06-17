@@ -34,7 +34,7 @@ public class PlantChatBotUI implements ToolWindowFactory {
 
 
     private void generateUML(Project project, String input) {
-        UMLChatBot umlChatBot = new UMLChatBotImpl(new OpenAILLM(PlantChatSettings.getInstance().openAIToken));
+        UMLChatBot umlChatBot = new UMLChatBotImpl(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.CHATGPT));
 
         Collection<VirtualFile> currentDiagramsFiles = PlantChatHelper.findPumlFiles(project);
 

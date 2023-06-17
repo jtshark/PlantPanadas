@@ -17,38 +17,77 @@ import com.google.gson.Gson;
 
 
 public class OpenAILLM implements LLM {
+
+
+    public enum OpenAIType {
+        CHATGPT, GPT3
+    }
+
     private final Gson gson = new Gson();
     private final String openAIKey;
+    private final OpenAIType openAIType;
 
-    public OpenAILLM(String openAIKey) {
+    public OpenAILLM(String openAIKey, OpenAIType openAIType) {
         this.openAIKey = openAIKey;
+        this.openAIType = openAIType;
+    }
+
+    public OpenAILLM(OpenAIType openAIType) {
+        this(Keys.getProperty("OPENAI_KEY"), openAIType);
     }
 
     public OpenAILLM() {
-        this(Keys.getProperty("OPENAI_KEY"));
+        this(Keys.getProperty("OPENAI_KEY"), OpenAIType.CHATGPT);
     }
 
 
-    private String getRequestBody(String input) {
+    private String getRequestBody(List<Message> input) {
         JsonObject json = new JsonObject();
 
-        json.addProperty("model", "gpt-3.5-turbo");
+        String model = switch (openAIType) {
+            case CHATGPT -> "gpt-3.5-turbo-16k";
+            case GPT3 -> "text-davinci-003";
+        };
+        json.addProperty("model", model);
 
-        JsonArray messages = new JsonArray();
-        JsonObject message = new JsonObject();
-        message.addProperty("role", "user");
-        message.addProperty("content", input);
-        messages.add(message);
-        json.add("messages", messages);
+
+        if (openAIType == OpenAIType.CHATGPT) {
+            JsonArray messages = new JsonArray();
+
+            for (Message m : input) {
+                JsonObject message = new JsonObject();
+                message.addProperty("role", switch (m.getMessageType()) {
+                    case HUMAN -> "user";
+                    case ASSISTANT -> "assistant";
+                    case SYSTEM -> "system";
+                });
+                message.addProperty("content", m.getContent());
+                messages.add(message);
+                json.add("messages", messages);
+            }
+
+        } else if (openAIType == OpenAIType.GPT3) {
+            System.out.println("Extra for GPT3");
+        }
+
         json.addProperty("max_tokens", 2000);
         json.addProperty("temperature", 0);
+
+        JsonArray stopTokens = new JsonArray();
+        stopTokens.add("<EOQ>");
+        json.add("stop", stopTokens);
 
         return json.toString();
     }
 
 
     HttpURLConnection openConnectionToOpenAI() throws IOException {
-        URL url = new URL("https://api.openai.com/v1/chat/completions");
+
+        URL url = switch (openAIType) {
+            case CHATGPT -> new URL("https://api.openai.com/v1/chat/completions");
+            case GPT3 -> new URL("https://api.openai.com/v1/completions");
+        };
+
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
@@ -82,12 +121,15 @@ public class OpenAILLM implements LLM {
         Map data = gson.fromJson(String.valueOf(openAIResponse), Map.class);
         List choices = (List) data.get("choices");
         Map choicesMap = (Map) choices.get(0);
-        Map message = (Map) choicesMap.get("message");
-        return (String) message.get("content");
+
+        return switch (openAIType) {
+            case CHATGPT -> (String) ((Map) choicesMap.get("message")).get("content");
+            case GPT3 -> (String) choicesMap.get("text");
+        };
     }
 
     @Override
-    public String prompt(String input) {
+    public String prompt(List<Message> input) {
         try {
 
             HttpURLConnection openAIConnection = openConnectionToOpenAI();

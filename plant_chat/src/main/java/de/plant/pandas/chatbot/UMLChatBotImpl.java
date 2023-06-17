@@ -1,10 +1,10 @@
 package de.plant.pandas.chatbot;
 
 import de.plant.pandas.llm.LLM;
+import de.plant.pandas.llm.Message;
+import de.plant.pandas.llm.MessageRole;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,8 +34,9 @@ public class UMLChatBotImpl implements UMLChatBot {
     public Map<String, String> askQuestion(Collection<String> plantUMLs, String task) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("You are an assistant for helping people with UML class diagrams.\n");
-        builder.append("You are controlled through the PlantUML language.\n");
+        builder.append("Client: ").append(task).append("\n");
+        builder.append("Imagine three UML Experts discussing how they design an UML diagram fulfilling the request from the client.\n");
+
 
         if (plantUMLs.isEmpty()) {
             builder.append("Currently there are no UML diagrams created.\n");
@@ -46,24 +47,17 @@ public class UMLChatBotImpl implements UMLChatBot {
                 builder.append(uml);
                 builder.append("\n");
             }
-            builder.append("output existing diagrams only, if there have been any changes.\n");
         }
 
-        builder.append("Your task is:\n");
-        builder.append(task);
-        builder.append("\n");
-        builder.append("You should output your answer as PlantUML and you should only output PlantUML commands.\n");
-        builder.append("Keep your answer as short as possible and only insert things the user asked for.\n");
-        builder.append("Start your output with a meaningful filename.\n");
-        builder.append("Do not change existing filenames.\n");
-        builder.append("But you are allowed to change file content, but then the filename must be the same.\n");
-        builder.append("<FILENAME>.puml\n");
-        builder.append("@startuml\n");
-        builder.append("...");
-        builder.append("@enduml\n");
+        builder.append("If something is unclear for the Experts they can ask questions to the client.\n");
+        builder.append("If one of them wants to ask a question they must ask with:\n");
+        builder.append("QUESTION: <question> <EOQ>\n");
 
-        String output = llm.prompt(builder.toString());
+        List<Message> messages = new ArrayList<>();
+        messages.add(new Message(builder.toString(), MessageRole.HUMAN));
 
+        String output = llm.prompt(messages);
+        System.out.println(output);
 
         return umlStringToMap(output);
 
