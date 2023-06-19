@@ -34,7 +34,7 @@ public class UMLChatBotImpl implements UMLChatBot {
     public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Imagine three UML Experts discussing how they design an UML diagram fulfilling the request from the client.\n");
+        builder.append("Imagine three UML Experts verbally discussing how they design an UML diagram fulfilling the request from the client.\n");
 
 
         if (plantUMLs.isEmpty()) {
@@ -48,21 +48,39 @@ public class UMLChatBotImpl implements UMLChatBot {
             }
         }
 
-        builder.append("If something is unclear for the Experts they can ask questions to the client.\n");
-        builder.append("If one of them wants to ask a question they must definitely in every situation ask with:\n");
+        builder.append("If something is unclear for the Experts they have to ask questions to the client.\n");
+        builder.append("If one of them wants to ask a question back to the client they have to start the question with \"QUESTION:\" like so:\n");
         builder.append("QUESTION: <question> <EOQ>\n");
 
         messages.add(0, new Message(builder.toString(), MessageRole.SYSTEM));
 
         String output = llm.prompt(messages);
-        messages.remove(0);
         if (output.contains("QUESTION:")) {
+            messages.remove(0);
             String[] questions = output.split("QUESTION: ");
             String question = questions[questions.length - 1];
             return new UMLChatBotResults.ChatBotQuestions(question);
         } else {
-            System.out.println(output);
-            return new UMLChatBotResults.GeneratedUML(umlStringToMap(output));
+            messages.add(new Message(output, MessageRole.ASSISTANT));
+            messages.add(new Message("The UML Experts should now come up with a final step by step solution what they want to do.\n", MessageRole.SYSTEM));
+            String steps = llm.prompt(messages);
+            messages.add(new Message(steps, MessageRole.ASSISTANT));
+
+            StringBuilder plantUMLInput = new StringBuilder();
+            plantUMLInput.append("Create a PlantUML out of it.\n");
+            plantUMLInput.append("All PlantUML outputs should a meaningful filename.\n");
+            plantUMLInput.append("Do not change existing filenames.\n");
+            plantUMLInput.append("But you are allowed to change file content, but then the filename must be the same.\n");
+            plantUMLInput.append("<FILENAME>.puml\n");
+            plantUMLInput.append("@startuml\n");
+            plantUMLInput.append("...");
+            plantUMLInput.append("@enduml\n");
+
+            messages.add(new Message(plantUMLInput.toString(), MessageRole.ASSISTANT));
+
+            String plantUML = llm.prompt(messages);
+            plantUML = plantUML.replaceAll("```", "");
+            return new UMLChatBotResults.GeneratedUML(umlStringToMap(plantUML));
         }
 
     }

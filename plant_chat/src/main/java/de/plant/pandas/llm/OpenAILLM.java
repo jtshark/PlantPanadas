@@ -70,7 +70,7 @@ public class OpenAILLM implements LLM {
             System.out.println("Extra for GPT3");
         }
 
-        json.addProperty("max_tokens", 2000);
+        json.addProperty("max_tokens", 10000);
         json.addProperty("temperature", 0);
 
         JsonArray stopTokens = new JsonArray();
