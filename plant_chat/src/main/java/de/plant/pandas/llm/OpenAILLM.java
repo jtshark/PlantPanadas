@@ -131,13 +131,23 @@ public class OpenAILLM implements LLM {
     @Override
     public String prompt(List<Message> input) {
         try {
-
+            for (Message message : input) {
+                System.out.print(switch (message.getMessageType()) {
+                    case SYSTEM -> "System: ";
+                    case HUMAN -> "Human: ";
+                    case ASSISTANT -> "Assistant: ";
+                });
+                System.out.println(message.getContent());
+                System.out.println();
+            }
             HttpURLConnection openAIConnection = openConnectionToOpenAI();
             String query = getRequestBody(input);
             sendTextToOpenAI(query, openAIConnection);
             String openAIResponse = readInputFromOpenAI(openAIConnection);
             openAIConnection.disconnect();
-            return parseTextFromOpenAI(openAIResponse);
+            String answer = parseTextFromOpenAI(openAIResponse);
+            System.out.println("Response: " + answer);
+            return answer;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

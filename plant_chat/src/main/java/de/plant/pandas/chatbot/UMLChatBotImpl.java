@@ -53,9 +53,6 @@ public class UMLChatBotImpl implements UMLChatBot {
         builder.append("QUESTION: <question> <EOQ>\n");
 
         messages.add(0, new Message(builder.toString(), MessageRole.SYSTEM));
-        System.out.println(builder);
-        System.out.println(messages.get(1).getContent());
-
         String output = llm.prompt(messages);
         if (output.contains("QUESTION:")) {
             messages.remove(0);
