@@ -43,7 +43,7 @@ public class PlantChatBotUI implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        panel.setLayout(new BorderLayout());
 
         progressBar.setIndeterminate(true);
         progressBar.setVisible(false);
@@ -70,8 +70,8 @@ public class PlantChatBotUI implements ToolWindowFactory {
 
         textArea.setMargin(JBUI.insets(10)); // 10 pixels margin all around
 
-        textAreaPanel.add(textArea, BorderLayout.SOUTH);
-        panel.add(textAreaPanel);
+        textAreaPanel.add(textArea, BorderLayout.CENTER);
+        panel.add(textAreaPanel, BorderLayout.SOUTH);
         UMLChatBotProcessor umlChatBotProcessor = new UMLChatBotProcessor(this::addChatMessage);
 
         textArea.addKeyListener(new KeyAdapter() {
