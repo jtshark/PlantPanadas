@@ -3,16 +3,16 @@ package de.plant.pandas;
 import de.plant.pandas.chatbot.UMLChatBot;
 import de.plant.pandas.chatbot.UMLChatBotImpl;
 import de.plant.pandas.chatbot.UMLChatBotResults;
-import de.plant.pandas.llm.Message;
-import de.plant.pandas.llm.MessageRole;
-import de.plant.pandas.llm.OpenAILLM;
-import de.plant.pandas.llm.LLM;
+import de.plant.pandas.llm.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        LLM llm = new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT);
+    public static void main(String[] args) throws MalformedURLException {
+        //LLM llm = new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT);
+        LLM llm = new LLaMALLM(new URL("http://127.0.0.1:5000"));
         Scanner scanner = new Scanner(System.in);
 
         UMLChatBot umlChatBot = new UMLChatBotImpl(llm);

@@ -75,7 +75,7 @@ public class UMLChatBotImpl implements UMLChatBot {
             plantUMLInput.append("...");
             plantUMLInput.append("@enduml\n");
 
-            messages.add(new Message(plantUMLInput.toString(), MessageRole.ASSISTANT));
+            messages.add(new Message(plantUMLInput.toString(), MessageRole.SYSTEM));
 
             String plantUML = llm.prompt(messages);
             plantUML = plantUML.replaceAll("```", "");
