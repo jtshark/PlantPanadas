@@ -35,11 +35,12 @@ public class UMLChatBotProcessor {
         this.addChatMessage = addChatMessage;
     }
 
-    private void addChatMessage(Message message) {
+    private void addChatMessage(Message message, boolean addToHistory) {
         if (addChatMessage != null) {
             addChatMessage.accept(message);
         }
-        _currentMessages.add(message);
+        if (addToHistory)
+            _currentMessages.add(message);
     }
 
 
@@ -84,7 +85,7 @@ public class UMLChatBotProcessor {
 
     private void processQuestion(UMLChatBotResults.ChatBotQuestions result) {
         Message question = new Message(result.getQuestion(), MessageRole.ASSISTANT);
-        addChatMessage(question);
+        addChatMessage(question, false);
     }
 
     private Collection<String> getPumlFiles(Project project) {
@@ -105,7 +106,7 @@ public class UMLChatBotProcessor {
         ApplicationManager.getApplication().executeOnPooledThread(
                 () -> {
                     Message ourMessage = new Message(input, MessageRole.HUMAN);
-                    addChatMessage(ourMessage);
+                    addChatMessage(ourMessage, true);
 
                     UMLChatBotResults result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages);
                     if (result instanceof UMLChatBotResults.ChatBotQuestions) {

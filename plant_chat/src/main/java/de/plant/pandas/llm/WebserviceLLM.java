@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 public abstract class WebserviceLLM implements LLM {
     private final URL llmURL;
@@ -25,7 +26,7 @@ public abstract class WebserviceLLM implements LLM {
     public void addExtraRequestMap(JsonObject json) {
     }
 
-    private String getRequestBody(List<Message> input) {
+    private String getRequestBody(List<Message> input, List<String> stopTokens, int maxTokens) {
         JsonObject json = new JsonObject();
 
         addExtraRequestMap(json);
@@ -43,12 +44,15 @@ public abstract class WebserviceLLM implements LLM {
             json.add("messages", messages);
         }
 
-        json.addProperty("max_tokens", 10000);
-        json.addProperty("temperature", 0);
+        json.addProperty("max_tokens", maxTokens);
+        json.addProperty("temperature", 0.4);
 
-        JsonArray stopTokens = new JsonArray();
-        stopTokens.add("<EOQ>");
-        json.add("stop", stopTokens);
+        if (!stopTokens.isEmpty()) {
+            JsonArray stopTokensGson = new JsonArray();
+            stopTokens.forEach(stopTokensGson::add);
+            json.add("stop", stopTokensGson);
+        }
+
 
         return json.toString();
     }
@@ -96,24 +100,40 @@ public abstract class WebserviceLLM implements LLM {
     }
 
     @Override
-    public String prompt(List<Message> input) {
+    public String prompt(List<Message> input, List<String> stopTokens, int tokenLimit) {
         try {
-            for (Message message : input) {
+            /*for (Message message : input) {
                 System.out.print(switch (message.getMessageType()) {
                     case SYSTEM -> "System: ";
                     case HUMAN -> "Human: ";
                     case ASSISTANT -> "Assistant: ";
                 });
-                System.out.println(message.getContent());
-                System.out.println();
+                //System.out.println(message.getContent());
+                //System.out.println();
+            }*/
+
+            String answer = null;
+            int errorCounter = 0;
+            while (answer == null) {
+                HttpURLConnection openAIConnection = openConnectionToOpenAI();
+                String query = getRequestBody(input, stopTokens, tokenLimit);
+                sendTextToWebservice(query, openAIConnection);
+                if (openAIConnection.getResponseCode() == 503) {
+                    errorCounter++;
+                    if (errorCounter == 3) {
+                        throw new RuntimeException("Too many errors when connecting to Server");
+                    }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                    }
+
+                } else {
+                    String openAIResponse = readInputFromOpenAI(openAIConnection);
+                    openAIConnection.disconnect();
+                    answer = parseTextFromOpenAI(openAIResponse);
+                }
             }
-            HttpURLConnection openAIConnection = openConnectionToOpenAI();
-            String query = getRequestBody(input);
-            sendTextToWebservice(query, openAIConnection);
-            String openAIResponse = readInputFromOpenAI(openAIConnection);
-            openAIConnection.disconnect();
-            String answer = parseTextFromOpenAI(openAIResponse);
-            System.out.println("Response: " + answer);
             return answer;
         } catch (IOException e) {
             throw new RuntimeException(e);

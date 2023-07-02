@@ -14,5 +14,5 @@ public interface LLM {
      * @param input the prompt to be completed by the language model.
      * @return the generated completion as a string.
      */
-    String prompt(List<Message> input);
+    String prompt(List<Message> input, List<String> stopTokens, int tokenLimit);
 }
