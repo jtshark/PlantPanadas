@@ -163,7 +163,7 @@ if __name__ == '__main__':
                 i += 1
                 overall_error_count = 0
 
-                if i == 10:
+                if i == 3333:
                     break
             except Exception as e:
                 print(f"Error {e}")
