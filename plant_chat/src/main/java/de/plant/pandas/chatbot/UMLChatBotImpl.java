@@ -60,7 +60,7 @@ public class UMLChatBotImpl implements UMLChatBot {
         }
 
         messages.add(0, new Message(builder.toString(), MessageRole.SYSTEM));
-        String output = llm.prompt(messages, List.of("END", "User:"), 3000);
+        String output = llm.prompt(messages, List.of("END", "User:"), 2000);
         System.out.println(output);
         messages.add(new Message(output, MessageRole.ASSISTANT));
         if (output.contains("QUESTION:")) {
@@ -70,21 +70,12 @@ public class UMLChatBotImpl implements UMLChatBot {
             return new UMLChatBotResults.ChatBotQuestions(question);
         } else {
             messages.add(new Message("The UML experts are now tasked with crafting a clear and precise step-by-step solution for the design of the UML diagramm based on the discussion.\nIt is crucial that the solution is highly sequential. The steps should instruct on elements such as creating, modifieng, deleting specific elements.\nYou do not need to add any review or process improvement steps. The experts are expected to be highly proficient in their field and are not required to review their work.\n", MessageRole.SYSTEM));
-            String steps = llm.prompt(messages, Collections.EMPTY_LIST, 8000);
+            String steps = llm.prompt(messages, Collections.EMPTY_LIST, 4000);
             System.out.println(steps);
 
             messages.add(new Message(steps, MessageRole.ASSISTANT));
 
             StringBuilder plantUMLInput = new StringBuilder();
-            /*plantUMLInput.append("Create a PlantUML out of it.\n");
-            plantUMLInput.append("All PlantUML outputs should a meaningful filename.\n");
-            plantUMLInput.append("Do not change existing filenames.\n");
-            plantUMLInput.append("But you are allowed to change file content, but then the filename must be the same.\n");
-            plantUMLInput.append("Create only new files if it is necessary and put related objects in the same file.\n");
-            plantUMLInput.append("<FILENAME>.puml\n");
-            plantUMLInput.append("@startuml\n");
-            plantUMLInput.append("...");
-            plantUMLInput.append("@enduml\n");*/
             plantUMLInput.append("Design a PlantUML with the following guidelines based on the step by step guide:\n");
             plantUMLInput.append("1. Each PlantUML output must have a meaningful filename.\n");
             plantUMLInput.append("2. Existing filenames should not be altered. However, the content of the file can be changed as necessary. When changes are made, ensure the filename remains the same.");
@@ -95,11 +86,12 @@ public class UMLChatBotImpl implements UMLChatBot {
             plantUMLInput.append("<Content>");
             plantUMLInput.append("@enduml\n");
             plantUMLInput.append("Please note: It's crucial to maintain this exact syntax for the PlantUML files, and not alter it in any way.\n");
-            plantUMLInput.append("When existing files do not require modifications, there is no need to generate any output for them.p");
+            plantUMLInput.append("When existing files do not require modifications, there is no need to generate any output for them.");
+            plantUMLInput.append("Create just a new file if absolutely necessary.");
 
             messages.add(new Message(plantUMLInput.toString(), MessageRole.SYSTEM));
 
-            String plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 14000);
+            String plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 6000);
             System.out.println(plantUML);
             return new UMLChatBotResults.GeneratedUML(umlStringToMap(plantUML));
         }

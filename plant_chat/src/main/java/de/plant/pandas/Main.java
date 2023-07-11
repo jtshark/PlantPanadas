@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        /*LLM llm = new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT);
+        LLM llm = new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT);
         //LLM llm = new LLaMALLM(new URL("http://127.0.0.1:5000"));
         Scanner scanner = new Scanner(System.in);
 
@@ -37,10 +37,6 @@ public class Main {
             }
 
         }
-        scanner.close();*/
-        String text = new String(Files.readAllBytes(Paths.get("/home/jt/work/uni/PlantPanadas/plant_chat/src/main/resources/examples.txt")));
-        UMLChatBotImpl chatBot = new UMLChatBotImpl(null);
-        System.out.println(chatBot.umlStringToMap(text));
-
+        scanner.close();
     }
 }

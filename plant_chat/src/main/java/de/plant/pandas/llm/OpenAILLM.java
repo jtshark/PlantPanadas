@@ -48,7 +48,7 @@ public class OpenAILLM extends WebserviceLLM {
 
     @Override
     public void addExtraRequestMap(JsonObject json) {
-        json.addProperty("model", "gpt-3.5-turbo-16k");
+        json.addProperty("model", "gpt-4");
     }
 
     @Override
