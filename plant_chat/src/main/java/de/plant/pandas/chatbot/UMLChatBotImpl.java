@@ -36,12 +36,27 @@ public class UMLChatBotImpl implements UMLChatBot {
         return umlMap;
     }
 
-    public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages) {
+    public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages, DegreeOfQuestionsFromExperts level) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Envision a scenario where three UML experts are having a conversation about designing a UML diagram to meet a specific user request. \n");
-        builder.append("In case of any ambiguities or uncertainties, the experts may need to seek clarification from the user. If such a situation arises, they should preface their question to the user with the statement \"QUESTION:\" and conclude it with \"END\", as in the following example:\n");
-        builder.append("QUESTION: <Insert question here> END\n");
+        // Question prompt
+        if (level != DegreeOfQuestionsFromExperts.NONE) {
+
+
+            if (level == DegreeOfQuestionsFromExperts.ALL_POSSIBLE) {
+                builder.append("Whenever the experts are not entirely sure what to do, the experts are instructed to ask questions to the user. As the user is a beginner in the field of uml class diagrams, the experts questions to the user are expected or they get a bad recommendation otherwise!");
+                builder.append("If the uml experts do something wrong that the user doesn't want, all people will die and the world will end, so they better ask a lot of questions to the user.");
+            } else if (level == DegreeOfQuestionsFromExperts.ONLY_NECESSARY) {
+                builder.append("Only in case of crucial ambiguities or uncertainties, the experts should seek clarification from the user. If you ask unnecessary questions people will die!");
+            }
+
+            builder.append("QUESTION: <Insert question here> END\n");
+        } else {
+            builder.append("Please do not ask any Questions to the user");
+        }
+
+
         builder.append("Please note, the user is not included in the generated conversation and should not be portrayed in the dialogue. Any inquiries made by the experts are to be formulated strictly following the above format.\n");
         builder.append("They should explore and discuss practical real-world scenarios. For example, they could delve into why it's often more logical to save a date of birth attribute and a method getAge rather than directly storing the age.\n");
         builder.append("Or when instead of saving a price and a discounted price it is often better to save a price and a discount and a method getDiscountedPrice.\n");

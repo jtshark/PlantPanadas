@@ -9,6 +9,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import de.plant.pandas.chatbot.DegreeOfQuestionsFromExperts;
 import de.plant.pandas.chatbot.UMLChatBot;
 import de.plant.pandas.chatbot.UMLChatBotImpl;
 import de.plant.pandas.chatbot.UMLChatBotResults;
@@ -16,6 +17,7 @@ import de.plant.pandas.llm.Message;
 import de.plant.pandas.llm.MessageRole;
 import de.plant.pandas.llm.OpenAILLM;
 import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettings;
+import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettingsUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -108,7 +110,7 @@ public class UMLChatBotProcessor {
                     Message ourMessage = new Message(input, MessageRole.HUMAN);
                     addChatMessage(ourMessage, true);
 
-                    UMLChatBotResults result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages);
+                    UMLChatBotResults result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting);
                     if (result instanceof UMLChatBotResults.ChatBotQuestions) {
                         processQuestion((UMLChatBotResults.ChatBotQuestions) result);
                     } else if (result instanceof UMLChatBotResults.GeneratedUML) {
