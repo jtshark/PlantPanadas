@@ -110,7 +110,16 @@ public class UMLChatBotProcessor {
                     Message ourMessage = new Message(input, MessageRole.HUMAN);
                     addChatMessage(ourMessage, true);
 
-                    UMLChatBotResults result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting);
+                    UMLChatBotResults result = null;
+                    try {
+                        result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting);
+                    } catch (IOException e) {
+                        _currentMessages.clear();
+                        addChatMessage.accept(new Message("Ohhhh it seems like pandas do not like you.", MessageRole.ASSISTANT));
+                        addChatMessage.accept(new Message("Ohh no what have I done?", MessageRole.HUMAN));
+                        addChatMessage.accept(new Message(e.toString(), MessageRole.ASSISTANT));
+
+                    }
                     if (result instanceof UMLChatBotResults.ChatBotQuestions) {
                         processQuestion((UMLChatBotResults.ChatBotQuestions) result);
                     } else if (result instanceof UMLChatBotResults.GeneratedUML) {

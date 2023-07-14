@@ -1,5 +1,6 @@
 package de.plant.pandas.llm;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,5 +15,5 @@ public interface LLM {
      * @param input the prompt to be completed by the language model.
      * @return the generated completion as a string.
      */
-    String prompt(List<Message> input, List<String> stopTokens, int tokenLimit);
+    String prompt(List<Message> input, List<String> stopTokens, int tokenLimit) throws IOException;
 }

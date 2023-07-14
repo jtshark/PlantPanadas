@@ -100,44 +100,35 @@ public abstract class WebserviceLLM implements LLM {
     }
 
     @Override
-    public String prompt(List<Message> input, List<String> stopTokens, int tokenLimit) {
-        try {
-            /*for (Message message : input) {
-                System.out.print(switch (message.getMessageType()) {
-                    case SYSTEM -> "System: ";
-                    case HUMAN -> "Human: ";
-                    case ASSISTANT -> "Assistant: ";
-                });
-                //System.out.println(message.getContent());
-                //System.out.println();
-            }*/
-
-            String answer = null;
-            int errorCounter = 0;
-            while (answer == null) {
-                HttpURLConnection openAIConnection = openConnectionToOpenAI();
-                String query = getRequestBody(input, stopTokens, tokenLimit);
-                sendTextToWebservice(query, openAIConnection);
-                if (openAIConnection.getResponseCode() == 503) {
-                    errorCounter++;
-                    if (errorCounter == 3) {
-                        throw new RuntimeException("Too many errors when connecting to Server");
-                    }
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
-
-                } else {
+    public String prompt(List<Message> input, List<String> stopTokens, int tokenLimit) throws IOException {
+        int errorCount = 0;
+        while(true)
+        {
+            try {
+                    HttpURLConnection openAIConnection = openConnectionToOpenAI();
+                    String query = getRequestBody(input, stopTokens, tokenLimit);
+                    sendTextToWebservice(query, openAIConnection);
                     String openAIResponse = readInputFromOpenAI(openAIConnection);
                     openAIConnection.disconnect();
-                    answer = parseTextFromOpenAI(openAIResponse);
+                    return parseTextFromOpenAI(openAIResponse);
+            } catch (IOException e) {
+                errorCount++;
+                if(errorCount == 5)
+                {
+                    throw e;
+                }
+                else {
+                    e.printStackTrace();
+                    try {
+                        Thread.sleep(errorCount * 300);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
-            return answer;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+
+
     }
 
 }

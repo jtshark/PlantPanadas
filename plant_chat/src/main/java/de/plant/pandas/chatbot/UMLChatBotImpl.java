@@ -4,6 +4,7 @@ import de.plant.pandas.llm.LLM;
 import de.plant.pandas.llm.Message;
 import de.plant.pandas.llm.MessageRole;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +37,7 @@ public class UMLChatBotImpl implements UMLChatBot {
         return umlMap;
     }
 
-    public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages, DegreeOfQuestionsFromExperts level) {
+    public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages, DegreeOfQuestionsFromExperts level) throws IOException {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Envision a scenario where three UML experts are having a conversation about designing a UML diagram to meet a specific user request. \n");
@@ -104,11 +105,29 @@ public class UMLChatBotImpl implements UMLChatBot {
             plantUMLInput.append("When existing files do not require modifications, there is no need to generate any output for them.");
             plantUMLInput.append("Create just a new file if absolutely necessary.");
 
+
             messages.add(new Message(plantUMLInput.toString(), MessageRole.SYSTEM));
 
             String plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 6000);
             System.out.println(plantUML);
-            return new UMLChatBotResults.GeneratedUML(umlStringToMap(plantUML));
+            Map<String, String> result = umlStringToMap(plantUML);
+            if(result.isEmpty())
+            {
+                messages.add(new Message(plantUML, MessageRole.ASSISTANT));
+                StringBuilder noUMLFoundText = new StringBuilder();
+                noUMLFoundText.append("Currently no PlantUML are found!\n");
+                noUMLFoundText.append("Do you really followed the following syntax?\n");
+                noUMLFoundText.append("<FILENAME>.puml\n");
+                noUMLFoundText.append("@startuml\n");
+                noUMLFoundText.append("<Content>");
+                noUMLFoundText.append("@enduml\n");
+                noUMLFoundText.append("If not output the PlantUML again with to corrected systax.\n");
+
+                messages.add(new Message(noUMLFoundText.toString(), MessageRole.SYSTEM));
+                plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 7000);
+                result = umlStringToMap(plantUML);
+            }
+            return new UMLChatBotResults.GeneratedUML(result);
         }
 
     }

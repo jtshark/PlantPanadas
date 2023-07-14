@@ -24,7 +24,7 @@ public class Main {
         messageList.add(new Message("Create a class diagram PizzaShop with a customer and an order and Pizzas to buy. The Customer should have an age so we can check that they are eighteen when buying certain elements. Additionally the Pizzas have a normal price and a price when a discount is applied.", MessageRole.HUMAN));
 
         while (true) {
-            UMLChatBotResults result = umlChatBot.askQuestion(Collections.emptyList(), messageList, DegreeOfQuestionsFromExperts.ONLY_NECESSARY);
+            UMLChatBotResults result = umlChatBot.askQuestion(Collections.emptyList(), messageList, DegreeOfQuestionsFromExperts.NONE);
 
             if (result instanceof UMLChatBotResults.ChatBotQuestions) {
                 String question = ((UMLChatBotResults.ChatBotQuestions) result).getQuestion();
