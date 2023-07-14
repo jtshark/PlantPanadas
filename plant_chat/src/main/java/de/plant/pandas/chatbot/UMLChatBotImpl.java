@@ -53,6 +53,7 @@ public class UMLChatBotImpl implements UMLChatBot {
             }
 
             builder.append("QUESTION: <Insert question here> END\n");
+            builder.append("Since the user cannot see the discussions among the experts, it's important that questions from the experts can be understood by the user without any context from the discussion.\n");
         } else {
             builder.append("Please do not ask any Questions to the user");
         }
