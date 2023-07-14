@@ -37,7 +37,7 @@ public class PlantChatSettingsUI implements Configurable {
 
         return FormBuilder.createFormBuilder()
                 .addLabeledComponent(new JBLabel("Enter your OpenAI Key: "), textField, 1, false)
-                .addLabeledComponent(new JBLabel("Select how many questions shall be asked by ChatPanadas"), degreeQuestionsUI, 1, false)
+                .addLabeledComponent(new JBLabel("Select how many questions shall be asked"), degreeQuestionsUI, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
