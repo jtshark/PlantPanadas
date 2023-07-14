@@ -113,14 +113,14 @@ public abstract class WebserviceLLM implements LLM {
                     return parseTextFromOpenAI(openAIResponse);
             } catch (IOException e) {
                 errorCount++;
-                if(errorCount == 5)
+                if(errorCount == 6)
                 {
                     throw e;
                 }
                 else {
                     e.printStackTrace();
                     try {
-                        Thread.sleep(errorCount * 300);
+                        Thread.sleep(errorCount * errorCount * 500);
                     } catch (InterruptedException ex) {
                         throw new RuntimeException(ex);
                     }
