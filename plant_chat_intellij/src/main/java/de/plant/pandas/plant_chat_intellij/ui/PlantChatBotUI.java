@@ -49,20 +49,10 @@ public class PlantChatBotUI implements ToolWindowFactory {
             root.getChildren().add(header);
 
 
-            ChatInputField chatInputField = new ChatInputField();
+            ChatInputField chatInputField = new ChatInputField(
+                    text -> umlChatBotProcessor.startChat(project, text)
+            );
 
-            chatInputField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                if (event.getCode() == KeyCode.ENTER) {
-                    if (event.isShiftDown()) {
-                        chatInputField.insertText(chatInputField.getCaretPosition(), "\n");
-                    } else {
-
-                        umlChatBotProcessor.startChat(project, chatInputField.getText());
-                        chatInputField.clear();
-                    }
-                    event.consume();
-                }
-            });
 
             root.getChildren().add(chatArea);
             root.getChildren().add(chatInputField);

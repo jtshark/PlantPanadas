@@ -22,6 +22,10 @@ dependencies {
     )
     implementation(project(":plant_chat"))
     implementation(project(mapOf("path" to ":plant_chat")))
+    implementation("org.kordamp.ikonli:ikonli-javafx:12.3.1")
+    implementation("org.kordamp.ikonli:ikonli-fluentui-pack:12.3.1")
+    implementation("com.jfoenix:jfoenix:9.0.10")
+
 }
 
 
