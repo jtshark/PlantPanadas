@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
+import de.plant.pandas.chatbot.GenerationStage;
 import de.plant.pandas.chatbot.UMLChatBot;
 import de.plant.pandas.chatbot.UMLChatBotImpl;
 import de.plant.pandas.chatbot.UMLChatBotResults;
@@ -31,9 +32,12 @@ public class UMLChatBotProcessor {
     private final UMLChatBot umlChatBot = new UMLChatBotImpl(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.CHATGPT));
     private Consumer<Message> addChatMessage;
 
+    private Consumer<GenerationStage> onStageChange;
 
-    public UMLChatBotProcessor(Consumer<Message> addChatMessage) {
+
+    public UMLChatBotProcessor(Consumer<Message> addChatMessage, Consumer<GenerationStage> onStageChange) {
         this.addChatMessage = addChatMessage;
+        this.onStageChange = onStageChange;
     }
 
     private void addChatMessage(Message message, boolean addToHistory) {
@@ -112,7 +116,7 @@ public class UMLChatBotProcessor {
 
                         UMLChatBotResults result = null;
                         try {
-                            result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting);
+                            result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting, onStageChange);
                         } catch (IOException e) {
                             _currentMessages.clear();
                             addChatMessage.accept(new Message("Ohhhh it seems like pandas do not like you.", MessageRole.ASSISTANT));

@@ -34,18 +34,19 @@ public class PlantChatBotUI implements ToolWindowFactory {
 
         Platform.runLater(() -> {
             ChatArea chatArea = new ChatArea();
+            Header header = new Header();
 
             UMLChatBotProcessor umlChatBotProcessor = new UMLChatBotProcessor(
                     message -> {
                         Platform.runLater(() -> {
                             chatArea.addChatMessage(message.getContent(), message.getMessageType() == MessageRole.HUMAN);
                         });
-                    }
+                    },
+                    stage -> Platform.runLater(() -> header.setStage(stage))
             );
 
             VBox root = new VBox();
-
-            root.getChildren().add(new Header());
+            root.getChildren().add(header);
 
 
             ChatInputField chatInputField = new ChatInputField();
@@ -57,7 +58,6 @@ public class PlantChatBotUI implements ToolWindowFactory {
                     } else {
 
                         umlChatBotProcessor.startChat(project, chatInputField.getText());
-                        //chatArea.addChatMessage(chatInputField.getText(), true);
                         chatInputField.clear();
                     }
                     event.consume();

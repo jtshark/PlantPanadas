@@ -9,33 +9,51 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.text.Font;
 
-public class FontHelper {
-    public static void bindFont(TextInputControl node) {
+import java.util.function.Consumer;
 
-        int fontSize = UISettings.getInstance().getFontSize();
+public class FontHelper {
+
+    enum FontType {
+        TITLE(4), STANDARD(0), SUBTITLE(-4);
+
+        final int fontOffset;
+
+        FontType(int fontOffset) {
+            this.fontOffset = fontOffset;
+        }
+    }
+
+    public static void bindFont(Consumer<Font> setFont, FontType type) {
+        int fontSize = UISettings.getInstance().getFontSize() + type.fontOffset;
+
+
         String fontFamily = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
-        node.setFont(new Font(fontFamily, fontSize));
+        setFont.accept(new Font(fontFamily, fontSize));
 
 
         ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.TOPIC, (UISettingsListener) source -> {
-            int newFontSize = source.getFontSize();
-            String newFontFamily = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
-            Platform.runLater(() -> node.setFont(new Font(newFontFamily, newFontSize)));
-        });
+            int newFontSize = source.getFontSize() + type.fontOffset;
 
+            String newFontFamily = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
+            int finalNewFontSize = newFontSize;
+            Platform.runLater(() -> setFont.accept(new Font(newFontFamily, finalNewFontSize)));
+        });
+    }
+
+    public static void bindFont(TextInputControl node, FontType isTitle) {
+        bindFont(node::setFont, isTitle);
+    }
+
+    public static void bindFont(TextInputControl node) {
+        bindFont(node::setFont, FontType.STANDARD);
+    }
+
+    public static void bindFont(Labeled node, FontType isTitle) {
+        bindFont(node::setFont, isTitle);
     }
 
     public static void bindFont(Labeled node) {
-
-        int fontSize = UISettings.getInstance().getFontSize();
-        String fontFamily = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
-        node.setFont(new Font(fontFamily, fontSize));
-
-        ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.TOPIC, (UISettingsListener) source -> {
-            int newFontSize = source.getFontSize();
-            String newFontFamily = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
-            Platform.runLater(() -> node.setFont(new Font(newFontFamily, newFontSize)));
-        });
-
+        bindFont(node::setFont, FontType.STANDARD);
     }
+
 }
