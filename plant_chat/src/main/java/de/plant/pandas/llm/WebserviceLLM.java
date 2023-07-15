@@ -102,25 +102,22 @@ public abstract class WebserviceLLM implements LLM {
     @Override
     public String prompt(List<Message> input, List<String> stopTokens, int tokenLimit) throws IOException {
         int errorCount = 0;
-        while(true)
-        {
+        while (true) {
             try {
-                    HttpURLConnection openAIConnection = openConnectionToOpenAI();
-                    String query = getRequestBody(input, stopTokens, tokenLimit);
-                    sendTextToWebservice(query, openAIConnection);
-                    String openAIResponse = readInputFromOpenAI(openAIConnection);
-                    openAIConnection.disconnect();
-                    return parseTextFromOpenAI(openAIResponse);
+                HttpURLConnection openAIConnection = openConnectionToOpenAI();
+                String query = getRequestBody(input, stopTokens, tokenLimit);
+                sendTextToWebservice(query, openAIConnection);
+                String openAIResponse = readInputFromOpenAI(openAIConnection);
+                openAIConnection.disconnect();
+                return parseTextFromOpenAI(openAIResponse);
             } catch (IOException e) {
                 errorCount++;
-                if(errorCount == 6)
-                {
+                if (errorCount == 6) {
                     throw e;
-                }
-                else {
+                } else {
                     e.printStackTrace();
                     try {
-                        Thread.sleep(errorCount * errorCount * 500);
+                        Thread.sleep(errorCount * errorCount * 1000);
                     } catch (InterruptedException ex) {
                         throw new RuntimeException(ex);
                     }
