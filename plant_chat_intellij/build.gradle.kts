@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.8.21"
     id("org.jetbrains.intellij") version "1.13.3"
+    id("org.openjfx.javafxplugin") version "0.0.13" // Add this line
 }
 
 group = "de.plant.pandas"
@@ -21,6 +22,12 @@ dependencies {
     )
     implementation(project(":plant_chat"))
     implementation(project(mapOf("path" to ":plant_chat")))
+}
+
+
+javafx {
+    version = "17" // Or the version you want
+    modules("javafx.controls", "javafx.swing", "javafx.base") // Add the modules you need, for example: "javafx.fxml", "javafx.base", etc.
 }
 
 

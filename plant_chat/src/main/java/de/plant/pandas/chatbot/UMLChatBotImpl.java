@@ -55,7 +55,7 @@ public class UMLChatBotImpl implements UMLChatBot {
             builder.append("QUESTION: <Insert question here> END\n");
             builder.append("Since the user cannot see the discussions among the experts, it's important that questions from the experts can be understood by the user without any context from the discussion.\n");
         } else {
-            builder.append("Please do not ask any Questions to the user");
+            builder.append("Please do not ask any Questions to the user.\n");
         }
 
 
@@ -75,6 +75,9 @@ public class UMLChatBotImpl implements UMLChatBot {
                 builder.append("\n");
             }
         }
+
+        builder.append("If the user types something in that makes no sense, then answer with:\nQUESTION: Sorry I do not understand what you mean. Can you explain it again? END\n");
+
 
         messages.add(0, new Message(builder.toString(), MessageRole.SYSTEM));
         String output = llm.prompt(messages, List.of("END", "User:"), 2000);
@@ -112,8 +115,7 @@ public class UMLChatBotImpl implements UMLChatBot {
             String plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 6000);
             System.out.println(plantUML);
             Map<String, String> result = umlStringToMap(plantUML);
-            if(result.isEmpty())
-            {
+            if (result.isEmpty()) {
                 messages.add(new Message(plantUML, MessageRole.ASSISTANT));
                 StringBuilder noUMLFoundText = new StringBuilder();
                 noUMLFoundText.append("Currently no PlantUML are found!\n");

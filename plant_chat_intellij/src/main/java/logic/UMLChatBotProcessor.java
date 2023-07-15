@@ -1,4 +1,4 @@
-package de.plant.pandas.plant_chat_intellij.ui;
+package logic;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
@@ -9,7 +9,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import de.plant.pandas.chatbot.DegreeOfQuestionsFromExperts;
+import com.intellij.psi.search.FilenameIndex;
 import de.plant.pandas.chatbot.UMLChatBot;
 import de.plant.pandas.chatbot.UMLChatBotImpl;
 import de.plant.pandas.chatbot.UMLChatBotResults;
@@ -17,7 +17,6 @@ import de.plant.pandas.llm.Message;
 import de.plant.pandas.llm.MessageRole;
 import de.plant.pandas.llm.OpenAILLM;
 import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettings;
-import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettingsUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class UMLChatBotProcessor {
     }
 
     private Collection<String> getPumlFiles(Project project) {
-        Collection<VirtualFile> currentDiagramsFiles = PlantChatHelper.findPumlFiles(project);
+        Collection<VirtualFile> currentDiagramsFiles = FilenameIndex.getAllFilesByExt(project, "puml");
 
         Collection<String> currentDiagramStrings = currentDiagramsFiles.stream().map((file) -> {
             try {
@@ -104,29 +103,33 @@ public class UMLChatBotProcessor {
     }
 
     public void startChat(Project project, String input) {
-        Collection<String> currentDiagramStrings = getPumlFiles(project);
-        ApplicationManager.getApplication().executeOnPooledThread(
-                () -> {
-                    Message ourMessage = new Message(input, MessageRole.HUMAN);
-                    addChatMessage(ourMessage, true);
+        ApplicationManager.getApplication().runReadAction(() -> {
+            Collection<String> currentDiagramStrings = getPumlFiles(project);
+            ApplicationManager.getApplication().executeOnPooledThread(
+                    () -> {
+                        Message ourMessage = new Message(input, MessageRole.HUMAN);
+                        addChatMessage(ourMessage, true);
 
-                    UMLChatBotResults result = null;
-                    try {
-                        result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting);
-                    } catch (IOException e) {
-                        _currentMessages.clear();
-                        addChatMessage.accept(new Message("Ohhhh it seems like pandas do not like you.", MessageRole.ASSISTANT));
-                        addChatMessage.accept(new Message("Ohh no what have I done?", MessageRole.HUMAN));
-                        addChatMessage.accept(new Message(e.toString(), MessageRole.ASSISTANT));
+                        UMLChatBotResults result = null;
+                        try {
+                            result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting);
+                        } catch (IOException e) {
+                            _currentMessages.clear();
+                            addChatMessage.accept(new Message("Ohhhh it seems like pandas do not like you.", MessageRole.ASSISTANT));
+                            addChatMessage.accept(new Message("Ohh no what have I done?", MessageRole.HUMAN));
+                            addChatMessage.accept(new Message(e.toString(), MessageRole.ASSISTANT));
 
+                        }
+                        if (result instanceof UMLChatBotResults.ChatBotQuestions) {
+                            processQuestion((UMLChatBotResults.ChatBotQuestions) result);
+                        } else if (result instanceof UMLChatBotResults.GeneratedUML) {
+                            processUMLResult(project, (UMLChatBotResults.GeneratedUML) result);
+                        }
                     }
-                    if (result instanceof UMLChatBotResults.ChatBotQuestions) {
-                        processQuestion((UMLChatBotResults.ChatBotQuestions) result);
-                    } else if (result instanceof UMLChatBotResults.GeneratedUML) {
-                        processUMLResult(project, (UMLChatBotResults.GeneratedUML) result);
-                    }
-                }
-        );
+            );
+        });
+
+
     }
 
 }
