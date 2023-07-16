@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class FontHelper {
 
     enum FontType {
-        TITLE(4), STANDARD(0), SUBTITLE(-4);
+        TITLE(4), STANDARD(0), SUBTITLE(-2);
 
         final int fontOffset;
 

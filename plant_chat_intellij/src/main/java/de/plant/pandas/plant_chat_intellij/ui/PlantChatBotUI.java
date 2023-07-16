@@ -13,8 +13,10 @@ import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatInputField;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.Header;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import logic.UMLChatBotProcessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +42,11 @@ public class PlantChatBotUI implements ToolWindowFactory {
             );
 
             VBox root = new VBox();
+
+            Region topSeparator = new Region();
+            topSeparator.setPrefHeight(1);
+            topSeparator.setBackground(new Background(new BackgroundFill(Color.web("#1e1f22"), CornerRadii.EMPTY, Insets.EMPTY)));
+            root.getChildren().add(topSeparator);
             root.getChildren().add(header);
 
 
@@ -48,7 +55,13 @@ public class PlantChatBotUI implements ToolWindowFactory {
             );
 
 
-            root.getChildren().add(chatArea);
+            HBox chatAreaBox = new HBox();
+            Region sideSeparator = new Region();
+            sideSeparator.setPrefWidth(1);
+            sideSeparator.setBackground(new Background(new BackgroundFill(Color.web("#2b2d30"), CornerRadii.EMPTY, Insets.EMPTY)));
+            chatAreaBox.getChildren().addAll(sideSeparator, chatArea);
+            VBox.setVgrow(chatAreaBox, Priority.ALWAYS);
+            root.getChildren().add(chatAreaBox);
             root.getChildren().add(chatInputField);
 
             Scene scene = new Scene(root);

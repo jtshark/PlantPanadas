@@ -34,7 +34,7 @@ public class Header extends HBox {
         HBox.setHgrow(vBox, Priority.ALWAYS);
         Label nameLabel = new Label("Plant Panadas");
         nameLabel.setAlignment(Pos.CENTER);
-        FontHelper.bindFont(nameLabel, FontHelper.FontType.STANDARD);
+        FontHelper.bindFont(nameLabel, FontHelper.FontType.TITLE);
 
         Label statusLabel = new Label();
         FontHelper.bindFont(statusLabel, FontHelper.FontType.SUBTITLE);
