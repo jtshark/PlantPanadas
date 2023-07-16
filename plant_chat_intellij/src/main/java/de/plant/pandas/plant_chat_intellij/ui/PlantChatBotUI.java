@@ -52,6 +52,8 @@ public class PlantChatBotUI implements ToolWindowFactory {
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
             fxPanel.setScene(scene);
+
+            SwingUtilities.invokeLater(fxPanel::requestFocusInWindow);
         });
 
 
