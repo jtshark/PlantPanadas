@@ -64,7 +64,7 @@ public class Header extends HBox {
 
         vBox.getChildren().addAll(nameLabel, placeholderRegion, statusLabel);
 
-        setBackground(new Background(new BackgroundFill(Color.web("#202c33"), CornerRadii.EMPTY, Insets.EMPTY)));
+        setBackground(new Background(new BackgroundFill(Color.web("#2b2d30"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         getChildren().addAll(profileImageView, vBox);
         setAlignment(Pos.CENTER_LEFT);

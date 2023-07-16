@@ -99,7 +99,7 @@ public class ChatInputField extends HBox {
 
         setHgrow(textArea, Priority.ALWAYS);
 
-        setBackground(new Background(new BackgroundFill(Color.web("#202c33"), CornerRadii.EMPTY, Insets.EMPTY)));
+        setBackground(new Background(new BackgroundFill(Color.web("#2b2d30"), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     private int computeVisualLinesCount(String text, double lineWidth) {
