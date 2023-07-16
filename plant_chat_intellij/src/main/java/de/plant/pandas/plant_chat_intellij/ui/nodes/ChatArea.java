@@ -20,7 +20,7 @@ public class ChatArea extends ScrollPane {
         setVvalue(1.0); // scroll to bottom
         vvalueProperty().bind(chatBubblesBox.heightProperty()); // auto scroll to bottom when a new message is added
 
-        HBox.setHgrow(this, Priority.ALWAYS);
+        VBox.setVgrow(this, Priority.ALWAYS);
     }
 
     public void addChatMessage(String message, boolean isUser) {

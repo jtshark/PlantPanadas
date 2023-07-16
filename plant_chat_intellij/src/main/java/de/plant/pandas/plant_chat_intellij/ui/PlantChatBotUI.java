@@ -14,6 +14,7 @@ import de.plant.pandas.plant_chat_intellij.ui.nodes.Header;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -25,6 +26,12 @@ import javax.swing.*;
 
 public class PlantChatBotUI implements ToolWindowFactory {
 
+    private Node separator() {
+        Region topSeparator = new Region();
+        topSeparator.setPrefHeight(1);
+        topSeparator.setBackground(new Background(new BackgroundFill(Color.web("#1e1f22"), CornerRadii.EMPTY, Insets.EMPTY)));
+        return topSeparator;
+    }
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -43,25 +50,18 @@ public class PlantChatBotUI implements ToolWindowFactory {
 
             VBox root = new VBox();
 
-            Region topSeparator = new Region();
-            topSeparator.setPrefHeight(1);
-            topSeparator.setBackground(new Background(new BackgroundFill(Color.web("#1e1f22"), CornerRadii.EMPTY, Insets.EMPTY)));
-            root.getChildren().add(topSeparator);
-            root.getChildren().add(header);
 
+            root.getChildren().add(separator());
+            root.getChildren().add(header);
+            root.getChildren().add(separator());
 
             ChatInputField chatInputField = new ChatInputField(
                     text -> umlChatBotProcessor.startChat(project, text)
             );
 
 
-            HBox chatAreaBox = new HBox();
-            Region sideSeparator = new Region();
-            sideSeparator.setPrefWidth(1);
-            sideSeparator.setBackground(new Background(new BackgroundFill(Color.web("#2b2d30"), CornerRadii.EMPTY, Insets.EMPTY)));
-            chatAreaBox.getChildren().addAll(sideSeparator, chatArea);
-            VBox.setVgrow(chatAreaBox, Priority.ALWAYS);
-            root.getChildren().add(chatAreaBox);
+            root.getChildren().add(chatArea);
+            root.getChildren().add(separator());
             root.getChildren().add(chatInputField);
 
             Scene scene = new Scene(root);
