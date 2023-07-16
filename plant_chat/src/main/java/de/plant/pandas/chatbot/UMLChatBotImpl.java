@@ -42,6 +42,14 @@ public class UMLChatBotImpl implements UMLChatBot {
         return umlMap;
     }
 
+    private void sleep() {
+        try {
+            Thread.sleep(1000); // wait for one second (not have that often to many requests error)
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages, DegreeOfQuestionsFromExperts level, Consumer<GenerationStage> onStageChange) throws IOException {
         StringBuilder builder = new StringBuilder();
         Translator translator = null;
@@ -119,6 +127,8 @@ public class UMLChatBotImpl implements UMLChatBot {
         } else {
             messages.add(new Message("The UML experts are now tasked with crafting a clear and precise step-by-step solution for the design of the UML diagram based on the discussion.\nIt is crucial that the solution is highly sequential. The steps should instruct on elements such as creating, modifieng, deleting specific elements.\nYou do not need to add any review or process improvement steps. The experts are expected to be highly proficient in their field and are not required to review their work.\n", MessageRole.SYSTEM));
             if (onStageChange != null) onStageChange.accept(GenerationStage.CREATE_PLAN);
+
+            sleep();
             String steps = llm.prompt(messages, Collections.EMPTY_LIST, 4000);
             System.out.println(steps);
 
@@ -143,11 +153,7 @@ public class UMLChatBotImpl implements UMLChatBot {
 
             if (onStageChange != null) onStageChange.accept(GenerationStage.GENERATE_PLANT_UML);
 
-            try {
-                Thread.sleep(1000); // wait for one second (not have that often to many requests error)
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sleep();
             String plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 6000);
             System.out.println(plantUML);
             Map<String, String> result = umlStringToMap(plantUML);
@@ -164,7 +170,8 @@ public class UMLChatBotImpl implements UMLChatBot {
 
                 messages.add(new Message(noUMLFoundText.toString(), MessageRole.SYSTEM));
                 if (onStageChange != null) onStageChange.accept(GenerationStage.FIX_ERRORS);
-
+                
+                sleep();
                 plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 7000);
                 result = umlStringToMap(plantUML);
             }
