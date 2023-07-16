@@ -1,8 +1,12 @@
 package de.plant.pandas.plant_chat_intellij.ui;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
 import de.plant.pandas.llm.MessageRole;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatArea;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatInputField;
@@ -23,7 +27,6 @@ public class PlantChatBotUI implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         final JFXPanel fxPanel = new JFXPanel();
-        JComponent component = toolWindow.getComponent();
 
         Platform.setImplicitExit(false);
 
@@ -53,10 +56,11 @@ public class PlantChatBotUI implements ToolWindowFactory {
 
             fxPanel.setScene(scene);
 
-            SwingUtilities.invokeLater(fxPanel::requestFocusInWindow);
         });
 
 
-        component.getParent().add(fxPanel);
+        ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
+        Content content = contentFactory.createContent(fxPanel, "", false);
+        toolWindow.getContentManager().addContent(content);
     }
 }
