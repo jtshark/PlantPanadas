@@ -60,7 +60,7 @@ public class ChatInputField extends HBox {
             textArea.clear();
         });
 
-        HBox.setMargin(sendButton, new Insets(0, 16, 28, 0));
+        HBox.setMargin(sendButton, new Insets(0, 16, 16, 0));
 
         getChildren().addAll(textArea, sendButton);
         setAlignment(Pos.BOTTOM_RIGHT);
