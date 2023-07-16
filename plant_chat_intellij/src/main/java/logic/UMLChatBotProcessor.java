@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class UMLChatBotProcessor {
     private final List<Message> _currentMessages = new ArrayList<>();
-    private final UMLChatBot umlChatBot = new UMLChatBotImpl(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.CHATGPT));
+    private final UMLChatBot umlChatBot = new UMLChatBotImpl(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.CHATGPT), PlantChatSettings.getInstance().deepLToken);
     private Consumer<Message> addChatMessage;
 
     private Consumer<GenerationStage> onStageChange;

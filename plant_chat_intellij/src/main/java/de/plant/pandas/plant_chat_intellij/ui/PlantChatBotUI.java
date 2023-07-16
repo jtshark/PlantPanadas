@@ -3,18 +3,13 @@ package de.plant.pandas.plant_chat_intellij.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import de.plant.pandas.chatbot.UMLChatBot;
-import de.plant.pandas.chatbot.UMLChatBotImpl;
 import de.plant.pandas.llm.MessageRole;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatArea;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatInputField;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.Header;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import logic.UMLChatBotProcessor;
 import org.jetbrains.annotations.NotNull;
@@ -37,11 +32,7 @@ public class PlantChatBotUI implements ToolWindowFactory {
             Header header = new Header();
 
             UMLChatBotProcessor umlChatBotProcessor = new UMLChatBotProcessor(
-                    message -> {
-                        Platform.runLater(() -> {
-                            chatArea.addChatMessage(message.getContent(), message.getMessageType() == MessageRole.HUMAN);
-                        });
-                    },
+                    message -> Platform.runLater(() -> chatArea.addChatMessage(message.getContent(), message.getMessageType() == MessageRole.HUMAN)),
                     stage -> Platform.runLater(() -> header.setStage(stage))
             );
 

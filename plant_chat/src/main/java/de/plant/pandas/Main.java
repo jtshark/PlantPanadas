@@ -19,9 +19,12 @@ public class Main {
         //LLM llm = new LLaMALLM(new URL("http://127.0.0.1:5000"));
         Scanner scanner = new Scanner(System.in);
 
-        UMLChatBot umlChatBot = new UMLChatBotImpl(llm);
+        UMLChatBot umlChatBot = new UMLChatBotImpl(llm, Keys.getProperty("DEEPL_KEY"));
         List<Message> messageList = new LinkedList<>();
-        messageList.add(new Message("Create a class diagram PizzaShop with a customer and an order and Pizzas to buy. The Customer should have an age so we can check that they are eighteen when buying certain elements. Additionally the Pizzas have a normal price and a price when a discount is applied.", MessageRole.HUMAN));
+        messageList.add(new Message(
+                "Erstelle ein Klassendiagramm für einen Pizzashop mit einem Kunden und einer Bestellung und Pizzas, die man kaufen kann.\n" +
+                        "Die Kunden sollen ein Alter haben, damit wir überprüfen können, ob sie bestimmte Artikel kaufen können.\n" +
+                        "Außerdem sollen die Pizzas einen normalen Preis haben und einen Preis, wenn ein Rabatt angewendet wurde.", MessageRole.HUMAN));
 
         while (true) {
             UMLChatBotResults result = umlChatBot.askQuestion(Collections.emptyList(), messageList, DegreeOfQuestionsFromExperts.ALL_POSSIBLE);

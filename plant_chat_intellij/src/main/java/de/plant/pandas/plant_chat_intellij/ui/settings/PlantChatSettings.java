@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "PlantChatSettings", storages = {@Storage("PlantChat.xml")})
 public class PlantChatSettings implements PersistentStateComponent<PlantChatSettings> {
     public String openAIToken;
+    public String deepLToken;
+
     public DegreeOfQuestionsFromExperts questionSetting = DegreeOfQuestionsFromExperts.NONE;
 
     public static PlantChatSettings getInstance() {

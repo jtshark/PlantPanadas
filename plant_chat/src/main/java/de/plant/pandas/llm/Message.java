@@ -2,6 +2,7 @@ package de.plant.pandas.llm;
 
 public class Message {
     private final String content;
+
     private final MessageRole messageRole;
 
     public Message(String content, MessageRole messageRole) {

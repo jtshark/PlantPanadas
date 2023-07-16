@@ -10,11 +10,15 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.deepl.api.*;
+
 public class UMLChatBotImpl implements UMLChatBot {
     private final LLM llm;
+    private final String deeplAPIToken;
 
-    public UMLChatBotImpl(LLM llm) {
+    public UMLChatBotImpl(LLM llm, String deeplAPIToken) {
         this.llm = llm;
+        this.deeplAPIToken = deeplAPIToken;
     }
 
     public Map<String, String> umlStringToMap(String umlString) {
@@ -40,12 +44,22 @@ public class UMLChatBotImpl implements UMLChatBot {
 
     public UMLChatBotResults askQuestion(Collection<String> plantUMLs, List<Message> messages, DegreeOfQuestionsFromExperts level, Consumer<GenerationStage> onStageChange) throws IOException {
         StringBuilder builder = new StringBuilder();
+        Translator translator = null;
+        Message lastMessage = messages.get(messages.size() - 1);
+        String sourceLang = "EN-US";
+        if (deeplAPIToken != null && !deeplAPIToken.isBlank()) {
+            try {
+                translator = new Translator(deeplAPIToken);
+                TextResult translation = translator.translateText(lastMessage.getContent(), null, "EN-US");
+                sourceLang = translation.getDetectedSourceLanguage();
+            } catch (DeepLException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-        builder.append("Envision a scenario where three UML experts are having a conversation about designing a UML diagram to meet a specific user request. \n");
+        builder.append("Imagine a scenario where three UML experts are having a conversation about designing a UML diagram to meet a specific user request. \n");
         // Question prompt
         if (level != DegreeOfQuestionsFromExperts.NONE) {
-
-
             if (level == DegreeOfQuestionsFromExperts.ALL_POSSIBLE) {
                 builder.append("Whenever the experts are not entirely sure what to do, the experts are instructed to ask questions to the user. As the user is a beginner in the field of uml class diagrams, the experts questions to the user are expected or they get a bad recommendation otherwise!");
                 builder.append("If the uml experts do something wrong that the user doesn't want, all people will die and the world will end, so they better ask a lot of questions to the user.");
@@ -55,6 +69,7 @@ public class UMLChatBotImpl implements UMLChatBot {
 
             builder.append("QUESTION: <Insert question here> END\n");
             builder.append("Since the user cannot see the discussions among the experts, it's important that questions from the experts can be understood by the user without any context from the discussion.\n");
+
         } else {
             builder.append("Please do not ask any Questions to the user.\n");
         }
@@ -91,6 +106,14 @@ public class UMLChatBotImpl implements UMLChatBot {
             String[] questions = output.split("QUESTION: ");
             String question = questions[questions.length - 1];
 
+            if (!sourceLang.toLowerCase().contains("en") && translator != null) {
+                try {
+                    question = translator.translateText(question, null, sourceLang).getText();
+                } catch (DeepLException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
             if (onStageChange != null) onStageChange.accept(null);
             return new UMLChatBotResults.ChatBotQuestions(question);
         } else {
@@ -119,6 +142,12 @@ public class UMLChatBotImpl implements UMLChatBot {
             messages.add(new Message(plantUMLInput.toString(), MessageRole.SYSTEM));
 
             if (onStageChange != null) onStageChange.accept(GenerationStage.GENERATE_PLANT_UML);
+
+            try {
+                Thread.sleep(1000); // wait for one second (not have that often to many requests error)
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             String plantUML = llm.prompt(messages, Collections.EMPTY_LIST, 6000);
             System.out.println(plantUML);
             Map<String, String> result = umlStringToMap(plantUML);

@@ -12,7 +12,9 @@ import javax.swing.*;
 
 
 public class PlantChatSettingsUI implements Configurable {
-    private JBTextField textField;
+    private JBTextField openAIAPItextField;
+    private JBTextField deepLAPItextField;
+
     private ComboBox<String> degreeQuestionsUI = new ComboBox<>();
 
     @Nls
@@ -24,11 +26,11 @@ public class PlantChatSettingsUI implements Configurable {
     @Override
     public JComponent createComponent() {
 
-        PlantChatSettings settings = PlantChatSettings.getInstance();
-        textField = new JBTextField();
-        textField.setColumns(20);
+        openAIAPItextField = new JBTextField();
+        openAIAPItextField.setColumns(20);
 
-        textField.setText(settings.openAIToken);
+        deepLAPItextField = new JBTextField();
+        deepLAPItextField.setColumns(20);
 
         for (DegreeOfQuestionsFromExperts questionChoice : DegreeOfQuestionsFromExperts.values()
         ) {
@@ -36,7 +38,8 @@ public class PlantChatSettingsUI implements Configurable {
         }
 
         return FormBuilder.createFormBuilder()
-                .addLabeledComponent(new JBLabel("Enter your OpenAI Key: "), textField, 1, false)
+                .addLabeledComponent(new JBLabel("Enter your OpenAI Key: "), openAIAPItextField, 1, false)
+                .addLabeledComponent(new JBLabel("Enter your DeepL Key: "), deepLAPItextField, 1, false)
                 .addLabeledComponent(new JBLabel("Select how many questions shall be asked"), degreeQuestionsUI, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
@@ -53,29 +56,32 @@ public class PlantChatSettingsUI implements Configurable {
     @Override
     public boolean isModified() {
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        return !textField.getText().equals(settings.openAIToken) || settings.questionSetting.ordinal() != degreeQuestionsUI.getSelectedIndex();
+        return !openAIAPItextField.getText().equals(settings.openAIToken) || !deepLAPItextField.getText().equals(settings.deepLToken) || settings.questionSetting.ordinal() != degreeQuestionsUI.getSelectedIndex();
     }
 
     @Override
     public void apply() {
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        settings.openAIToken = textField.getText();
+        settings.openAIToken = openAIAPItextField.getText();
         settings.questionSetting = DegreeOfQuestionsFromExperts.values()[degreeQuestionsUI.getSelectedIndex()];
+        settings.deepLToken = deepLAPItextField.getText();
     }
 
     @Override
     public void reset() {
         // Reset the text field to the saved setting value
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        textField.setText(settings.openAIToken);
+        openAIAPItextField.setText(settings.openAIToken);
         degreeQuestionsUI.setSelectedIndex(settings.questionSetting.ordinal());
+        deepLAPItextField.setText(settings.deepLToken);
     }
 
     @Override
     public void disposeUIResources() {
         // Clean up any resources used by the UI component
-        textField = null;
+        openAIAPItextField = null;
         degreeQuestionsUI = null;
+        deepLAPItextField = null;
     }
 
 }
