@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 public abstract class WebserviceLLM implements LLM {
     private final URL llmURL;
@@ -34,7 +33,7 @@ public abstract class WebserviceLLM implements LLM {
 
         for (Message m : input) {
             JsonObject message = new JsonObject();
-            message.addProperty("role", switch (m.getMessageType()) {
+            message.addProperty("role", switch (m.getMessageRole()) {
                 case HUMAN -> "user";
                 case ASSISTANT -> "assistant";
                 case SYSTEM -> "system";
@@ -124,8 +123,6 @@ public abstract class WebserviceLLM implements LLM {
                 }
             }
         }
-
-
     }
 
 }

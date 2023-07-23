@@ -10,14 +10,12 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
-import de.plant.pandas.chatbot.GenerationStage;
-import de.plant.pandas.chatbot.UMLChatBot;
-import de.plant.pandas.chatbot.UMLChatBotImpl;
-import de.plant.pandas.chatbot.UMLChatBotResults;
+import de.plant.pandas.chatbot.*;
 import de.plant.pandas.llm.Message;
 import de.plant.pandas.llm.MessageRole;
 import de.plant.pandas.llm.OpenAILLM;
 import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettings;
+import de.plant.pandas.translation.TranslatorServiceDeepL;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,15 +27,17 @@ import java.util.stream.Collectors;
 
 public class UMLChatBotProcessor {
     private final List<Message> _currentMessages = new ArrayList<>();
-    private final UMLChatBot umlChatBot = new UMLChatBotImpl(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.CHATGPT), PlantChatSettings.getInstance().deepLToken);
-    private Consumer<Message> addChatMessage;
+    private final UMLChatBot umlChatBot;
+    private final Consumer<Message> addChatMessage;
 
-    private Consumer<GenerationStage> onStageChange;
+    private final Consumer<GenerationStage> onStageChange;
 
 
     public UMLChatBotProcessor(Consumer<Message> addChatMessage, Consumer<GenerationStage> onStageChange) {
         this.addChatMessage = addChatMessage;
         this.onStageChange = onStageChange;
+
+        umlChatBot = new UMLChatBotCoTImpl();
     }
 
     private void addChatMessage(Message message, boolean addToHistory) {
@@ -116,7 +116,12 @@ public class UMLChatBotProcessor {
 
                         UMLChatBotResults result = null;
                         try {
-                            result = umlChatBot.askQuestion(currentDiagramStrings, _currentMessages, PlantChatSettings.getInstance().questionSetting, onStageChange);
+                            result = umlChatBot.askQuestion(_currentMessages, currentDiagramStrings, AskQuestionParameter.builder()
+                                    .translatorService(new TranslatorServiceDeepL(PlantChatSettings.getInstance().deepLToken))
+                                    .onStageChange(onStageChange)
+                                    .level(PlantChatSettings.getInstance().questionSetting)
+                                    .llm(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.GPT4))
+                                    .build());
                         } catch (IOException e) {
                             _currentMessages.clear();
                             addChatMessage.accept(new Message("Ohhhh it seems like pandas do not like you.", MessageRole.ASSISTANT));
@@ -132,8 +137,5 @@ public class UMLChatBotProcessor {
                     }
             );
         });
-
-
     }
-
 }

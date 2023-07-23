@@ -44,7 +44,7 @@ public class PlantChatBotUI implements ToolWindowFactory {
             Header header = new Header();
 
             UMLChatBotProcessor umlChatBotProcessor = new UMLChatBotProcessor(
-                    message -> Platform.runLater(() -> chatArea.addChatMessage(message.getContent(), message.getMessageType() == MessageRole.HUMAN)),
+                    message -> Platform.runLater(() -> chatArea.addChatMessage(message.getContent(), message.getMessageRole() == MessageRole.HUMAN)),
                     stage -> Platform.runLater(() -> header.setStage(stage))
             );
 

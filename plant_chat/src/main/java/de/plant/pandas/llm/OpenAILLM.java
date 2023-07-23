@@ -12,43 +12,36 @@ public class OpenAILLM extends WebserviceLLM {
 
 
     public enum OpenAIType {
-        CHATGPT, GPT3
+        CHATGPT, GPT4
     }
 
     private final String openAIKey;
+    private final OpenAIType openAIType;
 
-    public OpenAILLM(String openAIKey, OpenAIType openAIType) {
-        super(switch (openAIType) {
-            case CHATGPT -> {
-                try {
-                    yield new URL("https://api.openai.com/v1/chat/completions");
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            case GPT3 -> {
-                try {
-                    yield new URL("https://api.openai.com/v1/completions");
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+    public OpenAILLM(String openAIKey, OpenAIType openAIType) throws MalformedURLException {
+        super(new URL("https://api.openai.com/v1/chat/completions"));
         this.openAIKey = openAIKey;
+        this.openAIType = openAIType;
     }
 
-    public OpenAILLM(OpenAIType openAIType) {
+    public OpenAILLM(OpenAIType openAIType) throws MalformedURLException {
         this(Keys.getProperty("OPENAI_KEY"), openAIType);
     }
 
-    public OpenAILLM() {
+    public OpenAILLM() throws MalformedURLException {
         this(Keys.getProperty("OPENAI_KEY"), OpenAIType.CHATGPT);
     }
 
 
     @Override
     public void addExtraRequestMap(JsonObject json) {
-        json.addProperty("model", "gpt-4");
+
+        String type = switch (openAIType) {
+            case CHATGPT -> "gpt-3.5-turbo-16k";
+            case GPT4 -> "gpt-4";
+        };
+
+        json.addProperty("model", type);
     }
 
     @Override
