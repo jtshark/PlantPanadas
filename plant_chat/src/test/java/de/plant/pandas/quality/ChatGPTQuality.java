@@ -22,7 +22,7 @@ public class ChatGPTQuality {
         Map<String, Map<String, String>> results = new HashMap<>();
         Map<String, String> tasks = new HashMap<>();
         for (File model : new File("results").listFiles()) {
-            if(model.getName().equals("points")) {
+            if(model.getName().equals("points") || model.getName().equals("venv") || model.getName().equals(".idea") || model.getName().equals("plotter.py") ) {
                 continue;
             }
             for (File subfolder : model.listFiles()) {
