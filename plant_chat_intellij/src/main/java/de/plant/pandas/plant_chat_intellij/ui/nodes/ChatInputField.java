@@ -41,49 +41,15 @@ public class ChatInputField extends HBox {
             textArea.setPrefRowCount(visualLinesCount);
         });
 
+        fixScrollPane();
         textArea.setPrefRowCount(1);
-
-        // Create Button with icon
-        FontIcon icon = new FontIcon(FluentUiFilledMZ.SEND_24);
-        icon.setIconColor(Color.web("7c8b95"));
-        FontHelper.bindFont(font -> icon.setIconSize((int) font.getSize() + 8), FontHelper.FontType.STANDARD);
-
-        JFXButton sendButton = new JFXButton();
-        sendButton.setCursor(Cursor.HAND);
-        sendButton.setPrefSize(50, 50);
-        sendButton.setGraphic(icon);
-        sendButton.setRipplerFill(Color.WHITE);
-        sendButton.setStyle("-fx-background-radius: 50%; -jfx-button-type: RAISED;");
-
-        sendButton.setOnAction(event -> {
-            sendText.accept(textArea.getText());
-            textArea.clear();
-        });
-
+        JFXButton sendButton = getButton(sendText);
         HBox.setMargin(sendButton, new Insets(0, 16, 16, 0));
 
         getChildren().addAll(textArea, sendButton);
         setAlignment(Pos.BOTTOM_RIGHT);
         HBox.setMargin(textArea, new Insets(16, 16, 16, 16));
 
-        Platform.runLater(() -> {
-            Node node = textArea.lookup(".scroll-bar");
-            if (node instanceof ScrollBar) {
-                ScrollBar scrollBar = (ScrollBar) node;
-                scrollBar.setOpacity(0);
-                scrollBar.setMinHeight(0);
-                scrollBar.setMaxHeight(0);
-                scrollBar.setPrefHeight(0);
-                scrollBar.setMinWidth(0);
-                scrollBar.setMaxWidth(0);
-                scrollBar.setPrefWidth(0);
-
-
-            }
-
-            ScrollPane scrollPane = (ScrollPane) textArea.lookup(".scroll-pane");
-            scrollPane.setPadding(new Insets(12, 0, -8, 0));
-        });
 
         textArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -100,6 +66,45 @@ public class ChatInputField extends HBox {
         setHgrow(textArea, Priority.ALWAYS);
 
         setBackground(new Background(new BackgroundFill(Color.web("#2b2d30"), CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+    private void fixScrollPane() {
+        Platform.runLater(() -> {
+            Node node = textArea.lookup(".scroll-bar");
+            if (node instanceof ScrollBar) {
+                ScrollBar scrollBar = (ScrollBar) node;
+                scrollBar.setOpacity(0);
+                scrollBar.setMinHeight(0);
+                scrollBar.setMaxHeight(0);
+                scrollBar.setPrefHeight(0);
+                scrollBar.setMinWidth(0);
+                scrollBar.setMaxWidth(0);
+                scrollBar.setPrefWidth(0);
+            }
+
+            ScrollPane scrollPane = (ScrollPane) textArea.lookup(".scroll-pane");
+            scrollPane.setPadding(new Insets(12, 0, -8, 0));
+        });
+
+    }
+
+    private JFXButton getButton(Consumer<String> sendText) {
+        FontIcon icon = new FontIcon(FluentUiFilledMZ.SEND_24);
+        icon.setIconColor(Color.web("7c8b95"));
+        FontHelper.bindFont(font -> icon.setIconSize((int) font.getSize() + 8), FontHelper.FontType.STANDARD);
+
+        JFXButton sendButton = new JFXButton();
+        sendButton.setCursor(Cursor.HAND);
+        sendButton.setPrefSize(50, 50);
+        sendButton.setGraphic(icon);
+        sendButton.setRipplerFill(Color.WHITE);
+        sendButton.setStyle("-fx-background-radius: 50%; -jfx-button-type: RAISED;");
+
+        sendButton.setOnAction(event -> {
+            sendText.accept(textArea.getText());
+            textArea.clear();
+        });
+        return sendButton;
     }
 
     private int computeVisualLinesCount(String text, double lineWidth) {

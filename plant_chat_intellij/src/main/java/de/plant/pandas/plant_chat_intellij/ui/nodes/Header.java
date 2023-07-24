@@ -19,16 +19,7 @@ public class Header extends HBox {
     private final double PBSIZE = 54;
 
     public Header() {
-        ImageView profileImageView = new ImageView();
-
-        Image image = new Image(getClass().getResource("/PandaPB.jpeg").toExternalForm());
-        profileImageView.setImage(image);
-
-        Circle circleClip = new Circle(PBSIZE / 2, PBSIZE / 2, PBSIZE / 2);
-        profileImageView.setClip(circleClip);
-
-        profileImageView.setFitHeight(PBSIZE);
-        profileImageView.setFitWidth(PBSIZE);
+        ImageView profileImageView = getPB();
 
         VBox vBox = new VBox();
         HBox.setHgrow(vBox, Priority.ALWAYS);
@@ -70,10 +61,21 @@ public class Header extends HBox {
         setAlignment(Pos.CENTER_LEFT);
         HBox.setMargin(vBox, new Insets(10, 10, 10, 10));
         HBox.setMargin(profileImageView, new Insets(10, 10, 10, 10));
-
-
     }
 
+    private ImageView getPB() {
+        ImageView profileImageView = new ImageView();
+
+        Image image = new Image(getClass().getResource("/PandaPB.jpeg").toExternalForm());
+        profileImageView.setImage(image);
+
+        Circle circleClip = new Circle(PBSIZE / 2, PBSIZE / 2, PBSIZE / 2);
+        profileImageView.setClip(circleClip);
+
+        profileImageView.setFitHeight(PBSIZE);
+        profileImageView.setFitWidth(PBSIZE);
+        return profileImageView;
+    }
 
     public void setStage(GenerationStage stage) {
         this.stage.set(stage);

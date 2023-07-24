@@ -29,6 +29,40 @@ public class UMLChatBotCoTImpl implements UMLChatBot {
         }
     }
 
+    public UMLChatBotResults.GeneratedUML generateUML(List<Message> messages, Collection<String> plantUMLs, AskQuestionParameter askQuestionParameter) throws IOException {
+        messages.remove(0);
+        messages.add(new Message(prompts.getStepByStepPrompt(), MessageRole.SYSTEM));
+        if (askQuestionParameter.getOnStageChange() != null)
+            askQuestionParameter.getOnStageChange().accept(GenerationStage.CREATE_PLAN);
+
+        sleep();
+        String steps = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 4000);
+        System.out.println(steps);
+
+        messages.add(new Message(steps, MessageRole.ASSISTANT));
+        messages.add(new Message(prompts.generatePlantUMLPrompt(), MessageRole.SYSTEM));
+
+        if (askQuestionParameter.getOnStageChange() != null)
+            askQuestionParameter.getOnStageChange().accept(GenerationStage.GENERATE_PLANT_UML);
+
+        sleep();
+        String plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 6000);
+        System.out.println(plantUML);
+        Map<String, String> result = responseParser.umlStringToMap(plantUML);
+        if (result.isEmpty()) {
+            messages.add(new Message(plantUML, MessageRole.ASSISTANT));
+            messages.add(new Message(prompts.foundNoUMLPrompt(), MessageRole.SYSTEM));
+            if (askQuestionParameter.getOnStageChange() != null)
+                askQuestionParameter.getOnStageChange().accept(GenerationStage.FIX_ERRORS);
+
+            sleep();
+            plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 7000);
+            result = responseParser.umlStringToMap(plantUML);
+        }
+        if (askQuestionParameter.getOnStageChange() != null) askQuestionParameter.getOnStageChange().accept(null);
+        return new UMLChatBotResults.GeneratedUML(result);
+    }
+
     public UMLChatBotResults askQuestion(List<Message> messages, Collection<String> plantUMLs, AskQuestionParameter askQuestionParameter) throws IOException {
         Message lastMessage = messages.get(messages.size() - 1);
         String language = askQuestionParameter.getTranslatorService().translateToLanguage(lastMessage.getContent(), "EN-US", true).getLang();
@@ -49,37 +83,7 @@ public class UMLChatBotCoTImpl implements UMLChatBot {
             if (askQuestionParameter.getOnStageChange() != null) askQuestionParameter.getOnStageChange().accept(null);
             return new UMLChatBotResults.ChatBotQuestions(question);
         } else {
-            messages.remove(0);
-            messages.add(new Message(prompts.getStepByStepPrompt(), MessageRole.SYSTEM));
-            if (askQuestionParameter.getOnStageChange() != null)
-                askQuestionParameter.getOnStageChange().accept(GenerationStage.CREATE_PLAN);
-
-            sleep();
-            String steps = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 4000);
-            System.out.println(steps);
-
-            messages.add(new Message(steps, MessageRole.ASSISTANT));
-            messages.add(new Message(prompts.generatePlantUMLPrompt(), MessageRole.SYSTEM));
-
-            if (askQuestionParameter.getOnStageChange() != null)
-                askQuestionParameter.getOnStageChange().accept(GenerationStage.GENERATE_PLANT_UML);
-
-            sleep();
-            String plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 6000);
-            System.out.println(plantUML);
-            Map<String, String> result = responseParser.umlStringToMap(plantUML);
-            if (result.isEmpty()) {
-                messages.add(new Message(plantUML, MessageRole.ASSISTANT));
-                messages.add(new Message(prompts.foundNoUMLPrompt(), MessageRole.SYSTEM));
-                if (askQuestionParameter.getOnStageChange() != null)
-                    askQuestionParameter.getOnStageChange().accept(GenerationStage.FIX_ERRORS);
-
-                sleep();
-                plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 7000);
-                result = responseParser.umlStringToMap(plantUML);
-            }
-            if (askQuestionParameter.getOnStageChange() != null) askQuestionParameter.getOnStageChange().accept(null);
-            return new UMLChatBotResults.GeneratedUML(result);
+            return generateUML(messages, plantUMLs, askQuestionParameter);
         }
 
     }
