@@ -24,7 +24,7 @@ examples = [
     "We're creating a banking app that allows customers to check balances, transfer money, and pay bills, while bank staff can manage accounts, loans, and customer inquiries.",
     "Our mission involves a project management tool, where project team members can create tasks, set deadlines, and share updates, while project managers can track progress, allocate resources, and manage teams.",
     "Create an online learning platform where students can enroll in courses, watch video lessons, and take quizzes, while teachers create and manage courses, grade assignments, and interact with students.",
-    "Wa are building a sports team management app, where team members can track game schedules, view statistics, and communicate with each other, while coaches manage rosters, strategies, and player development.",
+    "We are building a sports team management app, where team members can track game schedules, view statistics, and communicate with each other, while coaches manage rosters, strategies, and player development.",
     "Designing a charity fundraising platform, where users can discover causes, make donations, and track the impact of their contributions, while charity organizers can manage fundraising campaigns and donor relationships.",
     "Please craft a social media app where users can create profiles, post updates, and connect with friends, and where administrators can monitor content, manage user reports, and handle advertising.",
     "A car rental platform where customers can browse cars, book rentals, and leave reviews, while rental staff manage vehicle availability, pricing, and customer inquiries.",

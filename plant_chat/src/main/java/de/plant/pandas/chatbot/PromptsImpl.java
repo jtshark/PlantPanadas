@@ -86,7 +86,7 @@ public class PromptsImpl implements Prompts {
     public String getStepByStepPrompt() {
         return
                 "The UML experts are now tasked with crafting a clear and precise step-by-step solution for the design of the UML diagram based on the discussion.\n" +
-                        "It is crucial that the solution is highly sequential. The steps should instruct on elements such as creating, modifieng, deleting specific elements.\n" +
+                        "It is crucial that the solution is highly sequential. The steps should instruct on elements such as creating, modifying, deleting specific elements.\n" +
                         "You do not need to add any review or process improvement steps. The experts are expected to be highly proficient in their field and are not required to review their work." +
                         "\n Also do not add any IDs element anywhere.";
     }
