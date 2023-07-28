@@ -16,6 +16,8 @@ public class PlantChatSettingsUI implements Configurable {
     private JBTextField deepLAPItextField;
 
     private ComboBox<String> degreeQuestionsUI = new ComboBox<>();
+    private ComboBox<String> llmTypeUI = new ComboBox<>();
+
 
     @Nls
     @Override
@@ -32,15 +34,19 @@ public class PlantChatSettingsUI implements Configurable {
         deepLAPItextField = new JBTextField();
         deepLAPItextField.setColumns(20);
 
-        for (DegreeOfQuestionsFromExperts questionChoice : DegreeOfQuestionsFromExperts.values()
-        ) {
+        for (DegreeOfQuestionsFromExperts questionChoice : DegreeOfQuestionsFromExperts.values()) {
             degreeQuestionsUI.addItem(getDegreeOfQuestionsString(questionChoice));
+        }
+
+        for (PlantChatSettings.LLMType llmType : PlantChatSettings.LLMType.values()) {
+            llmTypeUI.addItem(getLLMString(llmType));
         }
 
         return FormBuilder.createFormBuilder()
                 .addLabeledComponent(new JBLabel("Enter your OpenAI Key: "), openAIAPItextField, 1, false)
                 .addLabeledComponent(new JBLabel("Enter your DeepL Key: "), deepLAPItextField, 1, false)
                 .addLabeledComponent(new JBLabel("Select how many questions shall be asked"), degreeQuestionsUI, 1, false)
+                .addLabeledComponent(new JBLabel("Select the type of LLM you want to use"), degreeQuestionsUI, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
@@ -53,10 +59,21 @@ public class PlantChatSettingsUI implements Configurable {
         };
     }
 
+    String getLLMString(PlantChatSettings.LLMType type) {
+        return switch (type) {
+            case CHATGPT -> "ChatGPT 3.5";
+            case GPT4 -> "GPT 4";
+            case LLaMA -> "Plant Panadas LLM";
+        };
+    }
+
     @Override
     public boolean isModified() {
         PlantChatSettings settings = PlantChatSettings.getInstance();
-        return !openAIAPItextField.getText().equals(settings.openAIToken) || !deepLAPItextField.getText().equals(settings.deepLToken) || settings.questionSetting.ordinal() != degreeQuestionsUI.getSelectedIndex();
+        return !openAIAPItextField.getText().equals(settings.openAIToken) ||
+                !deepLAPItextField.getText().equals(settings.deepLToken) ||
+                settings.questionSetting.ordinal() != degreeQuestionsUI.getSelectedIndex() ||
+                settings.llmType.ordinal() != llmTypeUI.getSelectedIndex();
     }
 
     @Override
@@ -64,6 +81,7 @@ public class PlantChatSettingsUI implements Configurable {
         PlantChatSettings settings = PlantChatSettings.getInstance();
         settings.openAIToken = openAIAPItextField.getText();
         settings.questionSetting = DegreeOfQuestionsFromExperts.values()[degreeQuestionsUI.getSelectedIndex()];
+        settings.llmType = PlantChatSettings.LLMType.values()[llmTypeUI.getSelectedIndex()];
         settings.deepLToken = deepLAPItextField.getText();
     }
 
@@ -73,6 +91,7 @@ public class PlantChatSettingsUI implements Configurable {
         PlantChatSettings settings = PlantChatSettings.getInstance();
         openAIAPItextField.setText(settings.openAIToken);
         degreeQuestionsUI.setSelectedIndex(settings.questionSetting.ordinal());
+        llmTypeUI.setSelectedIndex(settings.llmType.ordinal());
         deepLAPItextField.setText(settings.deepLToken);
     }
 
@@ -82,6 +101,7 @@ public class PlantChatSettingsUI implements Configurable {
         openAIAPItextField = null;
         degreeQuestionsUI = null;
         deepLAPItextField = null;
+        llmTypeUI = null;
     }
 
 }

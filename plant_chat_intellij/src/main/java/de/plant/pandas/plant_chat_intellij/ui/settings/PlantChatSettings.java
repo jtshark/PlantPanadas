@@ -15,6 +15,7 @@ public class PlantChatSettings implements PersistentStateComponent<PlantChatSett
     public String deepLToken;
 
     public DegreeOfQuestionsFromExperts questionSetting = DegreeOfQuestionsFromExperts.NONE;
+    public LLMType llmType = LLMType.CHATGPT;
 
     public static PlantChatSettings getInstance() {
         Application app = ApplicationManager.getApplication();
@@ -33,4 +34,7 @@ public class PlantChatSettings implements PersistentStateComponent<PlantChatSett
         XmlSerializerUtil.copyBean(state, this);
     }
 
+    public enum LLMType {
+        CHATGPT, GPT4, LLaMA
+    }
 }
