@@ -4,8 +4,9 @@ from llama_cpp import Llama
 
 app = Flask(__name__)
 
-llama_path = hf_hub_download(repo_id="TheBloke/wizard-mega-13B-GGML", filename="wizard-mega-13B.ggmlv3.q4_1.bin")
-llm = Llama(model_path=llama_path, n_gpu_layers=60, n_threads=1, n_ctx=2048)
+# llama_path = hf_hub_download(repo_id="TheBloke/wizard-mega-13B-GGML", filename="wizard-mega-13B.ggmlv3.q4_1.bin")
+llm = Llama(model_path="/srv/work/QE/plant_panadas/model/plant-panadas-q5_1.bin",
+            n_gpu_layers=60, n_threads=1, n_ctx=2048)
 
 
 def llama_model(messages):

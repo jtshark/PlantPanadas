@@ -3,7 +3,6 @@ import os
 from datasets import Dataset
 from dotenv import load_dotenv
 from transformers import AutoTokenizer
-from random import randint
 from itertools import chain
 from functools import partial
 
