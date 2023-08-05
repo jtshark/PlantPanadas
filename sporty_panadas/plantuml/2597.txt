@@ -1,0 +1,136 @@
+### Request: Our project involves building a website that sells multiple types of products to consumers. The website should have different user roles such as a guest user and registered user that can search/purchase items, add products to a wishlist and add different payment methods.
+### Expert 1: So, we have multiple user roles like guest and registered users. We also have different functionalities such as searching and purchasing items, adding products to a wishlist, and managing payment methods. 
+
+### Expert 2: Right, I think we should start by identifying the main entities we'll need for this system.
+
+### Expert 3: Agreed. We should also consider the relationships between these entities. For example, the relationship between a user and their wishlist items or payment methods. 
+
+### Expert 1: Let's start with the user entity. We can have properties like name, email, and password for all users. Additionally, we might want to add attributes specific to registered users, such as address and phone number.
+
+### Expert 2: Makes sense. And for the different user roles, perhaps we should deduct that an unregistered user is simply a guest user.
+
+### Expert 3: I agree, but we should keep in mind that a guest user and a registered user might have different capabilities and access levels. For example, a guest user might not be able to add items to a wishlist or store multiple payment methods.
+
+### Expert 1: True. So, we should have a general "User" class with common attributes and methods, and then specialize it to "GuestUser" and "RegisteredUser" classes with their specific properties.
+
+### Expert 2: That's a good approach. Now, for the wishlist functionality, what should we consider?
+
+### Expert 3: We need to link each user to their respective wishlist items. In the wishlist class, we can have a relationship with the User class - let's say a one-to-many association because a user can have multiple items in their wishlist.
+
+### Expert 1: That sounds good. Now what about payment methods? Do we need a separate entity for them?
+
+### Expert 2: I think it would be useful to have a separate class for payment methods. It can include attributes such as card type, card number, and expiration date. Additionally, we can have methods for adding a new payment method, deleting a payment method, etc.
+
+### Expert 3: Agreed. And maybe also a method that verifies the payment method or checks if it is valid.
+
+### Expert 1: Yes, that makes sense. We should also consider the relationship between a user and their payment methods. Would it be a one-to-many association?
+
+### Expert 2: I would say so. A user can have multiple payment methods, but each payment method belongs to only one user.
+
+### Expert 1: Great. So, our class diagram so far would include classes like User (with subclasses: GuestUser and RegisteredUser), Wishlist, and PaymentMethod. We'll also need to define associations between User and Wishlist, as well as User and PaymentMethod.
+
+### Expert 3: Definitely. And don't forget some additional classes for the products, the search functionality, and the purchasing process.
+
+### Expert 2: Right, we can have a Product class with attributes like name, description, price, and maybe a method to check if the product is on sale or has a discount.
+
+### Expert 1: That's true. For search, we can have a Search class that takes user inputs, queries the products, and returns the results.
+
+### Expert 3: And for purchasing, we might need an Order class to track the items the user wants to buy, the payment method they choose, and the final transaction details.
+
+### Expert 2: I agree. Let's also consider adding an Inventory class to manage the stock levels of products.
+
+### Expert 1: Yes, good idea. So, to summarize, our class diagram will include classes like User, GuestUser, RegisteredUser, Wishlist, PaymentMethod, Product, Search, Order, and Inventory. We'll need to define relationships and attributes accordingly.
+
+### Expert 3: And while designing the class diagrams, it's always a good practice to think about additional methods that would support the required functionality. It helps in keeping the diagram flexible and attuned to future requirements.
+
+### Expert 2: Absolutely! And as we create the class diagram, we might stumble upon some uncertainties. In those cases, before making assumptions, it's crucial we seek clarifications from the user. Remember, clear communication leads to a better design.
+
+### Expert 1: True, let's keep that in mind. Now let's work on mapping these classes to their attributes, methods, and relationships. This will give us a solid foundation for the design of our website.
+### Instructions: Solution:
+
+1. Create a User class with attributes such as name, email, and password.
+2. Create subclasses of the User class: GuestUser and RegisteredUser, with specific properties like address and phone number for RegisteredUser.
+3. Create a Wishlist class, and associate it with the User class as a one-to-many relationship, denoting that a User can have multiple items in their wishlist.
+4. Create a PaymentMethod class with attributes like card type, card number, and expiration date. Include methods for adding, deleting, and verifying payment methods.
+5. Associate PaymentMethod with the User class as a one-to-many relationship, indicating that a User can have multiple payment methods.
+6. Create a Product class with attributes like name, description, and price.
+7. Add methods to the Product class, such as checking if the product is on sale or if it has a discount.
+8. Create a Search class responsible for searching products based on user inputs.
+9. Create an Order class to track items the user wants to purchase, the selected payment method, and transaction details.
+10. Finally, create an Inventory class to manage stock levels of products.
+
+Note: The steps given above provide a sequential approach to designing the class diagram. However, depending on the complexity and more specific requirements of the project, further iterations and revisions may be necessary to refine the design.
+
+### PlantUML:
+Filename: website_class_diagram.puml
+
+@startuml
+
+class User {
+  - name: string
+  - email: string
+  - password: string
+}
+
+class GuestUser {
+}
+
+class RegisteredUser {
+  - address: string
+  - phone number: string
+}
+
+class Wishlist {
+  - items: List<Item>
+}
+
+class PaymentMethod {
+  - cardType: string
+  - cardNumber: string
+  - expirationDate: string
+  + addPaymentMethod()
+  + deletePaymentMethod()
+  + verifyPaymentMethod()
+}
+
+class Item {
+  - classID: int
+  - name: string
+  - description: string
+  - price: float
+}
+
+class Product {
+  - name: string
+  - description: string
+  - price: float
+  + isOnSale(): boolean
+  + hasDiscount(): boolean
+}
+
+class Search {
+  + searchProducts(input: string): List<Product>
+}
+
+class Order {
+  - items: List<Item>
+  - paymentMethod: PaymentMethod
+  - transactionDetails: string
+}
+
+class Inventory {
+  - stockLevels: Map<Product, int>
+  + updateStock(product: Product, quantity: int)
+}
+
+User "1" -up-down-|> "1..*" Wishlist
+User "1" -up-down-|> "1..*" PaymentMethod
+
+Item "1" -> "1" Product
+
+Product <|-- Search
+
+Order "1" -down- PaymentMethod: selects
+
+Inventory "1" -right-> "*" Product
+@enduml

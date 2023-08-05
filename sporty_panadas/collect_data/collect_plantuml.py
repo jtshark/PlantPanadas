@@ -21,7 +21,7 @@ if __name__ == '__main__':
     for filename in os.listdir(folder_path):
         path = os.path.join(folder_path, filename)
         count += 1
-        if count >= 10:
+        if count >= 5000:
             break
         if os.path.isfile(path):
             try:
@@ -30,14 +30,14 @@ if __name__ == '__main__':
                     continue
                 with open(path, "r") as f:
                     discussion = f.read()
-                    time.sleep(5)
+                    time.sleep(2)
                     completion = openai.ChatCompletion.create(
-                        model="gpt-4",
+                        model="gpt-3.5-turbo",
                         messages=[
                             {"role": "user", "content": f"{discussion}"},
                             {"role": "system", "content": prompt},
                         ],
-                        max_tokens=3000,
+                        max_tokens=1000,
                         temperature=1.3,
                         top_p=1,
                         frequency_penalty=0,

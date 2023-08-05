@@ -1,0 +1,86 @@
+### Request: Our project is a social media app where users can share photos, videos and posts with their followers and add hashtags to their content to categorize it and make it more discoverable.
+### Expert 1: So it looks like we have a social media app where users can share various types of content with their followers. They also have the option to add hashtags to their posts for categorization and discoverability. To start designing a UML class diagram, let's identify the main entities and their relationships. 
+
+### Expert 2: Agreed. I think we can start with the User entity, as it seems to be the central component of our app. Users will have followers and be able to share content. We should include attributes such as username, email, and password. 
+
+### Expert 3: Definitely. Additionally, we can provide methods for users to follow and unfollow other users, as well as create, edit, and delete their posts. We should also store how many followers each user has, so perhaps an attribute for follower count would be useful. 
+
+### Expert 1: Good points. Let's move on to the Post entity. It should have attributes like a unique post ID, the content itself (text, photo, video), and the creation time. Each post should be associated with the specific user who created it. We could consider including attributes for likes, comments, and shares as well.
+
+### Expert 2: Makes sense. It might be useful to store the number of likes, comments, and shares as attributes, to display that information quickly. Shouldn't these actions also be connected to specific users? 
+
+### Expert 1: Absolutely. We can include associations between the User and Post entities to represent that users create and interact with posts.
+
+### Expert 3: What about hashtags? We need to plan for how users can add hashtags to their posts and search for posts by specific tags. Should we include an entity called Hashtag?
+
+### Expert 2: I'm not convinced that a separate entity is necessary. Since hashtags are simply keywords, we could consider them as attributes of the Post entity itself. We can allow users to add multiple hashtags, which can be stored as an array or a string with appropriate parsing techniques.
+
+### Expert 1: That's a clever approach. By treating hashtags as attributes of each post, we can easily retrieve posts based on specific hashtags. It simplifies the design and eliminates the need for a separate Hashtag entity.
+
+### Expert 3: I agree, that sounds straightforward. However, what about searching for posts that contain a particular hashtag? Should we include a method or a separate class for searching?
+
+### Expert 1: We could consider a separate Search class that provides methods for querying posts based on hashtags. This way, we can encapsulate the search logic and keep it separate from the Post entity. This approach allows for code separation and easier maintenance in case we want to extend the search functionality in the future.
+
+### Expert 2: Great point, and providing a separate Search class aligns with the model-view-controller (MVC) architecture principles. Now, do we need to represent relationships between users, followers, and posts in our UML diagram?
+
+### Expert 1: Good catch. I think it would be helpful to include associations between the User entity and the Follower entity. The Follower entity could have attributes to track the relationship between a User and their followers. We could potentially store their usernames or user IDs to avoid duplicating data, depending on the specific constraints and requirements of our application.
+
+### Expert 3: Agreed. To summarize, the main entities that arise from our current understanding are User, Post, and Follower. Users create posts and can have followers. Each post has content, a creation time, and other interactions like likes, comments, and shares. The hashtag functionality can be handled within the Post entity itself, avoiding the need for a separate Hashtag entity.
+
+### Expert 1: Right. And we could include a Search class to encapsulate the search functionality for posts based on hashtags. Does that sound good to everyone?
+### Instructions: Solution:
+1. Create a class diagram file using a suitable UML modeling tool.
+2. Create a "User" class with attributes such as username, email, and password.
+3. Add methods to handle follow & unfollow actions between users.
+4. Include a attribute called "followerCount" to keep track of the number of followers a user has.
+5. Create a "Post" class with attributes like postID, content, and creationTime.
+6. Connect the "User" and "Post" classes with an association to represent that users create and interact with posts.
+7. Add attributes to track the number of likes, comments, and shares for each post.
+8. Include associations between the "User" and "Follower" classes to represent the follower relationship.
+9. Decide on the most appropriate way to represent hashtags (e.g., as an array or a string) as attributes of the "Post" class.
+10. Include a "Search" class to encapsulate the search functionality for posts based on hashtags.
+11. Build methods within the "Search" class to query posts based on specific hashtags.
+12. Make sure the association lines are properly labeled to reflect the cardinality and roles of the connecting entities.
+13. Review the class diagram for accuracy and completeness.
+14. Iterate and refine the class diagram as needed to meet the requirements of the social media app.
+
+### PlantUML:
+Filename: social_media_app.puml
+@startuml
+
+class User {
+  - username : string
+  - email : string
+  - password : string
+  - followerCount : int
+  {method} + follow(user: User) : void
+  {method} + unfollow(user: User) : void
+  {method} + createPost(content: string) : Post
+  {method} + editPost(postId: int) : void
+  {method} + deletePost(postId: int) : void
+}
+
+class Post {
+  - postId : int
+  - content : string
+  - creationTime : DateTime
+  - likes : int
+  - comments : int
+  - shares : int
+}
+
+class Follower {
+  - followerId : int
+  - user : User
+}
+
+class Search {
+  + queryByHashtag(hashtag: string) : Post[]
+}
+
+User --> Post
+User <*> User: followers
+User "1" --> "0..*" Follower
+Post -* Search 
+
+@enduml

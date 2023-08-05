@@ -1,0 +1,101 @@
+### Request: We need an online shopping application that allows customers to easily search and purchase products, while also enabling us to manage our inventory and track order shipments.
+### Expert 1: Okay, let's start by identifying the main entities that we'll need to represent in our class diagram. Obviously, we'll have a "Customer" class. We can also include an "Order" class and a "Product" class. Is there anything else we should consider?
+### Expert 2: Good point, we shouldn't forget about managing the inventory and tracking shipments. So, we can include an "Inventory" class and a "Shipment" class. Additionally, I think it would be a good idea to have a "ShoppingCart" class for the customer to add products before purchasing.
+### Expert 3: I agree. The "ShoppingCart" class will enable the customer to add and remove items, and ultimately create an order. Speaking of which, we should also add an "OrderItem" class that represents each individual item in an order. 
+
+### Expert 1: Great, so now that we have our initial list of classes, we need to think about the attributes and methods of each class. Starting with the "Customer" class, we'll include attributes such as firstName, lastName, email, and phoneNumber. Does that cover the basic customer information?
+### Expert 2: Yes, those attributes should be sufficient for a start. We can always add more later if needed. Now, let's move on to the "Product" class. We'll need attributes like name, description, price, and quantityAvailable.
+### Expert 3: Agreed. Furthermore, we should consider adding a discount that could be applicable to some products. Instead of storing the discounted price directly, we could have a separate "discount" attribute, and a method "getDiscountedPrice()" that calculates the final price based on the discount.
+
+### Expert 1: That makes sense. It allows us to store the original price and any potential discounts separately, and provides the flexibility to apply different discounts in the future. Moving on to the "Order" class, we'll need attributes like orderDate and totalAmount. And we can include a method like "calculateTotal()" that adds up the prices from the "OrderItems".
+
+### Expert 2: Good point. Now, let's talk about the "Shipment" class. This class will represent the shipment of an order. We can include attributes like shippingAddress, trackingNumber, and deliveryStatus.
+### Expert 3: Additionally, we can include a method in the "Shipment" class to update the delivery status. This way, we can communicate the order's progress to the customer easily.
+
+### Expert 1: Absolutely. Lastly, for the "OrderItem" class, we'll need attributes such as productName, quantity, and price. This class represents a specific product in an order.
+### Expert 2: I have an idea. Instead of having an attribute for price in the "OrderItem" class, we can refer back to the "Product" class and retrieve its price. This way, if the price of a product changes in the future, it will be automatically reflected in all existing orders without having to update each order individually.
+
+### Expert 3: That's a great idea! It ensures consistency and prevents data redundancy. We'll only need to update the price in the "Product" class, and the change will be reflected in all orders.
+
+### Expert 1: Agreed. We should also consider adding a method in the "OrderItem" class to calculate the subtotal by multiplying the quantity with the product's price.
+### Expert 2: Very true. With these in place, our UML class diagram will cover the main entities and their relationships for the online shopping application. 
+### Expert 3: Indeed. However, for any ambiguities or uncertainties, we should reach out to the user and seek clarification before finalizing the class diagram.
+### Expert 1: That's a good call. It's always better to confirm any unclear requirements with the user to ensure that we meet their needs accurately.
+### Expert 2: Absolutely. Now, let's compile our questions and reach out to the user for clarification before proceeding to finalize the design.
+### QUESTION: Regarding the "Customer" class, should we include any additional attributes or methods to meet your specific requirements? Please let us know. 
+### Answer: 
+Yes, I think it would be beneficial to also include attributes such as ipAddress and a method that will allow us to calculate the customer lifetime value to recognize out loyal users.
+### Expert 1: Thank you for the additional clarification. We can definitely include the "ipAddress" attribute in the "Customer" class. As for calculating the customer lifetime value, would you like us to include specific methods or formulas to do so?
+### Expert 2: Additionally, could you provide some insight into what factors should be considered when calculating the customer lifetime value? This will help us design the most appropriate method for your application.
+### Instructions: 1. Create a class diagram to visualize the relationships between the main entities: Customer, Product, Order, Shipment, OrderItem, and Inventory.
+2. In the "Customer" class, add attributes: firstName (String), lastName (String), email (String), phoneNumber (String), and ipAddress (String).
+3. In the "Product" class, add attributes: name (String), description (String), price (double), quantityAvailable (int), and discount (double).
+4. Add a method in the "Product" class named "getDiscountedPrice()" to calculate and retrieve the final price after applying discounts. Update the factory cost simultaneously in correspondence with any product modifications.
+5. Create an "Inventory" class to manage and track the availability of products.
+6. In the "Order" class, add attributes: orderDate (Date) and totalAmount (double).
+7. Include a method in the "Order" class named "calculateTotal()" to calculate the total amount for the order, summing up the prices of all the "OrderItems" in that order.
+8. In the "Shipment" class, add attributes: shippingAddress (String), trackingNumber (String), and deliveryStatus (String).
+9. Include a method in the "Shipment" class to update the deliveryStatus of an order shipment.
+10. Create a "ShoppingCart" class for the customer to add, remove, and manage products before purchasing.
+11. Include attributes in the "OrderItem" class: productName (String), quantity (int), and a foreign key reference to the "Product" class (productId).
+12. Instead of storing the price directly in the "OrderItem" class, refer back to the "Product" class to retrieve the current price dynamically.
+13. Add a method in the "OrderItem" class named "calculateSubtotal()" to calculate and retrieve the subtotal by multiplying quantity with the product's price.
+14. Craft an association between the "Customer" class and the "Order" class, with a one-to-many association where many orders can be associated with one customer.
+15. Create an association between the "Order" class and the "Shipment" class, with a one-to-one association where one shipment is associated with one order.
+16. Establish an association between the "Order" class and the "OrderItem" class, indicating that one order can have multiple order items, while each order item corresponds to only one order.
+17. Finish by verifying and validating all elements incorporated into the UML class diagram.
+
+### PlantUML:
+Filename: online_shopping.puml
+
+```plantuml
+@startuml
+
+class Customer {
+  -firstName: String
+  -lastName: String
+  -email: String
+  -phoneNumber: String
+  -ipAddress: String
+}
+
+class Product {
+  -name: String
+  -description: String
+  -price: double
+  -quantityAvailable: int
+  -discount: double
+  +getDiscountedPrice(): double
+}
+
+class Inventory
+
+class Order {
+  -orderDate: Date
+  -totalAmount: double
+  +calculateTotal(): double
+}
+
+class Shipment {
+  -shippingAddress: String
+  -trackingNumber: String
+  -deliveryStatus: String
+  +updateDeliveryStatus(): void
+}
+
+class ShoppingCart
+
+class OrderItem {
+  -productName: String
+  -quantity: int
+  -productId: int
+  +calculateSubtotal(): double
+}
+
+Customer -- Order
+Order *-- Shipment
+Order *-- OrderItem
+OrderItem -- Product
+
+@enduml
+```

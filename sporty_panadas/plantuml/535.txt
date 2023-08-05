@@ -1,0 +1,137 @@
+### Request: Our project is a mobile app allowing users to create and share creatives designs, which also allows others to like and comment on those designs.
+### Expert 1: So, let's start by understanding the main entities involved in this app. We have users, designs, likes, and comments. Does that cover everything?
+
+### Expert 2: Yes, those are the core entities. The user will create and own the designs, and other users will have the ability to like and comment on the designs. So, to begin with, let's create classes for these entities in our UML class diagram.
+
+### Expert 3: Agreed. We can have a "User" class with attributes such as "id", "name", and "email". We should also include methods for creating, viewing, and updating designs.
+
+### Expert 1: That sounds good. For the "Design" class, we can have attributes like 'id', 'title', 'description', 'imageURL', and 'createdAt'. Additionally, we should include methods for others to like and comment on designs.
+
+### Expert 2: Definitely. Now, about the liking and commenting functionality. Should we consider these as separate entities or just methods in the "Design" class?
+
+### Expert 1: That's a valid question. While likes and comments represent actions on a design, having separate entities for them can provide more flexibility. For instance, if we want to track the users who liked a design, having a separate "Like" class would be useful.
+
+### Expert 3: I agree. Let's create a "Like" class that will have attributes such as 'id', 'userId', and 'designId' to establish the connection between the user and the design they liked. Additionally, we can have attributes like 'createdAt' to record when the like was given.
+
+### Expert 1: Good suggestion. Now, what about comments? Should we have a separate "Comment" class?
+
+### Expert 2: I think we definitely should. Each comment will have its own set of attributes like 'id', 'userId', 'designId', 'content', 'createdAt'. This way, we can associate each comment with the respective design and user who made it.
+
+### Expert 3: Makes sense. And for the interactions between the classes, we can have methods like "addLike" and "addComment" in the "Design" class, along with other methods like "getLikesCount" and "getComments".
+
+### Expert 1: Absolutely. We would also need a way to retrieve the comments and likes given by a specific user. So, we can have methods like "getUserLikes" and "getUserComments" in the "User" class.
+
+### Expert 2: Sounds great. We're almost there. We just need to ensure that the relationships between the classes are captured correctly in our UML diagram. The "User" class should have a one-to-many relationship with both the "Design" and "Comment" classes, since a user can have multiple designs and comments.
+
+### Expert 3: Right. And the "Design" class should have a many-to-many relationship with the "User" class, as a design can be liked by many users and a user can like many designs. This can be implemented using a separate association class to capture the relationship.
+
+### Expert 1: Good catch. So, our final UML class diagram will have classes for "User", "Design", "Like", and "Comment". The relationships would be: "User" has one-to-many relationship with "Design" and "Comment"; "Design" has a many-to-many relationship with "User" via the "Like" class.
+
+### Expert 2: Excellent. Our UML class diagram will accurately represent the entities and relationships needed for our mobile app. I think we have covered everything the user requested.
+
+### Expert 3: Agreed. Now it's time to move on to the actual implementation.
+### Instructions: Solution:
+
+1. Create a "User" class with attributes:
+   - id : string
+   - name : string
+   - email : string
+
+2. Add methods to the "User" class:
+   - createDesign(title, description, imageURL): void
+   - viewDesign(designId): Design
+   - updateDesign(designId, title, description): void
+   - addLike(designId, userId): void
+   - addComment(designId, userId, content): void
+   - getUserLikes(userId): Like[]
+   - getUserComments(userId): Comment[]
+
+3. Create a "Design" class with attributes:
+   - id : string
+   - title : string
+   - description : string
+   - imageURL : string
+   - createdAt : date
+
+4. Add methods to the "Design" class:
+   - addLike(userId): void
+   - addComment(userId, content): void
+   - getLikesCount(): number
+   - getComments(): Comment[]
+
+5. Create a "Like" class with attributes:
+   - id : string
+   - userId : string
+   - designId : string
+   - createdAt : date
+
+6. Create a "Comment" class with attributes:
+   - id : string
+   - userId : string
+   - designId : string
+   - content : string
+   - createdAt : date
+
+7. Establish relationships between classes:
+   - "User" has a one-to-many relationship with "Design"
+   - "User" has a one-to-many relationship with "Comment"
+   - "Design" has a many-to-many relationship with "User" through the "Like" class
+
+8. Update the "User" class with relationships:
+   - designs: Design[]
+   - comments: Comment[]
+   
+9. Update the "Design" class with relationships:
+   - likes: Like[]
+
+With these steps, the class diagram representing the entities and relationships required for the mobile app is complete.
+
+### PlantUML:
+Filename: mobile_app_design.puml
+```
+@startuml
+
+class User {
+  - id : string
+  - name : string
+  - email : string
+  + createDesign(title, description, imageURL): void
+  + viewDesign(designId): Design
+  + updateDesign(designId, title, description): void
+  + addLike(designId, userId): void
+  + addComment(designId, userId, content): void
+}
+
+class Design {
+  - id : string
+  - title : string
+  - description : string
+  - imageURL : string
+  - createdAt : date
+  + addLike(userId): void
+  + addComment(userId, content): void
+  + getLikesCount(): number
+  + getComments(): Comment[]
+}
+
+class Like {
+  - id : string
+  - userId : string
+  - designId : string
+  - createdAt : date
+}
+
+class Comment {
+  - id : string
+  - userId : string
+  - designId : string
+  - content : string
+  - createdAt : date
+}
+
+User "1" o-- "0..*" Design
+User "1" o-- "0..*" Comment
+Design "1" -- "0..*" Like
+
+@enduml
+```

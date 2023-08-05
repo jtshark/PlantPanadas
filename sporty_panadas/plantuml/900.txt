@@ -1,0 +1,149 @@
+### Request: Our project is aimed at creating a website for a restaurant that allows customers to view the menu, make reservations, and order food online. Additionally, the admin should be able to manage the menu, track reservations, and respond to customer requests.
+### Expert 1: So our main objective is to design a class diagram for a restaurant website, which should have functionalities for customers to view the menu, make reservations, and order food online. And for the admin, they should be able to manage the menu, track reservations, and respond to customer requests. 
+
+### Expert 2: Yes, that's correct. To start, we can have a class called "Restaurant" as our main class for the system. This class will have attributes like "name", "contact", and "location". It will also have methods like "viewMenu()" and "makeReservation()".
+
+### Expert 3: That sounds good. We can have a separate class for the menu items called "MenuItem". This class can have attributes like "itemName", "price", and "ingredients". We can also include a method like "calculateDiscountedPrice()" if the admin wants to apply discounts or promotions in the future.
+
+### Expert 1: Right. And keeping the different types of users in mind, we should create separate classes for customers and admins. The "Customer" class can have attributes like "name", "email", and "phoneNumber". And perhaps a method like "requestAssistance()", so customers can contact the admin for any inquiries.
+
+### Expert 2: Agreed. We can also have a "User" class as a parent class for both customers and admins. This class can include common attributes like "username" and "password". And maybe a method like "login()" to authenticate user access.
+
+### Expert 3: In addition, we should have a class called "Order" which represents a customer's order. This class can have attributes like "orderDate", "orderTime", and "orderStatus". It will also have methods like "getOrderTotal()" and "cancelOrder()".
+
+### Expert 1: That makes sense. Keeping track of reservations is important for the admin. So we should have a class called "Reservation" with attributes like "reservationDate", "reservationTime", and "numOfGuests". And a method like "confirmReservation()", to let the admin finalize the reservation.
+
+### Expert 2: I think it would also be useful to have a class called "Request" to handle customer requests. This class can include attributes like "requestType" and "requestDate". And we can have a method like "respondToRequest()", so the admin can reply to customer inquiries or requests.
+
+### Expert 3: Agreed. Lastly, for online orders placed by customers, we should have a class called "Delivery" or "TakeAway", depending on whether they opt for delivery or pick-up. This class can include attributes like "deliveryAddress" for delivery orders and "pickupTime" for takeaways. Methods like "trackOrder()" and "changeDeliveryAddress()" would be beneficial too.
+
+### Expert 1: That sounds perfect. One final thing I'm thinking about is how the admin manages the menu. We could perhaps add a method to the "Restaurant" class called "addMenuItem()" that allows the admin to add new items to the menu.
+
+### Expert 2: Good suggestion. And to make it easier for the admin to view reservations, we can also have a method like "getUpcomingReservations()" in the "Admin" class which retrieves upcoming reservations.
+
+### Expert 3: I agree with both of you. This class diagram provides a solid foundation for our restaurant website. However, there might still be some more details we need to clarify with the user. So, shall we finalize this and prepare the questions for the user?
+
+### Expert 1: Yes, let's do that. I'll list down the questions we need to ask. Is it safe to assume that all customers will be required to create an account before using the reservation and online ordering features?
+
+### Expert 2: Good question. Additionally, do we need to consider any specific details regarding order customization or dietary preferences?
+
+### Expert 3: And are there any particular functionalities that the admin needs, apart from managing menus, reservations, and customer requests? I'll also include a question about formatting the menu - how should it be presented to customers?
+
+### Expert 1: Those are all important points to clarify. Let's craft these questions to ensure we have a complete understanding of the requirements before finalizing the class diagram.
+
+
+### Instructions: Step 1: Create a "Restaurant" class with attributes such as name, contact, and location. Add methods for viewing the menu and making reservations.
+
+Step 2: Create a "MenuItem" class with attributes like itemName, price, and ingredients. Include methods like calculateDiscountedPrice() if applicable.
+
+Step 3: Create a "Customer" class with attributes such as name, email, and phoneNumber. Add a method called requestAssistance() for contacting the admin.
+
+Step 4: Create a "User" class as a parent class for "Customer" and "Admin" classes, with attributes like username and password. Include a method for login().
+
+Step 5: Create an "Order" class with attributes like orderDate, orderTime, orderStatus, and a method for getOrderTotal(). Add a method for canceling the order.
+
+Step 6: Create a "Reservation" class with attributes like reservationDate, reservationTime, and numOfGuests. Add a method to confirm the reservation.
+
+Step 7: Create a "Request" class for handling customer requests with attributes like requestType and requestDate. Include a method for responding to customer requests.
+
+Step 8: Create a "Delivery" or "TakeAway" class with attributes like deliveryAddress and pickupTime, depending on customer preference. Include tracking and altering methods as needed.
+
+Step 9: Add a method called addMenuItem() to the "Restaurant" class for the admin to manage the menu.
+
+Step 10: Add a method called getUpcomingReservations() to the "Admin" class for retrieving upcoming reservations.
+
+Step 11: Clarify specific details with the user, such as account creation requirements for customers, order customization and dietary preferences, additional admin functionalities, and menu formatting.
+
+Step 12: Revise the class diagram based on the user's clarifications and repeat the previous steps as needed to ensure the diagram aligns with the project requirements.
+
+### PlantUML:
+Filename: restaurant_website.puml
+
+@startuml
+
+class Restaurant {
+  - name: String
+  - contact: String
+  - location: String
+  
+  + viewMenu(): void
+  + makeReservation(): void 
+}
+
+class MenuItem {
+  - itemName: String
+  - price: double
+  - ingredients: String
+  
+  + calculateDiscountedPrice(): double 
+}
+
+class Customer {
+  - name: String
+  - email: String
+  - phoneNumber: String
+  
+  + requestAssistance(): void 
+}
+
+class User {
+  - username: String
+  - password: String
+  
+  + login(): boolean  
+}
+
+class Admin {
+  + getUpcomingReservations(): Reservation[]
+}
+
+class Order {
+  - orderDate: Date
+  - orderTime: Time
+  - orderStatus: String
+  
+  + getOrderTotal(): double
+  + cancelOrder(): void  
+}
+
+class Reservation {
+  - reservationDate: Date
+  - reservationTime: Time
+  - numOfGuests: int
+  
+  + confirmReservation(): void  
+}
+
+class Request {
+  - requestType: String
+  - requestDate: Date
+
+  + respondToRequest(): void
+}
+
+class Delivery {
+  - deliveryAddress: String
+  
+  + trackOrder(): void
+  + changeDeliveryAddress(address: String): void
+}
+
+Restaurant --> MenuItem
+Restaurant --> Administrator
+Restaurant --> Order
+Restaurant --> Reservation
+
+Order --> MenuItem
+Order --> Customer
+
+Reservation --> Customer
+
+Customer --> User
+
+Admin --> User
+Admin --> Reservation
+Admin --> Request
+
+Delivery --> Order
+
+@enduml

@@ -1,0 +1,102 @@
+### Request: Our project is to build a subscription-based website that will educate and train individuals on different fitness routines.
+### Expert 1: So, to get started with designing the UML class diagram for our fitness training website, let's gather some requirements. It's a subscription-based platform where users can access fitness routines. What classes do you think we should include?
+
+### Expert 2: We'll definitely need a User class to represent the subscribers of our website. They will have personal information and their subscription details.
+
+### Expert 3: Agreed. And we'll need a FitnessRoutine class as well, which will contain information about each individual routine, including the key exercises, duration, and difficulty level.
+
+### Expert 1: Do you think we should include any other classes related to subscription management or user progress?
+
+### Expert 3: Yes, we should add a Subscription class that keeps the record of the user's chosen subscription plan and payment status. This way, we can manage their access rights.
+
+### Expert 2: I also think we can add a Progress class to track each user's fitness progress. It can store information such as weight, body measurements, and performance records.
+
+### Expert 1: Looks like we have a good start. Should we include any association between these classes?
+
+### Expert 3: Yes, there should be a "has-a" relationship between User and Subscription because each user will have a subscription plan. Also, we can have an "owns" relationship between User and Progress, as each user will have their own progress data.
+
+### Expert 2: Additionally, there should be an "uses" relationship between User and FitnessRoutine so that users can access the routines.
+
+### Expert 1: Great! Now, do we have anything else to clarify or inquire about?
+
+Question: Regarding the FitnessRoutine class, would it be beneficial to include a Many-to-Many association between FitnessRoutines and Users? This would allow users to track and save their favorite routines. Should we do that?
+
+### Instructions: Solution:
+
+Step 1: Create a User class
+- Define attributes: 
+  - username: string 
+  - password: string 
+  - email: string 
+  - subscription: Subscription
+
+Step 2: Create a Subscription class
+- Define attributes:
+  - plan: string 
+  - paymentStatus: string
+
+Step 3: Create a Progress class
+- Define attributes: 
+  - weight: float 
+  - bodyMeasurements: list of floats 
+  - performanceRecords: list of strings
+
+Step 4: Create a FitnessRoutine class
+- Define attributes: 
+  - exercises: list of strings 
+  - duration: int 
+  - difficultyLevel: string
+
+Step 5: Create associations between classes
+- Create a "has-a" association from User to Subscription
+- Create an "owns" association from User to Progress
+- Create a "uses" association from User to FitnessRoutine
+
+Step 6: Answering the question about a Many-to-Many association
+- Add a many-to-many association between FitnessRoutine and User with an intermediary class FavoriteRoutine. This allows users to save their favorite routines.
+- Define the FavoriteRoutine class:
+    - Define attributes:
+      - user: User 
+      - routine: FitnessRoutine
+     
+This completes the UML class diagram design for our fitness training website.
+
+### PlantUML:
+Filename: fitness_training_website.puml
+
+@startuml
+class User {
+  - username: string
+  - password: string
+  - email: string
+  - subscription: Subscription
+}
+
+class Subscription {
+  - plan: string
+  - paymentStatus: string
+}
+
+class Progress {
+  - weight: float
+  - bodyMeasurements: list of floats
+  - performanceRecords: list of strings
+}
+
+class FitnessRoutine {
+  - exercises: list of strings
+  - duration: int
+  - difficultyLevel: string
+}
+
+class FavoriteRoutine {
+  - user: User
+  - routine: FitnessRoutine
+}
+
+User "1" *-- "1" Subscription
+User "1" *-- "1" Progress
+User "1" *-- "1" FitnessRoutine
+User "1" -- "*" FavoriteRoutine: saves
+
+@enduml

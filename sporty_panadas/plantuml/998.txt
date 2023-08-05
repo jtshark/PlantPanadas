@@ -1,0 +1,177 @@
+### Request: Our project involves creating a website for a online store that sells clothing, shoes and accessories. The website should include browsing and searching capabilities, a shopping cart, a checkout system and account creation/login features for customers.
+### Expert 1: It sounds like we have a clear objective - designing a UML class diagram for an online store website. We'll need classes for clothing, shoes, and accessories, as well as classes for browsing, searching, the shopping cart, checkout, and customer accounts. 
+
+### Expert 2: Yes, that's right. Let's start by discussing the essential classes we'll need. I suggest we begin with the Product class, which will serve as the superclass for the Clothing, Shoe, and Accessory classes. These subclasses can add specific attributes and methods related to each type of product.
+
+### Expert 3: Agreed. Within the Product class, we can include attributes such as name, description, price, and quantity. We should also have a setter and getter for each attribute, as well as any additional methods relevant to the product, such as getDiscountedPrice or checkAvailability.
+
+### Expert 1: That's a good start. We'll also need a Cart class to handle the shopping cart functionality. It can have attributes like the list of products added, the total price, and the quantity for each product. We will also include methods to add a product, remove a product, and calculate the total price.
+
+### Expert 2: Right, and since the cart functionality is closely tied to the customer, we could also consider adding a Customer class. It can have attributes like name, email, and password for account creation and login purposes. We should add a ShoppingCart attribute to the Customer class to hold their current shopping cart. Based on this, we can include methods for adding products to the cart and proceeding to checkout.
+
+### Expert 3: In addition, we should consider creating a class for Order, which will represent a completed purchase. This class can include attributes like the customer who made the order, the products purchased with quantities and prices, the order ID, and the payment details. The Order class should also have methods like calculateTotalPrice and processPayment to handle payment processing.
+
+### Expert 1: Absolutely. And, to provide browsing and searching capabilities, we could create a Catalog class. This class can contain methods to retrieve and display products based on filters like category, price range, brand, and availability.
+
+### Expert 2: That makes sense. Additionally, we'll need another class to handle the checkout process and payment. We can call it Checkout. It can have methods to validate payment information, calculate taxes and discounts, and create an Order object once the payment is successful.
+
+### Expert 3: Agreed. Lastly, we should also include classes for specific features like User Authentication, Account Creation, and Customer Support. These classes would handle tasks such as user login, account registration, and customer support requests respectively.
+
+### Expert 1: Overall, I think we have covered the main classes we need to include in our UML class diagram. It is important to remember that this is the initial design and we should stay open to reviewing and refining it as we progress. We may also come across additional classes or relationships as we delve deeper into the project. 
+
+### Expert 3: Absolutely, it is always important to iterate our design process based on the evolving requirements and feedback. Next, we should start discussing the relationships between these classes like association, aggregation, or inheritance. 
+
+### Expert 2: Agreed. We should also consider any further details required for each class and think about which attributes and methods need to be private, public, or protected. Ultimately, our goal is to ensure a robust and scalable design to support the functionality required for the online store.
+### Instructions: Solution:
+
+Step 1: Create the Product class with attributes like title, description, price, and quantity.
+  - Add setter and getter methods for each attribute.
+  - Include additional methods like getDiscountedPrice() or checkAvailability() if needed.
+
+Step 2: Create subclasses Clothing, Shoe, and Accessory that extend the Product class.
+  - Include specific attributes and methods related to each type of product.
+
+Step 3: Create the Cart class to handle shopping cart functionality.
+  - Include attributes like productList, totalPrice, and totalQuantity.
+  - Include methods to addProduct(), removeProduct(), and calculateTotalPrice() within the Cart class.
+
+Step 4: Create the Customer class for account creation and login features.
+  - Include attributes like name, email, and password.
+  - Add ShoppingCart type attribute to hold the current shopping cart.
+  - Implement methods like addToCart() and proceedToCheckout().
+
+Step 5: Create the Order class to represent completed purchases.
+  - Include attributes like customer, productList, orderID, and paymentDetails.
+  - Implement methods like calculateTotalPrice() and +processPayment
+
+Step 6: Create the Catalog class to handle browsing and searching capabilities.
+  - Implement methods like getProductByCategory(), getProductByPriceRange(), and getProductByBrand().
+
+Step 7: Create the Checkout class to handle payment and the checkout process.
+  - Implement methods like validatePaymentInfo() and calculateTaxesAndDiscounts().
+
+Step 8: Create additional classes like UserAuthentication, AccountCreation, and CustomerSupport as needed.
+
+Step 9: Define relationships between relevant classes:
+- Product and Subclasses: Use generalization/inheritance.
+- Cart and Product: Association, as Cart uses instances of Product.
+- Customer and Cart, Customer and Order: Aggregation, as a Customer has a Cart and can have multiple Orders.
+- Catalog and Product: Association, as Catalog uses the instances of Product.
+- Checkout and Cart: Association, as Checkout is associated with the Cart class.
+
+Step 10: Define Modifiers:
+- Set appropriate access modifiers (private, public, protected) for attributes and methods based on their intended use and visibility requirements.
+
+It is important to note that this solution is merely a broad guideline, and the precise implementation details would depend on specific design considerations. Additional classes and relationships not mentioned in this solution may also be required based on the project's particular requirements and complexity.
+
+### PlantUML:
+Filename: online_store_design.puml@startuml
+
+class Product {
+  - title: string
+  - description: string
+  - price: double
+  - quantity: int
+  + getTitle(): string
+  + setTitle(title: string)
+  + getDescription(): string
+  + setDescription(description: string)
+  + getPrice(): double
+  + setPrice(price: double)
+  + getQuantity(): int
+  + setQuantity(quantity: int)
+  + getDiscountedPrice(): double
+  + checkAvailability(): boolean
+}
+
+class Clothing {
+  + color: string
+  + size: string
+  + fabric: string
+  + setcolor(color: string)
+  + setSize(size: string)
+  + setFabric(fabric: string)
+  + getColor(): string
+  + getSize(): string
+  + getFabric(): string
+}
+
+class Shoe {
+  + color: string
+  + size: int
+  + brand: string
+  + setColor(color: string)
+  + setSize(size: int)
+  + setBrand(brand: string)
+  + getColor(): string
+  + getSize(): int
+  + getBrand(): string
+}
+
+class Accessory {
+  + type: string
+  + material: string
+  + setColor(color: string)
+  + setMaterial(material: string)
+  + getType(): string
+  + getMaterial(): string
+}
+
+class Cart {
+  - productList: array of Product
+  - totalPrice: double
+  - totalQuantity: int
+  + addProduct(product: Product)
+  + removeProduct(product: Product)
+  + calculateTotalPrice(): double 
+}
+
+class Customer {
+  - name: string
+  - email: string
+  - password: string
+  - shoppingCart: Cart
+  + addToCart(product: Product)
+  + proceedToCheckout()
+}
+
+class Order {
+  - customer: Customer
+  - productList: array of Product
+  - orderID: string
+  - paymentDetails: string
+  + calculateTotalPrice(): double
+  + processPayment()
+}
+
+class Catalog {
+  + productCatalog: array of Product
+  + getProductByCategory(category: string)
+  + getProductByPriceRange(minPrice: double, maxPrice: double)
+  + getProductByBrand(brand: string)
+}
+
+class Checkout {
+  + cart: Cart
+  + validatePaymentInfo()
+  + calculateTaxesAndDiscounts(): double
+}
+
+class UserAuthentication {}
+
+class AccountCreation {}
+
+class CustomerSupport {}
+
+Product <|-- Clothing
+Product <|-- Shoe
+Product <|-- Accessory
+
+Customer "1" *-- "1" Cart
+Customer "1" *-- "*" Order
+
+Catalog *-- Product
+
+Checkout "1" -- "1" Cart
+
+@enduml

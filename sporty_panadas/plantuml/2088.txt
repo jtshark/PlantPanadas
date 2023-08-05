@@ -1,0 +1,165 @@
+### Request: Develop a social media app where users can connect with friends, share photos and videos, and discover content from creators they follow.
+### Expert 1: So, we need to design a UML class diagram for a new social media app that allows users to connect with friends, share media, and discover content from creators they follow. 
+
+### Expert 2: That's a common concept. Let's start by identifying the main entities. We'll definitely need a "User" class. What other entities do you think we should include?
+
+### Expert 1: Yes, a "User" class is a crucial starting point. We should also have a "Friend" class to represent the relationship between users. And we'll need a "Content" class to store media items like photos and videos.
+
+### Expert 3: Absolutely. In addition to user relationships, we should consider having a separate class for "Creator" to represent those users who produce content on the platform.
+
+### Expert 1: Good point! We could have a "Follow" class to store the relationship between users and the creators they follow. Should we also include a class for comments and likes?
+
+### Expert 2: Definitely, our app should support interactions like comments and likes. Let's add a "Comment" class and a "Like" class. These classes will be associated with other entities, like "User" and "Content".
+
+### Expert 3: Agreed. And we might also want to include classes for specific types of content, such as "Photo" and "Video", to allow for further specialization and definition of specific attributes or methods related to those types.
+
+### Expert 1: Makes sense. To build on that, we could consider having a class for tags. This will allow users to tag their content with specific keywords for easy discovery.
+
+### Expert 2: That's a good idea. It will allow users to search for content based on specific topics or interests. Should we include separate classes for notifications and messages too?
+
+### Expert 3: Hmm, I think notifications and messages can be seen as separate entities. A "Notification" class would capture updates regarding user activities, while a "Message" class represents direct communication between users.
+
+### Expert 1: Alright, we have covered quite a few classes. Now let's think about their attributes and relationships. But before we proceed, I have a question for the app's functionality. Is there any limit on the number of friends a user can have?
+
+### QUESTION: Is there any limit on the number of friends a user can have? 
+### Answer:  Yes, there is a limit on the number of friends a user can have – 100.
+### Expert 2: Got it. So, we need to consider the limitation of 100 friends per user. We could add a maximum limit attribute to the "User" class. 
+
+### Expert 3: Additionally, we could introduce an "Address" class to capture user addresses for friend suggestions or mapping features. Would there be a need for that?
+
+### Expert 1: That sounds logical. Including an "Address" class would provide additional functionality to the app. And we could include attributes like "city", "state", and "country".
+
+### Expert 2: Agreed. It would also be nice to have a "Timestamp" class to track the time when actions like content upload, comments, and likes occur. This can help with generating activity feeds and displaying recent events.
+
+### Expert 3: Good point. Adding a "Timestamp" class would bring additional clarity and functionality to our app. Should we also record the location data when users upload content or not?
+
+### Expert 1: I think recording location data could be valuable in certain situations. Including attributes like latitude and longitude in the "Content" class could be useful for geo-tagging content or generating recommendations based on user location.
+
+### Expert 2: True. It opens up possibilities for personalized experiences and location-based discovery. We should aim to include that in our UML class diagram.
+
+### Expert 3: Agreed. So just to recap, our current UML class diagram will include classes like "User", "Friend", "Content", "Creator", "Follow", "Comment", "Like", "Photo", "Video", "Tag", "Notification", "Message", "Address", and "Timestamp".
+
+### Expert 1: That sounds accurate. We've covered the core entities, their attributes, and potential relationships. Now, let's move on to defining their relationships, associations, and multiplicity details in the UML diagram.
+### Instructions: 1. Begin by creating the class diagram file/project in your preferred UML modeling tool.
+2. Create a top-level class called "User" with attributes such as username, password, email, profile picture, and a maximum limit attribute to represent the 100 friend limit.
+3. Add an "Address" class with attributes like city, state, and country. Link the "Address" class with the "User" class to represent user addresses.
+4. Create a class called "Friend" representing the relationship between users. Include attributes such as date added and level of friendship. Associate this class with the "User" class to link friends.
+5. Establish a "Content" class with attributes like media file, timestamp, location, and description. Include specialized classes like "Photo" and "Video" inheriting from this class with specific attributes related to those types of content.
+6. Add a class called "Tag" with attributes representing keywords. Associate the "Tag" class with the "Content" class to enable users to tag their content.
+7. Introduce a "Creator" class with attributes specific to content creators. This class represents users who produce content on the platform. Establish associations between the "User" class and the "Creator" class.
+8. Create a class called "Follow" representing the relationship between users and creators they follow. Include attributes like date followed. Associate this class with the "User" and "Creator" classes to track followers and who they follow.
+9. Implement a "Comment" class with attributes such as the comment text, timestamp, and associating it with the "User" and "Content" classes to enable users to post comments on content.
+10. Include a "Like" class with attributes like a timestamp, and associate it with the "User" and "Content" classes to track user likes.
+11. Design a "Notification" class with attributes like notification type, message, and timestamp. Associate this class with the "User" class to track user activities and updates.
+12. Add a "Message" class with attributes like sender, recipient, message text, and timestamp for direct communication between users. Associate this class with the "User" class to facilitate messaging.
+13. Finally, add a "Timestamp" class to track the time when actions occur, such as content upload, comments, and likes. Associate this class with appropriate classes for timestamping relevant actions for activity feeds and recent events.
+
+Remember to define associations, multiplicity (where required), and include inheritances between specialized class diagrams if applicable.
+
+Now that the sequential steps have been defined, handover to the UML experts for implementation into the UML modeling tool.
+
+### PlantUML:
+Filename: social_media_app_uml.puml
+@startuml
+hide empty attributes
+
+class User {
+  + username : String
+  + password : String
+  + email : String
+  + profilePicture : Image
+  + friendLimit : int = 100
+}
+
+class Address {
+  + city : String
+  + state : String
+  + country : String
+}
+
+class Friend {
+  + user : User
+  + friend : User
+  + dateAdded : Timestamp
+  + levelOfFriendship : int
+}
+
+class Content {
+  + mediaFile : Media
+  + timestamp : Timestamp
+  + location : Location
+  + description : String
+}
+
+class Photo {
+  + resolution : Resolution
+  + filter : Filter
+}
+
+class Video {
+  + duration : Duration
+  + quality : Quality
+}
+
+class Tag {
+  + keyword : String
+}
+
+class Creator {
+  + user : User
+  + contentProduced : Content []
+}
+
+class Follow {
+  + user : User
+  + creator : Creator
+  + dateFollowed : Timestamp
+}
+
+class Comment {
+  + user : User
+  + content : Content
+  + commentText : String
+  + timestamp : Timestamp
+}
+
+class Like {
+  + user : User
+  + content : Content
+  + timestamp : Timestamp
+}
+
+class Notification {
+  + user : User
+  + type : NotificationType
+  + message : String
+  + timestamp : Timestamp
+}
+
+class Message {
+  + sender : User
+  + recipient : User
+  + messageText : String
+  + timestamp : Timestamp
+}
+
+class Timestamp {
+  + actionTime : DateTime
+}
+
+User "1" --* "1" Address
+User "1" -- "1..100" Friend
+User "1" -- "1..*" Content
+Content <|-- Photo
+Content <|-- Video
+User "0..1" -- "0..*" Creator
+User "1" *-- "0..*" Follow
+Content "1" *-- "0..*" Tag
+User --|> Sender
+User --|> Recipient
+User "1" -- "0..*" Notification
+Content "1" -- "0..*" Comment
+User "1" *-- "0..*" Like
+Comment --|> Like
+
+@enduml

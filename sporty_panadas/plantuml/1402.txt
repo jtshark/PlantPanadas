@@ -1,0 +1,177 @@
+### Request: A social media application where users can share photos and videos, follow other users, and engage in comments and likes on posts.
+### Expert 1: So, we have a user request to design a UML class diagram for a social media application. The basic features seem to be sharing photos and videos, following other users, and either commenting or liking posts. Does that absorb everything so far?
+
+### Expert 2: Yes, that covers the main functionalities. I'm thinking we should start with a "User" class, as it will hold basic information like username, password, email, and profile picture. 
+
+### Expert 3: Agreed. We should also include attributes like "followers" and "following" as associations with other User objects.
+
+### Expert 1: Right. And speaking of posts, it seems like our User might need to create them too, so it feels appropriate to include a "Post" class.
+
+### Expert 2: Yes. The Post class can have attributes like "createdAt", "caption", "location", and maybe even a reference to the User who posted it. And we'll need a way for Users to interact with the posts.
+
+### Expert 3: Absolutely. We should consider including a "Like" class and a "Comment" class. These can both have associations with the "User" and "Post" classes.
+
+### Expert 1: Good point. Should we add some navigability to specify which User like a given post or made a particular comment?
+
+### Expert 3: Yes, to make this clearer, let's add two navigational properties. One in "Like" representing the User who liked a post and one in "Comment" pointing to the User who made the comment.
+
+### Expert 2: And I assume we'll want to show that a User can like multiple posts and leave multiple comments, right?
+
+### Expert 3: Exactly. We can represent these associations using multiplicity. So, a User can have a "likedPosts" attribute and a "comments" attribute, both represented as a collection of Posts and Comments respectively.
+
+### Expert 1: Agreed. This setup will make it easy to retrieve all the posts liked by a User or all the comments made by them.
+
+### Expert 2: For displaying the posts in the user's feed, shall we include a "Following" class to track the User's followed accounts?
+
+### Expert 3: Great idea. The "Following" class can have a reference to the follower User and another one to the account being followed.
+
+### Expert 1: Should we add any additional methods or attributes to these classes that could improve the functionality?
+
+### Expert 2: How about adding a method in the User class called "getFeed" that retrieves all the relevant posts from the accounts the user follows? This way, the feed could always be up to date.
+
+### Expert 3: In addition, we could include a method in the Post class called "getLikesCount" that returns the number of likes the post has received. Having it as a method instead of an attribute saves us from constantly updating the count when new likes come in.
+
+### Expert 1: Good call. It's often better to calculate dynamic values like that to avoid redundancy and ensure accuracy.
+
+### Expert 2: I agree. And regarding the User class, should we include a method to get the age based on their date of birth instead of directly saving the age as an attribute?
+
+### Expert 3: Yes, that's a good approach. It's more logical to store the date of birth as an attribute in the User class and have a "getAge" method calculated based on the current date.
+
+### Expert 1: One last thing, should we consider incorporating an additional class for storing and managing continuity within comments, like a "Reply" class?
+
+### Expert 2: Hmm, it depends on the requirements. If we need the ability to have threaded comments, then having a "Reply" class as a separate entity to represent replies could be beneficial.
+
+### Expert 3: Agreed. That gives more flexibility in handling comment hierarchies, especially in cases where nested replies might have their own likes and comments.
+
+### Expert 1: Alright then, I think we've covered all the necessary aspects for the social media application. Shall we start sketching the UML class diagram based on our discussion?
+
+### Expert 2: Absolutely. It's a good plan to get it visualized, review it, and iterate if needed.
+
+### Expert 3: Let's get to it. I'm excited to see our design take shape based on these expert considerations and envision how all the user requirements can be fulfilled in an elegant way.
+### Instructions: 1. Create a class named "User" with the following attributes:
+   - username: String
+   - password: String
+   - email: String
+   - profilePicture: Image
+
+2. Add the following associations to the "User" class:
+   - followers: User[] (Many-to-many association)
+   - following: User[] (Many-to-many association)
+   - likedPosts: Post[] (Many-to-many association)
+   - comments: Comment[] (Many-to-many association)
+
+3. Create a class named "Post" with the following attributes:
+   - createdAt: Date
+   - caption: String
+   - location: String
+
+4. Add the following associations to the "Post" class:
+   - postedBy: User (One-to-one association)
+   - likes: Like[] (One-to-many association)
+   - comments: Comment[] (One-to-many association)
+
+5. Create a class named "Like" with no attributes.
+
+6. Add the following associations to the "Like" class:
+   - likedBy: User (Many-to-one association)
+   - post: Post (Many-to-one association)
+
+7. Create a class named "Comment" with the following attributes:
+   - text: String
+   - createdAt: Date
+
+8. Add the following associations to the "Comment" class:
+   - commentedBy: User (Many-to-one association)
+   - post: Post (Many-to-one association)
+   - repliedTo: Comment (One-to-many association)
+
+9. Create a class named "Following" with no attributes.
+
+10. Add the following associations to the "Following" class:
+    - follower: User (Many-to-one association)
+    - account: User (Many-to-one association)
+
+11. Add the following methods to the "User" class:
+    - getFeed(): Post[] (returns the posts from followed accounts)
+    - getAge(): Integer (calculates the age based on the date of birth)
+
+12. Add the following methods to the "Post" class:
+    - getLikesCount(): Integer (returns the number of likes on the post)
+
+13. Please note that the solution suggests to add a "Reply" class whenever threaded comments are needed /required based on more specific requirements that are not published in this conversation.However, for the basic requirements stated in the discussion, the current design does not include the "Reply" class.
+
+That concludes the steps to create the UML class diagram for the social media application.
+
+### PlantUML:
+Filename: social_media_app_UML.puml@startuml
+!define AWSPUML /libraries/awspuml
+
+!includeurl AWSPUML.puml
+
+
+class User {
+  - username: String
+  - password: String
+  - email: String
+  - profilePicture: Image
+  - followers: User[]
+  - following: User[]
+  - likedPosts: Post[]
+  - comments: Comment[]
+  
+  + getFeed(): Post[]
+  + getAge(): Integer
+}
+
+class Post {
+  - createdAt: Date
+  - caption: String
+  - location: String
+  - postedBy: User
+  - likes: Like[]
+  - comments: Comment[]
+  
+  + getLikesCount(): Integer
+}
+
+
+class Like {
+  - likedBy: User
+  - post: Post
+}
+
+class Comment {
+  - text: String
+  - createdAt: Date
+  - commentedBy: User
+  - post: Post
+  - repliedTo: Comment
+}
+
+class Following {
+  - follower: User
+  - account: User
+}
+
+User "followers"~ *- "followers" User
+User "following"~ *- "following" User
+User "likedPosts"~ *- "likedPosts" Post
+User "comments"~ *- "comments" Comment
+User "getFeed()" as <<method>> : Post[]
+User "getAge()" as <<method>> : Integer
+
+Post "postedBy" o- "postedBy" User
+Post "likes" o- "likes" Like
+Post "comments" o- "comments" Comment
+Post "getLikesCount()" as <<method>> : Integer
+
+Like "likedBy" --o "likedBy" User
+Like "post" --o "post" Post
+
+Comment "commentedBy" --o "commentedBy" User
+Comment "post" --o "post" Post
+Comment "repliedTo" --• "comment" Comment
+
+User "*"--"1" Following
+
+@enduml

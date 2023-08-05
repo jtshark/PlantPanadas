@@ -1,0 +1,126 @@
+### Request: Our project aims to create a mobile application that tracks a person's water consumption and provides helpful reminders to promote hydration.
+### Expert 1: So, our user wants us to design a Class Diagram for a mobile application that tracks water consumption and provides reminders? 
+
+### Expert 2: Yes, that’s correct. This should be an interesting exercise! Let's start by identifying the main classes we will need. The first one that comes to mind is the "User" class to represent the app users.
+
+### Expert 1: Agreed. And we will need a "WaterTracker" class to handle the tracking functionality. It can have methods to add water consumed and get the consumption data for a given period.
+
+### Expert 3: Should we include a class to represent each entry of water consumption, so that every consumption record is identifiable?
+
+### Expert 1: Good point. We can have a "ConsumptionEntry" class that has attributes such as date, time, and amount of water consumed. It can be associated with a User.
+
+### Expert 2: But how about reminders to promote hydration. Should we handle them in another class?
+
+### Expert 3: We could have a separate "Reminder" class. It can have attributes like time and message, and can be associated with a user.
+
+### Expert 1: That makes sense. Consolidating all reminder logic in a separate class would keep our class diagram clearer.
+
+### Expert 2: Right. But let's also think about where we should store the user's daily water consumption for statistical analysis. Should we create a separate class for that?
+
+### Expert 3: I think a singleton class, "WaterStatistics", would fit well here. It can have methods to calculate daily averages, max, and min consumption, and so on.
+
+### Expert 1: Additionally, we could consider having a "Settings" class to store user preferences like preferred measurement units or reminders interval.
+
+### Expert 2: True, that would provide flexibility for the app so users can customize it according to their needs.
+
+### Expert 3: Finally, should we capture any additional functionality for these classes? Like a method to update the user's daily water goal based on their activity level or weight?
+
+### Expert 1: Yes, we could add such a method in the "User" class. It will update the daily water intake goal based on specific formulas or guidelines.
+
+### Expert 2: I like that approach. It keeps the logic related to the user's profile within the "User" class, making it more cohesive.
+
+### Expert 3: Agreed. Also, to track changes over time, we could add an attribute in the "User" class to store the user's hydration journey, capturing data such as past daily water consumption and goals.
+
+### Expert 1: That's an excellent addition. It will allow users to see their progress and history.
+
+### Expert 2: Great! So that covers the main classes needed for our UML class diagram - User, WaterTracker, ConsumptionEntry, Reminder, WaterStatistics, and Settings.
+
+### Expert 3: Definitely. We have considered both the tracking functionality and reminders in our design.
+
+### Expert 1: Yes, and capturing the user's hydration history is a nice touch too. It seems that our design covers all the requirements mentioned initially.
+
+### Expert 2: I agree. Now, let's move on to defining the relationships between these classes and adding attributes, methods, and associations.
+
+### Expert 3: Sounds good. It should be straightforward as we've identified most of the major components already. Let's get started.
+### Instructions: Step 1: Create a "User" class
+- Add attributes: id (String), name (String), weight (double), activityLevel (Enum), goal (double)
+- Add methods: updateWaterGoal(newGoal: double)
+
+Step 2: Create a "WaterTracker" class
+- Add method: addWaterConsumed(amount: double)
+- Add method: getConsumptionData(startDate: Date, endDate: Date)
+
+Step 3: Create a "ConsumptionEntry" class
+- Add attributes: date (Date), time (Time), amount (double)
+- Create an association between "ConsumptionEntry" and "User" classes:
+    - User (1) --------------- (*) ConsumptionEntry
+
+Step 4: Create a "Reminder" class
+- Add attributes: time (Time), message (String)
+- Create an association between "Reminder" and "User" classes:
+    - User (1) --------------- (*) Reminder
+
+Step 5: Create a "WaterStatistics" class
+- Add methods: calculateDailyAvg(), calculateMaxConsumption(), calculateMinConsumption()
+
+Step 6: Create a "Settings" class
+- Add attributes: unitOfMeasurement (Enum), reminderInterval (Time)
+
+Step 7: Add a method to the "User" class:
+- updateWaterGoalWeightBased()
+
+Step 8: Add attribute in the "User" class:
+- hydrationJourney (ArrayList of ConsumptionEntry)
+
+Step 9: Add associations between classes:
+- WaterTracker (1) --------------- (1) User
+- Reminder (1) --------------- (1) User
+- User (1) --------------- (1) WaterStatistics
+- User (1) --------------- (1) Settings
+
+### PlantUML:
+Filename: mobile_application_class_diagram.puml@startuml
+
+class User {
+  - id : String
+  - name : String
+  - weight : double
+  - activityLevel : Enum
+  - goal : double
+  + updateWaterGoal(newGoal: double)
+}
+
+class WaterTracker {
+  + addWaterConsumed(amount: double)
+  + getConsumptionData(startDate: Date, endDate: Date)
+}
+
+class ConsumptionEntry {
+  - date: Date
+  - time: Time
+  - amount: double
+}
+
+class Reminder {
+  - time: Time 
+  - message: String
+}
+
+class WaterStatistics {
+  + calculateDailyAvg()
+  + calculateMaxConsumption()
+  + calculateMinConsumption()
+}
+
+class Settings {
+  - unitOfMeasurement: Enum
+  - reminderInterval: Time
+}
+
+User "1" --- "1" WaterTracker
+User "1" --- "1" Variables -> Limits : Yeni Türkiyede parametre Planını sıradan Insana dönüş! 
+
+User "1" --- "1" Reminder
+User "1" --- "1" WaterStatistics
+User "1" --- "1" Settings
+User "0..n" --- "1" ConsumptionEntry@enduml

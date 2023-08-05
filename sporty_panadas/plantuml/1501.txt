@@ -1,0 +1,187 @@
+### Request: Our project involves designing a website that will allow users to create and view customized workout exercises, track their progress and set goals towards achieving their fitness milestones.
+### Expert 1: So, we need to design a class diagram for a website that provides workout exercises and tracking features. Let's start by identifying the main actors in the system.
+### Expert 2: Right, we know that users will be the main actors. What other actors will interact with the system?
+### Expert 3: I think we'll also have workout trainers or coaches who can create and modify exercise routines for users. Additionally, we may have administrators who can manage user accounts and perform administrative tasks on the website.
+### Expert 1: That's true. So, our actors would be User, Workout Trainer, and Administrator. Now, let's think about the main components we'll need in this system.
+### Expert 2: We definitely need a User component to represent basic user information, such as username, password, and email. It should also include attributes related to their fitness goals, like weight, height, and target weight.
+### Expert 3: I agree. We should also have an Exercise component to represent different exercises available. It can have attributes like exercise name, description, and difficulty level, as well as methods for performing the exercise properly and tracking the user's progress.
+### Expert 1: Definitely. We can link the User component with the Exercise component to represent user preferences and logs, where users can mark exercises as completed or add exercises to their workout routine.
+### Expert 2: That makes sense. But what about the Workout Trainer? How can they create and modify exercise routines for users?
+### Expert 3: We can have a component called Workout Routine that contains a list of exercises selected by the trainer for a specific user. It can also include attributes like schedule, duration, and intensity.
+### Expert 1: Good point. We can associate the Workout Trainer component with the Exercise and User components to enable the creation and assignment of workout routines.
+### Expert 2: Additionally, we should consider including a Goal component to represent the user's fitness goals. It can have attributes like target weight, target BMI, and a due date. We can link this component to the User component to track the progress towards achieving these goals.
+### Expert 3: Agreed. We should also think about including a Progress Tracking component, which can track the user's workout performance, such as the number of sets and reps completed, weights lifted, and elapsed time during each exercise session. We can associate this with the User, Exercise, and Workout Routine components.
+### Expert 1: Alright. We have covered the basics so far, but what about additional features like user registration, login, and email notifications?
+### Expert 2: We can add a Registration component with attributes like first name, last name, and date of birth. It can establish a relationship with the User component.
+### Expert 3: And for login functionality, we can include an Authentication component that includes attributes like username, password, and security questions for password recovery. It would also be related to the User component.
+### Expert 1: Good thinking. Regarding email notifications, we can have a Notifications component that can trigger email notifications to users for things like goal progress updates, new workout routines assigned by trainers, or reminders for upcoming workout sessions.
+### Expert 2: Absolutely. We should associate this Notifications component with the User component, enabling personalized notifications.
+### Expert 3: To summarize, we have User, Workout Trainer, and Administrator as our main actors. Key components include User, Exercise, Workout Routine, Goal, Progress Tracking, Registration, Authentication, and Notifications.
+### Expert 1: It sounds like we've captured the main elements of the system well. We might still need some additional details, but this should give us a good starting point for our UML class diagram. We can flesh out any missing attributes or methods as we continue our design process.
+### Expert 2: Agreed. Now, let's focus on establishing the relationships and further refining the details of each component.
+### Instructions: Step 1: Create User class
+- Add attributes: username, password, email, weight, height, targetWeight
+- Add methods: setWeight(), setHeight(), setTargetWeight(), createExercise()...
+
+Step 2: Create Exercise class
+- Add attributes: name, description, difficultyLevel
+- Add methods: performExercise(), trackProgress()...
+
+Step 3: Link User class to Exercise class
+- Create a many-to-many association between User and Exercise classes to represent user preferences and exercise logs
+- Add attributes: completedExercises[], addedExercises[]
+- Add methods: markExerciseAsCompleted(), addExercise()
+
+Step 4: Create WorkoutTrainer class
+- Add attributes: firstName, lastName, dateOfBirth
+- Add methods: createWorkoutRoutine(), modifyWorkoutRoutine()...
+
+Step 5: Create WorkoutRoutine class
+- Add attributes: exercises[], schedule, duration, intensity
+- Add methods: addExerciseToRoutine(), removeExerciseFromRoutine()...
+
+Step 6: Link WorkoutTrainer class to User and Exercise classes
+- Create a one-to-many association between WorkoutTrainer and User classes to enable the assignment of workout routines
+- Add attribute: assignedUsers[]
+- Create a many-to-many association between WorkoutTrainer and Exercise classes for modifying the exercise library
+- Add attribute: modifiedExercises[]
+
+Step 7: Create Goal class
+- Add attributes: targetWeight, targetBMI, dueDate
+- Add methods: setTargetWeight(), setTargetBMI()...
+
+Step 8: Link Goal class to User class
+- Create an association between Goal and User classes
+- Add attribute: goals[]
+- Allow the user to track progress towards goals using the ProgressTracking component
+
+Step 9: Create ProgressTracking class
+- Add attributes: setsCompleted, repsCompleted, weightsLifted, elapsedTime
+- Add methods: trackSetsReps(), trackWeights(), trackElapsedTime()...
+
+Step 10: Create Registration class
+- Add attributes: registrationDetails(firstName, lastName, ...)
+- Add methods: setDetails(), registerUser()
+
+Step 11: Create Authentication class
+- Add attributes: username, password, securityQuestions[]
+- Add methods: login(), recoverPassword()...
+
+Step 12: Link Authentication class to User class
+- Create a one-to-one association between Authentication and User classes for user authentication
+- Add attributes: user (to link the authentication details with the corresponding user)...
+
+Step 13: Create Notifications class
+- Add attributes: notificationTypes[], recipients[]
+- Add methods: sendEmailNotification(), createNotification(), setRecipients()...
+
+Step 14: Link Notifications class and User class
+- Create an association between Notifications and User classes for personalized notifications
+- Add attribute: user (to assign the notification to the corresponding user)
+
+Step 15: Refine the class diagram by specifying multiplicity, aggregation, or composition where applicable.
+   Add access modifiers (public/private) to limit access to attributes and methods.
+
+That concludes the step-by-step solution for designing the class diagram!
+
+### PlantUML:
+File name: workout-tracking.puml
+
+```plantuml
+@startuml
+class User {
+  - username: String
+  - password: String
+  - email: String
+  - weight: float
+  - height: int
+  - targetWeight: float  
+  + setWeight(float): void
+  + setHeight(int): void 
+  + setTargetWeight(float): void
+  + createExercise(Exercise): void
+}
+
+class Exercise {
+  - name: String
+  - description: String
+  - difficultyLevel: int  
+  + performExercise(): void
+  + trackProgress(): void
+}
+
+class WorkoutTrainer {
+  - firstName: String
+  - lastName: String
+  - dateOfBirth: Date 
+  + createWorkoutRoutine(WorkoutRoutine): void
+  + modifyWorkoutRoutine(WorkoutRoutine): void    
+}
+
+class WorkoutRoutine {
+  - exercises: List<Exercise>
+  - schedule: String
+  - duration: int
+  - intensity: String  
+  + addExerciseToRoutine(Exercise): void
+  + removeExerciseFromRoutine(Exercise): void
+}
+
+class Goal {
+  - targetWeight: float
+  - targetBMI: float
+  - dueDate: Date
+  + setTargetWeight(float): void
+  + setTargetBMI(float): void  
+}
+
+class ProgressTracking {
+  - setsCompleted: int
+  - repsCompleted: int
+  - weightsLifted: float
+  - elapsedTime: double  
+  + trackSetsReps(): void  
+  + trackWeights(): void
+  + trackElapsedTime(): void
+}
+
+class Registration {
+  - registrationDetails: RegistrationDetails
+  + setDetails(RegistrationDetails): void
+  + registerUser(): void
+}
+
+class Authentication {
+  - username: String
+  - password: String
+  - securityQuestions: List<String> 
+  + login(): void
+  + recoverPassword(): void
+}
+
+class Notifications {
+  - notificationTypes: List<NotificationType>
+  - recipients: List<User>    
+  + sendEmailNotification(): void
+  + createNotification(): void 
+  + setRecipients(List<User>): void 
+}
+
+
+User o-- Exercise
+User "completedExercises[]" --> "*" Exercise : Marks as Completed
+User "addedExercises[]" --> "*" Exercise  : Adds to Workout Plan
+Exercise "*" --o "assignedUsers[]" WorkoutTrainer
+WorkoutTrainer --> "|" User : Assigns Routines
+WorkoutTrainer "*" -right-> Exercise : Modifies Exercise Library
+Goal "*" -- "goals[]" User : Track Progress
+Goal - User  : track progress
+User --> ProgressTracking : Track Progress
+
+Registration "*" -- "user" User
+Authentication --o User
+Notifications --> User : Send Notification
+
+
+@enduml
+```

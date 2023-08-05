@@ -1,0 +1,122 @@
+### Request: Our project is a new e-commerce website, where customers can browse products, make purchases, and leave reviews, while the business owner manages inventory, shipment tracking, and customer support.
+### Expert 1: For this e-commerce website, we'll need to ensure our UML class diagram reflects the different actors and functionalities associated with browsing, purchasing, managing inventory, shipment tracking, and customer support. 
+
+### Expert 2: Agreed. Let's start by identifying the main actors. We have the customer, who browses and makes purchases, and the business owner, who manages inventory, tracks shipments, and provides customer support. 
+
+### Expert 3: Sounds good. So, for the customer, we'll include attributes like username, password, name, email, and maybe even a profile picture. They will also have methods like browseProducts, addProductToCart, and purchaseProducts. 
+
+### Expert 1: Right. And for the business owner, we can include attributes like username, password, name, email, and store details such as address and phone number. Methods for the business owner might include manageInventory, handleShipments, and provideCustomerSupport. 
+
+### Expert 2: Good start. What about the products themselves? I think we should include them as a separate class, with attributes like name, description, price, and quantity. This way, we can associate the products with the customer and inventory management functionalities.
+
+### Expert 3: I agree. Adding a class for reviews will also be important. Customers can leave reviews for products, and the business owner can see and respond to them. We can include attributes like rating, comment, and maybe even a timestamp. 
+
+### Expert 1: That's a good point. We can associate the Review class with both the Product and Customer classes to keep track of which products each customer has reviewed and the reviews for each product. It will also allow the business owner to view all the reviews associated with their products.
+
+### Expert 2: Yes, and we should have an Inventory class to manage the stock of products. It can have attributes like product, quantity available, and maybe even a reorder threshold. This way, the business owner will know when to restock items that are running low.
+
+### Expert 3: Additionally, we should include a class for the Order. It can have attributes like orderID, customer, date, and methods like calculateTotalPrice and trackShipment. This class will help us track and manage all the orders placed by the customers.
+
+### Expert 1: Absolutely. By including a separate class for the Order, we can store various order details and associate them with the corresponding customer. It will also allow us to track the status of shipments and notify both the customer and the business owner about any updates.
+
+### Expert 2: In terms of the payment process, I suggest we keep it simple for now and consider having an additional class called Payment. It can have attributes like orderID, amount, paymentMethod, and processed status, along with relevant methods.
+
+### Expert 3: That's a good idea. Including a Payment class will help us keep track of the payment information associated with each order. It will also allow us to process payments securely and efficiently.
+
+### Expert 1: Agreed. We can further refine the UML class diagram by considering any auxiliary classes or additional functionality that our user may require. Clarifying these points with the user would provide us with a more comprehensive understanding of their requirements.
+
+### Expert 2: Yes, let's finalize the current design and then seek clarification from the user if needed. Afterwards, we can proceed with implementing the different functionalities of the e-commerce website based on the finalized UML class diagram.
+### Instructions: Class Diagram Design Steps:
+1. Create a class called "Customer" with attributes: username, password, name, email, and profile picture.
+2. Create a class called "BusinessOwner" with attributes: username, password, name, email, address, and phone number.
+3. Create a class called "Product" with attributes: name, description, price, and quantity.
+4. Create a class called "Review" with attributes: rating, comment, and timestamp.
+5. Add associations between classes:
+   - Associate the "Customer" class with the "Review" class (1 to * association) to represent that a customer can write multiple reviews.
+   - Associate the "Product" class with the "Review" class (1 to * association) to represent that a product can have multiple reviews.
+6. Create a class called "InventoryItem" which has an association with both the "Product" class and the "BusinessOwner" class.
+   - Add attributes: quantity available and reorder threshold.
+   - Associate the "Product" class with the "InventoryItem" class (1 to 1) to represent that each product correlates to an inventory item.
+   - Associate the "BusinessOwner" class with the "InventoryItem" class (1 to *) to represent that the business owner manages multiple inventory items.
+7. Create a class called "Order" with attributes: orderID, customer, and date.
+   - Associate the "Customer" class with the "Order" class (1 to *) to represent that a customer can place multiple orders.
+8. Create a class called "Payment" with attributes: orderID, amount, paymentMethod, and processed status.
+   - Associate the "Order" class with the "Payment" class (1 to 1) to represent the association between an order and its payment details.
+9. Create methods as necessary for each class to perform specific functionalities mentioned during the discussion.
+10. Keep refining and updating the class diagram by seeking user feedback and verifying that it accurately represents the requirements of the e-commerce website.
+
+### PlantUML:
+Filename: EcommerceWebsite.puml@startuml
+
+class Customer {
+    -username: string
+    -password: string
+    -name: string
+    -email: string
+    -profilePicture: string
+    
+    +browseProducts()
+    +addProductToCart()
+    +purchaseProducts()
+}
+
+class BusinessOwner {
+    -username: string
+    -password: string
+    -name: string
+    -email: string
+    -address: string
+    -phoneNumber: string
+    
+    +manageInventory()
+    +handleShipments()
+    +provideCustomerSupport()
+}
+
+class Product {
+    -name: string
+    -description: string
+    -price: decimal
+    -quantity: int
+}
+
+class Review {
+    -rating: int
+    -comment: string
+    -timestamp: datetime
+}
+
+class InventoryItem {
+    -quantityAvailable: int
+    -reorderThreshold: int
+    
+    +updateQuantityAvailable()
+    +checkReorderThreshold()
+}
+
+class Order {
+    -orderID: string
+    -customer: Customer
+    -date: datetime
+    
+    +calculateTotalPrice()
+    +trackShipment()
+}
+
+class Payment {
+    -orderID: string
+    -amount: decimal
+    -paymentMethod: string
+    -processedStatus: boolean
+    
+    +processPayment()
+}
+
+Customer -> Review : "1" creates > "*"
+Product --> Review : "1" has many > "*"
+Product o-- InventoryItem : "1" correlates to > "1"
+BusinessOwner --|> InventoryItem : "1" manages > "*"
+Customer "1" --|| Order : places > "*"
+Order --|> Payment : "1" has > "1"
+
+@enduml

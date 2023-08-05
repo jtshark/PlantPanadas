@@ -1,0 +1,144 @@
+### Request: Our project is a website where people can buy products online and arrange for their delivery. Customers can add items to their shopping cart, pay for their order and track its shipping progress, while the admins manage inventory, order status, and customer service.
+### Expert 1: So, we need to design a UML class diagram for an online shopping website. Let's start by identifying the main actors and their relationships.
+
+### Expert 2: Yes, we should also consider the functionalities and characteristics of each actor. So, we have customers who can add items to their shopping cart, make payments, and track orders. And then we have admins who manage inventory, order status, and customer service. Let's just focus on their functionalities for now.
+
+### Expert 3: Good point. I think we can start with the Customer class. We should include attributes like name, email, username, password, and possibly their shipping address and telephone number. Additionally, we might want to add a ShoppingCart attribute to store their selected items.
+
+### Expert 1: That makes sense, but should we also include an attribute for the total price of the items in the shopping cart?
+
+### Expert 2: Actually, it might be better to have a method that calculates the total price instead. This way, if prices change or if there are any discounts, we wouldn't have to update the total every time.
+
+### Expert 3: Absolutely. We can have a method called calculateTotalPrice() that takes into account any discounts or promotions, and return the updated total price. This way, the customer always gets the accurate total. Makes the class more robust.
+
+### Expert 1: Great suggestion! Now, for the payment functionality, should we include attributes like credit card number and payment history?
+
+### Expert 2: We could, but storing credit card numbers is usually a security risk. It would be wiser to omit that attribute and focus on secure payment gateways. However, we can still have an attribute for storing payment history, which could be a list of Order objects.
+
+### Expert 3: Agreed. By having the payment history as a separate attribute, we maintain security and separation of concerns. Each Order object in the payment history could store details like the date, amount, and payment status.
+
+### Expert 1: Moving on to the Admin class, I think we should include attributes like name and email. But what about their authorization level or role within the system?
+
+### Expert 2: Good point. We could have an attribute called accessLevel that represents their authorization level. For example, they could be a regular admin, a super admin who has additional privileges, or even a customer support representative.
+
+### Expert 3: I think it would be beneficial to also have a method that allows an admin to update the order status. This method can take an Order object as a parameter and update its status accordingly.
+
+### Expert 1: Definitely. It would give admins the ability to manage the progress of each order easily.
+
+### Expert 2: And since we're talking about orders, should the Order class have attributes like shipping address and delivery status?
+
+### Expert 3: I think those are essential attributes. However, instead of directly storing the delivery status as a string, we can consider having a separate DeliveryStatus class with attributes like status, date, and estimated delivery time. This will provide more flexibility in handling order statuses and tracking deliveries.
+
+### Expert 1: That sounds logical. It allows us to implement additional functionality like sending notifications to customers regarding their orders.
+
+### Expert 2: Agreed. It also allows for more granular control over order status updates, such as marking an order as "shipped" and storing the actual delivery date as part of the DeliveryStatus object.
+
+### Expert 3: Since we have mentioned customer service, do you think it would be beneficial to have a class for managing customer inquiries?
+
+### Expert 1: That's a good idea. We can create a CustomerService class that handles customer inquiries by storing them as objects with attributes like the customer's name, email, inquiry message, and a date and time stamp.
+
+### Expert 2: Additionally, we can have a method to respond to inquiries. This method can take an Inquiry object as a parameter and update its response attribute.
+
+### Expert 3: Right. By having a separate class for customer inquiries, we can keep track of the communication history between the customer and customer service personnel.
+
+### Expert 1: It seems like we have covered the main functionalities and relationships. Any other thoughts or suggestions before we proceed with the UML diagram?
+
+### Expert 2: We might need to clarify a few things with the user, such as whether there should be a separate class for products, or how exactly the inventory management process works. But overall, I think we have a good starting point.
+### Instructions: Solution:
+
+1. Create a class called "Customer" with attributes like name, email, username, password, shipping address, and telephone number. Include a ShoppingCart attribute of type "List<Item>" to store the selected items in the cart.
+
+2. Add a method "calculateTotalPrice()" in the Customer class that calculates the total price of the items in the cart, considering any applicable discounts or promotions.
+
+3. Create a class called "Order" with attributes like orderID, orderDate, customer (of type "Customer"), and paymentStatus. Include a deliveryStatus attribute of type "DeliveryStatus". 
+
+4. Create a class called "Admin" with attributes like name, email, and accessLevel to represent their authorization level. 
+
+5. Add a method "updateOrderStatus()" in the Admin class that takes an Order object as a parameter and updates its status accordingly.
+
+6. Create a class called "DeliveryStatus" with attributes like status, date, and estimatedDeliveryTime.
+
+7. Create a class called "Inquiry" with attributes like customerName, customerEmail, message, dateTime, response, and status to manage customer inquiries.
+
+8. Add a method "respondToInquiry()" in the CustomerService class that takes an Inquiry object as a parameter and updates its response attribute.
+
+9. Identify associations between classes:
+   - Customer has a ShoppingCart (composition relationship)
+   - Customer has multiple Orders (composition relationship)
+   - Order has a DeliveryStatus (composition relationship)
+   - Admin manages multiple Orders (aggregation relationship)
+   - Inquiry is initiated by Customer (association relationship) and managed by CustomerService (association relationship)
+
+10. Define multiplicities for the associations:
+   - Customer: ShoppingCart (0..1), Orders (*)
+   - Order: DeliveryStatus (0..1)
+   - Admin: Orders (*)
+   - Inquiry: Customer (1) and CustomerService (1)
+
+11. Complete the UML class diagram by adding the class names, attributes, methods, and association with multiplicities to a clear, labeled diagram. 
+
+Note: The UML class diagram might have additional classes and relationships based on the specific requirements of the system. 
+
+### PlantUML:
+Filename: online_shopping_website.puml
+
+```puml
+@startuml
+
+class Customer {
+  - name: string
+  - email: string
+  - username: string
+  - password: string
+  - shippingAddress: string
+  - telephoneNumber: string
+  - shoppingCart: List<Item>
+  + calculateTotalPrice(): decimal
+}
+
+class Item {
+  - name: string
+  - price: decimal
+  - quantity: int
+}
+
+class Order {
+  - orderID: int
+  - orderDate: date
+  - customer: Customer
+  - paymentStatus: string
+  - deliveryStatus: DeliveryStatus
+}
+
+class Admin {
+  - name: string
+  - email: string
+  - accessLevel: string
+  + updateOrderStatus(order: Order): void
+}
+
+class DeliveryStatus {
+  - status: string
+  - date: date
+  - estimatedDeliveryTime: string
+}
+
+class Inquiry {
+  - customerName: string
+  - customerEmail: string
+  - message: string
+  - dateTime: datetime
+  - response: string
+  - status: string
+}
+
+Customer -- ShoppingCart
+Customer "0..*" -- "*" Order
+Order "0..1" -- "*" DeliveryStatus
+Admin -- "*" Order
+Customer --> "1" Inquiry
+Inquiry --> "1" CustomerService
+
+@enduml
+```
+![image](http://www.plantuml.com/plantuml/png/TP71JiCm48RtUwgzejvf06CCt3801Cuipcjc0mmaIHCGAoUi23xK_dpiHTSeqcmdPex2shnm22012ux3TGbBNI789btORQPPNYoFS-CXw6yGF89fvzkjn-krr90Ye2F_pV-gWtkYjzkZ8VSauguCMDPhxH0Bg_7AU33RH5K-d2yIDagnaj5-XSUDirUrIGeDhqyr05ZFHC9li6307NegpvBSax-dvMHBso04ScdTGtkTUbTxyeg6ML2FIJ-qYP-pfjtNxmbq_MV9w-LTabjeYLdt63OB-kaB)
