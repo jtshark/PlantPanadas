@@ -1,4 +1,4 @@
-package logic;
+package de.plant.pandas.plant_chat_intellij.logic;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;

@@ -8,6 +8,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import de.plant.pandas.llm.MessageRole;
+import de.plant.pandas.plant_chat_intellij.logic.UMLChatBotProcessor;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatArea;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.ChatInputField;
 import de.plant.pandas.plant_chat_intellij.ui.nodes.Header;
@@ -18,10 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import logic.UMLChatBotProcessor;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 
 public class PlantChatBotUI implements ToolWindowFactory {
