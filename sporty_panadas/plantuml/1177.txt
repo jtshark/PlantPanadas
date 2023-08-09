@@ -1,0 +1,99 @@
+### Request: Our project is a job management system where employees can find new work orders, update their progress, and receive feedback from managers, while managers have an overview of the workload and track employee performance.
+### Expert 1: So, for this job management system, let's start by discussing what entities we need to represent in our UML class diagram.
+
+### Expert 2: Right. It seems like we definitely need to have Employee and Manager entities. These will represent the users of the system. Additionally, we'll need a WorkOrder entity to represent the actual tasks that employees will work on.
+
+### Expert 3: Agreed. We'll also need an entity to represent the Feedback that managers give to employees. And since managers should be able to track employee performance, we should include an entity called PerformanceTracker as well.
+
+### Expert 1: That sounds good so far. Now, let's think about the attributes and relationships each of these entities should have.
+
+### Expert 2: Well, for the Employee entity, we probably want to include attributes like employeeID, name, phone number, email, and maybe even a dateOfBirth attribute. Additionally, we might want to have a getAge method instead of directly storing the age, as the age would change over time.
+
+### Expert 3: Good point. And for the Manager entity, we'd likely have similar attributes to the Employee entity, plus maybe an attribute to specify their managerial position.
+
+### Expert 1: Agreed. Now, what about the relationship between Employee and WorkOrder? 
+
+### Expert 2: I think one employee can be assigned to many work orders, so we'd have a one-to-many relationship. Each WorkOrder would have a reference to the Employee it is assigned to.
+
+### Expert 3: And what about PerformanceTracker? Should it be associated with Manager or Employee, or both?
+
+### Expert 1: Good question. I think we should associate the PerformanceTracker with the Employee entity. Each Employee would have exactly one PerformanceTracker associated with them, and the PerformanceTracker would keep track of their performance history.
+
+### Expert 2: That makes sense. And finally, the Feedback entity. We should have a one-to-many relationship between Manager and Feedback, where each Feedback is associated with a Manager.
+### Instructions: Step 1: Start by creating the Employee class.
+- Add the following attributes to the Employee class:
+   - employeeID: String
+   - name: String
+   - phoneNumber: String
+   - email: String
+   - dateOfBirth: Date
+
+Step 2: Create the Manager class inheriting from the Employee class.
+- Add an additional attribute to the Manager class:
+   - positionalTitle: String
+
+Step 3: Create the Feedback class.
+- Add the following attributes to the Feedback class:
+   - feedbackID: String
+   - content: String
+   - date: Date
+
+Step 4: Create the PerformanceTracker class.
+- Add the following attributes to the PerformanceTracker class:
+   - trackerID: String
+   - performanceHistory: ArrayList<Performance>
+
+Step 5: Create the WorkOrder class.
+- Add the following attributes to the WorkOrder class:
+   - orderID: String
+   - description: String
+   - status: enum (incomplete, in progress, completed)
+   - assignedEmployeeID: String (reference to the Employee)
+
+Step 6: Define the association between WorkOrder and Employee classes.
+- Add a one-to-many association between WorkOrder and Employee classes where each WorkOrder can have one assigned Employee but each Employee can have multiple WorkOrders.
+
+Step 7: Define the association between Manager and Feedback classes.
+- Add a one-to-many association between Manager and Feedback classes where each Manager can provide multiple Feedback but each Feedback is associated with one Manager.
+
+Step 8: Define the association between Employee and PerformanceTracker classes.
+- Add a one-to-one association between Employee and PerformanceTracker classes where each Employee has exactly one PerformanceTracker but each PerformanceTracker is associated with only one Employee.
+
+Please note that the steps are provided as a general guide and may require modifications based on specific project requirements. Always analyze your project in more depth before developing the final UML class diagram.
+
+### PlantUML:
+Filename: job_management_system.puml@startuml
+class Employee {
+  - employeeID : String
+  - name : String
+  - phoneNumber : String
+  - email : String
+  - dateOfBirth : Date
+}
+
+class Manager {
+  - positionalTitle : String
+}
+
+class Feedback {
+  - feedbackID : String
+  - content : String
+  - date : Date
+}
+
+class PerformanceTracker {
+  - trackerID : String
+  - performanceHistory : ArrayList<Performance>
+}
+
+class WorkOrder {
+  - orderID : String
+  - description : String
+  - status : enum (incomplete, in progress, completed)
+  - assignedEmployeeID : String
+}
+
+Employee "1" <--o--> "0..*" WorkOrder
+Manager "0..*" <--o "1" Feedback
+Employee "0..1" <--o-- "1" PerformanceTracker
+@enduml

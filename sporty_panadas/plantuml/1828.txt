@@ -1,0 +1,75 @@
+### Request: Our project is creating a social media platform where users can follow their interests and see content relevant to them. The users themselves may also post content and interact with others on the platform.
+### Expert 1: So, it seems like we're building a social media platform for users to follow their interests and engage with others. We'll need to design a UML class diagram to represent the system. Any thoughts on where we should start?
+
+### Expert 2: Before we start, I think it would be helpful to identify the key entities or classes in our system. Definitely, we will have a User class, which represents the platform users. This class will have attributes like name, email, and password for identification purposes. Additionally, we should consider having a class for Content representing posts or media files shared by users.
+
+### Expert 3: Absolutely, User and Content are vital classes. I think we will also need to include a class for Interest. This will allow users to specify their interests and follow them. An attribute like name can be used in the Interest class to store the name of the interest. We can include a many-to-many association between User and Interest to represent the ability of users to follow multiple interests.
+
+### Expert 1: Great point! In addition to following interests, users should also be able to follow other users. So, we should include a association between User and User to represent followers and followed relationships. Having this association, we can guarantee that users see content posted by other users they follow.
+
+### Expert 2: Agreed. And how about adding functions like posting content and commenting on content? These are commonly included in social media platforms.
+
+### Expert 3: That makes sense to me. Adding methods like postContent() and addComment() would provide the necessary functionality for users to interact with the platform and engage with the content shared on it.
+
+### Expert 1: One more thing to consider is the ability to like or favorite content. We can add an association between User and Content to represent such actions.
+
+### Expert 2: Good call. By adding this association, users can easily express their appreciation for certain content without complex interactions. I think this covers the main functionalities of our social media platform. Are there any other classes or associations we need to consider?
+
+### Expert 3: From what I can tell, this seems to cover all the core functionalities the user requested. However, we can always clarify with the user if they have any other requirements or need clarification on any details.
+### Instructions: Step 1: Identify the main class User with attributes (name: string, email: string, password: string).
+
+Step 2: Identify the class Content with attributes (title: string, body: string, creationTime: time).
+
+Step 3: Identify the class Interest with attributes (name: string).
+
+Step 4: Create an association between User and Interest using a many-to-many relationship indicating that a user can follow multiple interests and an interest could have multiple followers.
+
+Step 5: Create an association between User and User using a one-to-many relationship to represent the following and followed relationships. Include multiplicities (0..* on one side and 1 on the other) to accurately depict the constraint that a user can follow many users, and a user can only be followed by one user.
+
+Step 6: Create an association between User and Content indicating that a user can post many contents, but a content has only one user as its creator.
+
+Step 7: Identify class Comment with attributes (body: string, creationTime: time).
+
+Step 8: Create an association between User and Comment indicating that a user can add many comments, and a comment has only one user as its creator.
+
+Step 9: Create an association between Content and Comment demonstrating that many comments can be added to a content, but a comment can only belong to one content.
+
+Step 10: Create another association between User and Content representing that a user can like or favorite multiple contents, but a content can be liked or favorited by multiple users.
+
+Remember to include directionality, multiplicities, associative class names if needed, and attribute data types in the class diagram.
+
+### PlantUML:
+Filename: social_media_platform.puml             @startuml
+ 
+class User {
+  - name: string
+  - email: string
+  - password: string
+}
+
+class Content {
+  - title: string
+  - body: string
+  - createDate: time
+}
+
+class Interest {
+  - name: string
+}
+
+User "*" --> "*" Interest : follows
+
+Friend: user
+Friend: friend
+--
+User "**" --> "0..1" User : follows
+Content "+owned by" -- "creator" User : postedBy
+Comment "+owned by" -- "creator" User : addedBy
+UserViews "0..*" -- "1" Content : viewed
+"- likes" User ---> Content
+"like- received" Content ---> User  
+Content "0..*" --> "0..*" Comment : hasComments
+
+
+
+@enduml

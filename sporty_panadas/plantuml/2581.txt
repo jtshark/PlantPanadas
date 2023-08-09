@@ -1,0 +1,129 @@
+### Request: Our project aims to create a mobile application that connects people looking for pet sitters with local pet lovers who can provide temporary accommodation for their pets.
+### Expert 1: So, it looks like our user wants us to design a class diagram for a mobile application that connects people seeking pet sitters with pet lovers who can provide temporary accommodation for their pets. This sounds interesting!
+
+### Expert 2: Yes, it does. Before we start designing the class diagram, we need to understand the different entities involved. From the user request, we can identify "users," "pets," and "sittings." What other entities do you think might be relevant?
+
+### Expert 3: In addition to those entities, we could also consider adding "requests" and "reviews" as entities. The user can make a request for a pet sitter, and after the sitting is complete, they can provide feedback in the form of a review.
+
+### Expert 1: That's a good point. Including "requests" and "reviews" would add more functionality to our application. 
+
+### Expert 2: I agree. Now let's think about the relationships between these entities. For instance, a user can have multiple pets, so there would be a one-to-many relationship between the "users" and "pets" entities. How about the relationship between "users" and "sittings"?
+
+### Expert 3: It would probably be a many-to-many relationship since a user could request multiple sittings, and multiple users might participate in a single sitting.
+
+### Expert 1: Right, so we would need to introduce another entity, say "bookings," to handle this many-to-many relationship between "users" and "sittings." This way, each booking would associate a user with a sitting.
+
+### Expert 2: That makes sense. We should also remember to include attributes for each entity. For example, in the "users" entity, we should include attributes like "name," "email," and "phone number" for contact information. 
+
+### Expert 3: Yes, and in the "…
+
+### QUESTION: What other attributes do you think would be important to include in the "users" entity? 
+### Answer:  Two other useful attributes for the ‘users’ entity could include an address and biodata about the type of pets they have full information regarding the compatibility in regards to pet accommodations. This will prevent any potential issues concerning pet types from incompatible occupants atmosphere
+### Expert 1: That's a great point. Adding an attribute for the address and biodata about the user's pets would indeed provide useful information for the application. It would allow the app to match users based on their location and ensure compatibility of pet types in the accommodation setting. 
+
+### Expert 2: Absolutely. It's important to prevent any issues that might arise from incompatible pet types or unsuitable accommodation settings. By including attributes for pet compatibility, we can improve the matching process and ensure a positive experience for both pet owners and pet sitters.
+
+### Expert 3: I completely agree. These additional attributes of address and pet biodata will provide crucial information for finding the right match. It will also help filter out any potential issues right from the beginning, saving everyone time and effort.
+
+### Expert 1: So to recap, we should include attributes like "address" and "pet biodata" in the "users" entity to enhance the matching process and ensure compatibility of pets and accommodations.
+
+### Expert 2: Yes, and incorporating these attributes would significantly improve the overall user experience. With this additional information, the app can make more accurate and tailored recommendations to pet owners looking for suitable pet sitters.
+
+### Expert 3: Absolutely. Including these attributes will make the app more efficient and reliable in finding the perfect match for both parties involved. It shows that we understand and address potential concerns in the pet sitting process.
+
+### Expert 1: Alright, now that we have a clearer understanding of the "users" entity, we can continue refining the class diagram by considering other entities and their relationships. Let's…
+
+-
+### Instructions: Here is a step-by-step solution for designing the class diagram for the pet sitting mobile application:
+
+Step 1: Create the "Users" class:
+- Add attributes: "name" (string), "email" (string), "phone number" (string), "address" (string), and "petBiodata" (string).
+- Create a one-to-many association between "Users" and "Pets" (1 user can have multiple pets).
+
+Step 2: Create the "Pets" class:
+- Add attributes: "name" (string), "species" (string), "age" (integer), and any other relevant pet details.
+- Create a many-to-one association between "Pets" and "Users" (many pets can belong to one user).
+
+Step 3: Create the "Sittings" class:
+- Add attributes: "startDateTime" (Date and Time), "endDateTime" (Date and Time), "location" (string), and any other relevant details.
+- Create a many-to-many association, introducing the "Bookings" class, linking "Sittings" and "Users" (many users can participate in several sittings, and each sitting can have multiple users).
+
+Step 4: Create the "Bookings" class:
+- Add attributes: None (only acting as an association class to represent the relation between "Users" and "Sittings").
+- Create a many-to-one association from "Users" to "Bookings" (many users can have multiple bookings).
+- Create a many-to-one association from "Bookings" to "Sittings" (many bookings can correspond to one sitting).
+
+Step 5: Create the "Requests" class:
+- Add attributes: None (used to represent a user's request for a sitting).
+- Create a many-to-one association from "Users" to "Requests" (many requests can be made by one user).
+- Create a many-to-one association from "Requests" to "Sittings" (many requests can correspond to one sitting).
+
+Step 6: Create the "Reviews" class:
+- Add attributes: "reviewText" (string), "rating" (integer), "timestamp" (Date and Time), and any other relevant details.
+- Create a many-to-one association from "Users" to "Reviews" (many reviews can be written by one user).
+- Create a many-to-one association from "Reviews" to "Sittings" (many reviews correspond to one sitting).
+
+That completes the steps for creating the class diagram for the pet sitting mobile application. Further refinement or modification may be required during the actual implementation, but this provides a solid foundation based on the requirements discussed.
+
+### PlantUML:
+Filename: pet_sitting_app_class_diagram.puml
+```
+@startuml
+
+// Users class
+class Users {
+    - name: string
+    - email: string
+    - phone number: string
+    - address: string
+    - pet biodata: string
+}
+
+// Pets class
+class Pets {
+    - name: string
+    - species: string
+    - age: integer
+    {repeating}...[0..*]
+    Users "1" -- "0..*" Pets      
+}
+
+// Sittings class
+class Sittings {
+    - startDateTime: DateTime
+    - endDateTime: DateTime
+    - location: string
+    {repeating}...[0..*]
+    Users "0..*" -- "0..*" Sittings
+}
+
+// Bookings class
+class Bookings {
+}
+
+// Requests class
+class Requests {
+}
+
+// Reviews class
+class Reviews {
+    - reviewText: string
+    - rating: integer
+    - timestamp: DateTime
+}
+
+// Relationships between classes
+Users "1" --> "*" Pets: own
+Users --> Sittings: participate 
+
+Users "1" o-- "*" Bookings 
+Sittings o-- "*" Bookings
+
+Users "1" -- "0..*" Requests
+Requests <- Sittings : create  
+
+Users "1" -- "0..*" Reviews
+Reviews <.. Sittings
+
+@enduml
+```

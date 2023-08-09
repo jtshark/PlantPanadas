@@ -1,0 +1,113 @@
+### Request: We're creating a system to manage our online store, where customers can place orders, view their order history, and access their profile, while admins can view and manage orders, products and customer profiles.
+### Expert 1: So, we'll be designing a class diagram for an online store system. It looks like there are two main types of users: customers and admins. 
+
+### Expert 2: Yes, let's start by creating separate classes for customers and admins. Each class will represent an individual user and will have attributes and methods specific to their roles. 
+
+### Expert 3: Agreed. For the customers, we should definitely include attributes like name, email, and password. We'll also need a method to get their order history. 
+
+### Expert 1: Absolutely. Additionally, we should consider including a unique ID attribute for each customer. And to manage the orders, we'll need an Order class as well, which should have attributes like orderID, date, shippingAddress, and methods like getOrderTotal and cancelOrder.
+
+### Expert 2: That sounds good. We can have a one-to-many relationship between the Customer class and the Order class, where a customer can have multiple orders. 
+
+### Expert 3: Right. And for admins, we'll need similar attributes like name, email, and password. It might be a good idea to include an additional attribute like adminRole, which indicates their specific role within the system, such as product manager or order manager.
+
+### Expert 1: Agreed. We could also have an Admin class that inherits from a User class, so that admins inherit the common attributes and methods from the User class.
+
+### Expert 2: That's a great suggestion. It simplifies the overall design and ensures consistency in the attributes and methods between customers and admins.
+
+### Expert 3: For admins to manage the products, we can create a Product class with attributes like productID, name, price, and a method to update the product details.
+
+### Expert 1: Absolutely. Now, since customers place orders, the Order class should also have an attribute like customerID, which references the customer who placed the order. This establishes a relationship between orders and customers.
+
+### Expert 2: That makes sense. And since admin can manage customer profiles, we'll need a method in the Admin class to search for customers by criteria like name or email.
+
+### Expert 3: Definitely. Let's also not forget to include appropriate associations and relationships between the various classes to represent how they are connected.
+
+### Expert 1: Agreed. We can have associations between the Customer and Admin classes with the Order class to represent the relationship of a customer placing an order and an admin managing customers' orders.
+
+### Expert 2: We should also include an association between the Admin class and the Product class, since this represents administrators managing products.
+
+### Expert 3: Good point. Finally, we might want to include an association between the Customer class and the Admin class, indicating that admins can view and manage customer profiles.
+
+### Expert 1: I think that covers most of the key elements. We can revise and refine it further as we move along, but I believe this initial design captures the core functionality of the system.
+
+### Expert 2: Agreed. It's always important to keep in mind that our class diagram should be able to accommodate future enhancements and modifications as well.
+
+### Expert 3: Absolutely. So, let's summarize our design so far. We have classes for Customer, Admin, Order, and Product, with attributes and methods specific to their roles. We've also established associations and references between the classes where applicable.
+
+### Expert 1: Great summary. I think we have a solid starting point for our UML class diagram. As we progress, we can further refine it and identify any additional relationships or dependencies that may arise.
+### Instructions: 1. Create a class called "Customer" with attributes such as name, email, and password.
+2. Add a unique ID attribute for the Customer class.
+3. Create a method within the Customer class to retrieve the order history.
+4. Create a separate class called "Product" with attributes like productID, name, and price.
+5. Implement a method in the Product class to update the product details.
+6. Create a class called "Order" with attributes such as orderID, date, and shippingAddress.
+7. Include a method within the Order class to get the order total and another method to cancel an order.
+8. Establish a one-to-many relationship between the Customer class and the Order class, where one customer can have multiple orders.
+9. Create an "Admin" class that inherits from the "User" class and includes additional attributes specific to admins (e.g., adminRole).
+10. Implement functionality within the Admin class to search for customers by criteria like name or email.
+11. Establish associations between the Customer class and the Admin class, indicating that admins can view and manage customer profiles.
+12. Set up an association between the Admin class and the Product class, representing administrators managing the store's products.
+13. Ensure appropriate associations and relationships are established between all relevant classes in the diagram.
+14. Continuously review and refine the class diagram as necessary to accommodate future enhancements and modifications.
+
+### PlantUML:
+Filename: online_store_system.puml
+
+@startuml
+
+class Customer {
+  - id: int
+  - name: string
+  - email: string
+  - password: string
+  + getName(): string
+  + getEmail(): string
+  + getPassword(): string
+  + getOrderHistory(): Order[]
+}
+
+class Product {
+  - productID: int
+  - name: string
+  - price: float
+  + getProductID(): int
+  + getName(): string
+  + getPrice(): float
+  + updateProductDetails(): void
+}
+
+class Order {
+  - orderID: int
+  - date: DateTime
+  - shippingAddress: string
+  - customerID: int
+  + getOrderID(): int
+  + getDate(): DateTime
+  + getShippingAddress(): string
+  + getorderTotal(): float
+  + cancelOrder(): void
+}
+
+class User {
+  - name: string
+  - email: string
+  - password: string
+  + getName(): string
+  + getEmail(): string
+  + getPassword(): string
+}
+
+class Admin {
+  - adminRole: string
+  + getAdminRole(): string
+  + searchCustomerByName(name: string): Customer[]
+  + searchCustomerByEmail(email: string): Customer[]
+}
+
+Customer "*" --> "1" Order : places
+Admin ..|> User
+Admin --> Product : manages
+Customer --> Admin : manages
+
+@enduml

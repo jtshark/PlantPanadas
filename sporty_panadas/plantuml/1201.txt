@@ -1,0 +1,116 @@
+### Request: Our project is building a website where users can search for and book hotels, while administrators manage the inventory, prices, and user reviews.
+### Expert 1: So, according to the user's request, we need to design a class diagram for a hotel booking website. Let's start by brainstorming the major entities involved in the system.
+
+### Expert 2: Yes, good idea. The obvious ones are User, Hotel, and Administrator. We'll also need Review and Price entities. But before jumping into the details, let's clarify a few things. What kind of information should each entity store?
+
+### QUESTION: For the User entity, do we need basic information like name, email, and password? Will there be any additional information or roles associated with users?
+
+### Answer:  Yes, users should have basic information like name, email, and password. Additionally, in the website there should be two types of users: customers and administrators. Customers should have profiles associated with their booking habits, e.g. past history, rewards etc., while administrators should be able to manage inventory and control reviews and prices on the website.
+### Expert 1: Okay, so we can add attributes like 'name', 'email', and 'password' to the User class to store basic user information. To cater to the different roles, we can create a subclass called 'Customer' that inherits from the User class and another subclass called 'Admin' for administrators. The Customer class can have additional attributes like 'bookingHistory' to store the past booking information.
+
+### Expert 2: I agree, this way we can handle the different functionalities for customers and administrators separately. Now, let's move on to the Hotel entity. Would it make sense to have attributes like 'name', 'location', and 'number of rooms' to represent a hotel?
+
+### Expert 3: Yes, those are good default attributes. Along with them, we may need additional attributes like 'description' to provide details about the hotel, 'amenities' to list the facilities available, and 'reviews' to store the user feedback associated with each hotel.
+
+### Expert 1: That sounds reasonable. We can associate the Review entity with both the User and Hotel entities using a many-to-one relationship. This would allow users to submit multiple reviews for different hotels and help administrators manage them.
+
+### Expert 2: It might also be useful to include attributes like 'rating' and 'comment' in the Review class to capture the specific details of each review.
+
+### Expert 3: Agreed. We should note that the Price entity is essential for the booking process. Another attribute we can consider is 'availability', which would indicate whether a particular room in a hotel is available for booking or not.
+
+### Expert 1: Good point. Adding the 'availability' attribute to the Hotel entity will allow us to track and manage room availability efficiently.
+
+### Expert 2: One more thing. We should also think about how administrators can manage the prices. Instead of directly storing the 'price' attribute in the Hotel entity, wouldn't it be more flexible to store a 'price' attribute along with a 'discount' attribute and provide a method to calculate the discounted price?
+
+### Expert 3: Absolutely, that way it would be easier to update and apply discounts without altering the main price every time.
+
+### Expert 1: Okay, let's sum it up. The major entities in our UML class diagram so far would be User (with subclasses Customer and Admin), Hotel, Review, and Price. We have captured the essential attributes and relationships required for a hotel booking website. Shall we proceed with refining the details of each entity?
+
+### Expert 2: Sounds like a plan. I think we have a solid foundation to start the detailed design. Let's dive into the attributes, methods, and relationships for each entity and ensure that we cover all the necessary functionalities.
+### Instructions: 1. Create a class called User.
+    - Add attributes: name (string), email (string), password (string).
+    - Add method createUser() to create a new user.
+
+2. Create two subclasses: Customer and Admin.
+   - Customer inherits from User.
+      - Add attribute bookingHistory (array of Booking objects).
+      - Add methods to manage booking history.
+
+   - Admin inherits from User.
+      - Add method to manage inventory, prices, and user reviews.
+
+3. Create a class called Hotel.
+   - Add attributes: name (string), location (string), numberOfRooms (integer), description (string).
+   - Add method createHotel() to create a new hotel.
+  
+4. Create a class called Review.
+   - Add attributes: rating (integer), comment (string).
+   - Associate the User and Hotel classes by adding attributes userId (integer) and hotelId (integer).
+   - Add method addReview() to create a new review.
+
+5. Create a class called Price.
+   - Add attributes: price (float), discount (float).
+   - Add method calculateDiscountedPrice() to calculate the discounted price.
+
+6. Add an attribute 'availability' (boolean) to the Hotel class.
+
+7. Add associations:
+   - User to Review: Many-to-One association. Add attribute reviews (array of Review objects) in the User class.
+   - Hotel to Review: Many-to-One association. Add attribute reviews (array of Review objects) in the Hotel class.
+   - User to Customer: Inheritance. Set User as the superclass of Customer.
+   - User to Admin: Inheritance. Set User as the superclass of Admin.
+
+At this point, the basic structure of the class diagram has been defined. The attributes, methods, and associations have been included to support the functionality of searching for and booking hotels while administrators manage inventory, prices, and user reviews.
+
+
+### PlantUML:
+Filename: hotel_booking_website.puml
+
+@startuml
+
+class User {
+  - name: string
+  - email: string
+  - password: string
+  + createUser(): void
+}
+
+class Customer {
+  - bookingHistory: Booking[]
+  + manageBookingHistory(): void
+}
+
+class Admin {
+  + manageInventory(): void
+  + managePrices(): void
+  + manageUserReviews(): void
+}
+
+class Hotel {
+  - name: string
+  - location: string
+  - numberOfRooms: integer
+  - description: string
+  + createHotel(): void
+}
+
+class Review {
+  - rating: integer
+  - comment: string
+  - userId: integer
+  - hotelId: integer
+  + addReview(): void
+}
+
+class Price {
+  - price: float
+  - discount: float
+  + calculateDiscountedPrice(): float
+}
+
+Hotel -- Review : contains
+User -- Review : creates
+User <|--- Customer
+User <|--- Admin
+
+@enduml

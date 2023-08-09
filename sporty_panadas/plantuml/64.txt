@@ -1,0 +1,141 @@
+### Request: Please create a UML model for a social media app that allows users to post photos, videos, and messages, follow and unfollow other users, and like and comment on posts. The app should also have a search function and show notifications for new activity.
+### Expert 1: Alright, let's start by identifying the main entities that will be involved in our social media app. We can have a User class to represent individual users. Each user will have attributes like username, email, password, and may I suggest including a profile picture as well?
+
+### Expert 2: Absolutely, including a profile picture could add a nice visual element to the app. 
+
+### Expert 3: We'll also need a Post class to represent the various types of media posts, such as photos and videos, as well as messages. The Post class should have attributes like postID, content, and date/time of creation. 
+
+### Expert 1: That sounds good. And to cater to the app capability of following and unfollowing users, we will need a relationship between User and User, with a certain association attribute such as following or followers count.
+
+### Expert 2: Right, so we can have a Friends class that represents the relationship between two users. This class will have attributes like friendCount and will be connected to two instances of the User class.
+
+### Expert 3: Okay, but we'll also need a way to represent the likes and comments on each post. We can have a Likes class and a Comments class, both of which will be connected to the Post class.
+
+### Expert 1: That's true, but we shouldn't forget about the search function and notifications. We can have a Search class that includes methods for searching relevant content based on keywords, and a Notification class that displays new activity, such as notifications for likes and comments on a user's posts.
+
+### Expert 2: That's a good idea. We can create a method in the User class to get notifications. It might come in handy for keeping track of unseen activity.
+
+### Expert 3: Agreed. And to tie it all together, we can consider having a main controller class, maybe called SocialMediaApp, that facilitates the interactions between all other classes while coordinating the functionality of following and unfollowing, posting, searching, and displaying notifications.
+
+### Expert 1: Sounds great. Now, during our design process, we should keep in mind that different types of media posts, like photos, videos, and messages, may have different attributes. Also, adding methods like getAge for calculating the age based on a birth date could be considered during the implementation.
+
+### Expert 2: Absolutely. And to save space, instead of directly storing the age of the user in the User class, we can save their date of birth and calculate the age on-demand using a getAge method. This way, we avoid redundantly storing information.
+
+### Expert 3: Additionally, to handle prices and discounts, it may be better to have a separate Discount class. Rather than directly saving a discounted price, we can save the price and the discount as attributes in the class, and have a method, like getDiscountedPrice, that calculates the discounted price based on those attributes.
+
+### Expert 1: Exactly. Using these approaches will not only optimize our data structure but also improve code clarity and maintainability.
+
+### Expert 2: Absolutely. Keeping the code clean and modular will make it easier for future updates and enhancements.
+
+### Expert 3: This sounds like a well-rounded UML design. I believe it's time to implement it and bring our social media app to life!
+
+### Expert 1: Agreed. Let's get to work!
+### Instructions: To create the UML model for the social media app, follow these steps sequentially:
+
+Step 1: Create a User class with attributes like username (String), email (String), password (String), and profilePicture (Image). Include any additional attributes deemed necessary such as dateOfBirth (date) to allow for calculating age.
+
+Step 2: Create a Post class with attributes like postID (int), content (String), and date (DateTime). Consider adding subclasses for specific types of posts (e.g., PhotoPost, VideoPost) with additional attributes relevant to each type.
+
+Step 3: Create a Friends class with attributes like friendCount (int) and connect it to two instances of the User class using an association called friendRelation.
+
+Step 4: Create a Likes class with attributes like likeCount (int) and link it to instances of the User and Post classes via associations 'userLikes' and 'postRecievesLikes', respectively.
+
+Step 5: Create a Comments class with attributes, createCommentMethods and other necessary methodsto allow instances of the User and Post classes to connect via association connections such as 'userLeavesComment' and 'postReceivesComments'.
+
+Step 6: Create a Search class that includes methods to look for relevant posts, users, or other content based on keywords and connect it to the User class via an association 'userSearchedOn'.
+
+Step 7: Create a Notification class with attributes like notificationContent (String) and generateNotification methods. Establish associations to connect pertinentinstances of the User and Post classes by 'userReceivesNotifications' or similar attribute names.
+
+Step 8: Implement a SocialMediaApp controller class that serves as the entry point to handle interactions between users and other classes. The controller will facilitate functionalities like following and unfollowing users, posting photos/videos/messages, searching, and displaying notifications.
+
+Keep in mind that the UML Model represents the structure and relationships between classes. The implementation details, along with any necessary methods or service classes, are excluded from the UML diagram but should be considered during the actual app development.
+
+
+### PlantUML:
+Filename: social_media_app_model.puml
+
+@startuml
+
+class User {
+    - username: String
+    - email: String
+    - password: String
+    - profilePicture: Image
+    - dateOfBirth: Date
+
+    + getAge()
+
+}
+
+class Post {
+    - postID: int
+    - content: String
+    - date: DateTime
+
+    {abstract} # getContent(): String
+
+}
+
+class PhotoPost {
+    
+}
+
+class VideoPost {
+    
+}
+
+class Friends {
+    - friendCount: int
+
+}
+
+class Likes {
+    - likeCount: int
+
+}
+
+class Comments {
+
+}
+
+class Search {
+
+    + searchPosts(keywords: String): List<Post>
+    + searchUsers(keywords: String): List<User>
+
+}
+
+class Notification {
+    - notificationContent: String
+
+        + generateNotification()
+
+}
+
+class SocialMediaApp {
+    - user: User
+    - post: Post
+    - friends: Friends
+    - likes: Likes
+    - comments: Comments
+    - search: Search
+    - notification: Notification
+
+    + followUser(user: User)
+    + unfollowUser(user: User)
+    + postContent(content: String)
+    + searchContent(keywords: String)
+    + displayNotification()
+}
+
+User "1" - "N" Friends: friendRelation
+User "1" - "N" Likes: userLikes
+Post "1" - "N" Likes: postReceivesLikes
+User "1" - "N" Comments: userLeavesComment
+Post "1" - "N" Comments: postReceivesComments
+User "1" - "N" Search: userSearchedOn
+User "1" - "N" Notification: userReceivesNotification
+Post <|-- PhotoPost
+Post <|-- VideoPost
+
+@enduml

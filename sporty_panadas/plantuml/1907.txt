@@ -1,0 +1,153 @@
+### Request: We need an UML model for a mobile app that allows users to search for and book various tourist activities in one app for their vacation, like booking tickets based on location or liking, viewing vouchers details, making advances, tracking their itinerary schedules and even connecting with local guides if required.
+### Expert 1: So, we've been asked to design a UML class diagram for a mobile app that allows users to search for and book various tourist activities. Let's start by identifying the main components of this system.
+
+### Expert 2: Right, so first we'll have the User class. This class would represent the app users and store their personal information, like name, email address, and maybe even the password.
+
+### Expert 3: That's a good start. We can also have a Ticket class to represent the ticket bookings made by the users. This class could have attributes like the activity name, location, and the date and time of the booking.
+
+### Expert 1: It could be useful to have a separate class for the tourist activities that users can book. Let's call it the Activity class. We can introduce attributes such as the name, location, duration, and perhaps even a description.
+
+### Expert 2: Good idea. And since the app allows users to track their itinerary schedules, we might need an Itinerary class to store information about the booked activities and their corresponding dates and times.
+
+### Expert 3: Additionally, we could introduce a Voucher class for the user's purchased vouchers. This class could have attributes such as the voucher number, description, and valid dates.
+
+### Expert 1: Yes, and let's not forget about the possibility of users making advances. We can introduce a Payment class to handle this functionality. It could have attributes like the payment ID, amount, and date.
+
+### Expert 2: Absolutely. And what if users want to connect with local guides? We should consider introducing a Guide class that represents the guides available for booking. This class could contain relevant attributes such as name, location, language, and ratings.
+
+### Expert 3: That covers most of the requirements mentioned by the user. But going back to the Tourist Activity class, do you think we should include attributes like price or discount in that class?
+
+### Expert 1: Hmm, good question. I think it would be more flexible to have two separate classes - Price and Discount. The Activity class would then have a one-to-one association with the Price class and a one-to-many association with the Discount class, in case different discounts are available.
+
+### Expert 3: That makes sense. Users may want to apply different discounts to an activity based on various factors, such as their membership type or booking platform.
+
+### Expert 2: I agree. By separating price and discount into their own classes, we can easily calculate the final discounted price based on the activity's regular price and applied discount.
+
+### Expert 1: It seems like we have a solid understanding of the requirements. Shall we start sketching the UML class diagram?
+
+### Expert 2: Yes, let's begin by representing the User, Ticket, Activity, Itinerary, Voucher, Payment, and Guide classes, along with their respective attributes and relationships.
+
+### Expert 3: Agreed. We can also consult the user in case there are any uncertainties or additional details required.
+### Instructions: Sure, here is a step-by-step solution for the design of the UML class diagram:
+
+1. Create a class called User with attributes such as name, email address, and password.
+
+2. Create a class called Ticket with attributes like activity name, location, and date/time details.
+
+3. Create a class called Activity with attributes like name, location, duration, and description.
+
+4. Introduce a class called Itinerary to store information about booked activities and their corresponding dates/times.
+
+5. Create a class called Voucher with attributes such as voucher number, description, and valid dates.
+
+6. Implement a class called Payment with attributes like payment ID, amount, and date.
+
+7. Create a class called Guide to represent local guides, with attributes like name, location, language, and ratings.
+
+8. Add two separate classes, Price and Discount, to handle the pricing information.
+
+9. Create a one-to-one association between Activity and Price, indicating the regular price of the activity.
+
+10. Create a one-to-many association between Activity and Discount, allowing multiple discount options for an activity.
+
+11. Review the classes created so far for completeness and accuracy.
+
+12. Identify any missing associations between the classes. For example:
+- User can have many Tickets (association with multiplicity "0..*").
+- User can have many Vouchers (association with multiplicity "0..*").
+- User can have many Itineraries (association with multiplicity "0..*").
+- User can make many Payments (association with multiplicity "0..*").
+- Itinerary can have many Tickets (association with multiplicity "1..*").
+
+13. Create the associations mentioned in the previous step by adding arrows indicating the relationships, specifying the multiplicities, and naming them appropriately.
+
+14. Check the UML diagram for completeness and accuracy, ensuring that all required components and associations have been added.
+
+15. Validate the UML diagram with the user to confirm that it accurately represents the requirements.
+
+That concludes the step-by-step solution for the UML class diagram design. By following this sequence, the experts will be able to create a comprehensive and accurate model of the mobile app that allows users to search for and book various tourist activities.
+
+### PlantUML:
+Filename: tourist_activity_app_class-diagram.puml
+
+```plantuml
+@startuml
+
+class User {
+    - name: String
+    - email: String
+    - password: String
+}
+
+class Ticket {
+    - activityName: String
+    - location: String
+    - dateTime: String
+}
+
+class Activity {
+    - name: String
+    - location: String
+    - duration: String
+    - description: String
+}
+
+class Itinerary {
+    - ticketList: List<Ticket>
+}
+
+class Voucher {
+    - voucherNumber: String
+    - description: String
+    - validDates: Date
+}
+
+class Payment {
+    - paymentId: String
+    - amount: double
+    - date: Date
+}
+
+class Guide {
+    - name: String
+    - location: String
+    - language: String
+    - ratings: int
+}
+
+class Price {
+    - activityPrice: double
+}
+
+class Discount {
+    - discountName: String
+    - discountAmount: double
+}
+
+User "0..*" -- "1..*" Ticket
+User "0..*" -- "0..*" Itinerary
+User "0..*" -- "0..*" Voucher
+User "0..*" -- "0..*" Payment
+Itinerary "1..*" -- "1..*" Ticket
+Activity "1" -- "1" Price
+Activity "1" -- "0..*" Discount
+
+note right of Activity
+* name: Name of the activity
+* location: Location of the activity
+* duration: Duration of the activity
+* description: Description of the activity
+end note
+
+note right of Itinerary
+* ticketList: List of booked tickets
+end note
+
+note left of User
+* name: User's name
+* email: User's email address
+* password: User's password
+end note
+
+@enduml
+```

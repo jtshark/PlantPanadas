@@ -1,0 +1,162 @@
+### Request: Our project is to develop a webshop where customers can select and purchase products online, while the shop owner can manage products, inventory, prices, and sales.
+### Expert 1: So, our goal is to design a UML class diagram for a webshop. We need to be able to accommodate the customer's actions like selecting and purchasing products, as well as the administrative tasks of managing products, inventory, prices, and sales. 
+
+### Expert 2: Right, let's start by identifying the main actors involved. We definitely have the customer as one actor, and the shop owner/administrator as another.
+
+### Expert 3: Agreed. So, let's focus on the customer side first. The customer needs to be able to select products. I think we'll need a class for the product itself, and maybe another class for the shopping cart where the customer can add selected products.
+
+### Expert 1: That sounds reasonable. We can also have a class for the customer, which can hold information like name, address, and payment details. This class would be associated with the shopping cart, as a customer can have multiple shopping carts or even a history of previous orders.
+
+### Expert 2: Good idea. We also need a way for the customer to initiate the purchase process. How about adding a class for the order?
+
+### Expert 3: Yes, that makes sense. The order class can hold information about the purchased products, quantities, total price, and maybe even the date and time of the purchase.
+
+### Expert 1: Exactly. Now, on the shop owner side, we need classes for managing products, inventory, and sales. The shop owner should be able to add, update, and remove products, view and update inventory levels, and track sales data.
+
+### Expert 2: Agreed. We can have a class for the product management, with methods for adding, updating, and removing products. The product management class should be associated with the product class.
+
+### Expert 3: And for the inventory management, we'll need a class that keeps track of the available quantity of each product. This class should have methods to increase or decrease stock as products are purchased or restocked.
+
+### Expert 1: Additionally, we should consider a class for sales analytics. This class could hold data related to sales, such as the total revenue, top-selling products, and other statistics that might be useful for the shop owner. We can associate this class with the order class to track the relevant data.
+
+### Expert 2: That's a good idea. It will provide valuable insights for the shop owner to make informed decisions. 
+
+### Expert 3: One more thing we should discuss is how to handle prices and discounts. Instead of directly storing discounted prices or applying them on the fly, it could be better to save the normal price and any applicable discount separately. We can have a price class associated with the product class. This way, we can calculate discounted prices when needed and also provide methods like getDiscountedPrice.
+
+### Expert 1: Absolutely, that approach offers greater flexibility and avoids redundant data storage. It also makes it easier to apply different discount rules during special promotions.
+
+### Expert 2: I agree. It will simplify the update process and ensure that prices are consistent across the different parts of the system.
+
+### Expert 3: We've covered most of the major classes and relationships for this UML class diagram. But there may still be some details or specific requirements we haven't addressed. We should reach out to the user and seek clarification on any uncertainties.
+
+### Expert 1: Agreed. Let's compile a list of questions we need to ask the user so that we can refine and finalize the design.
+
+Overall, our UML class diagram for the webshop would include classes like Customer, Product, Shopping Cart, Order, Product Management, Inventory Management, and Sales Analytics. We'll also have associations between these classes to represent relationships like customer-cart, cart-product, product-management, and so on.
+
+(Point being created)
+### Instructions: Step-by-step solution to design the UML class diagram for the webshop:
+
+1. Identify the main actors:
+   a. Customer
+   b. Shop owner/administrator
+
+2. Create classes for the customer and shop owner:
+   a. Customer class: Define attributes like name, address, payment details.
+   b. ShopOwner class: Define attributes like name, address, login credentials.
+
+3. Create a class for products:
+   a. Product class: Define attributes such as name, description, price, discount, etc.
+
+4. Create a class for the shopping cart:
+   a. ShoppingCart class: Define attributes like cartID, totalPrice, and associated operations like addProduct, removeProduct.
+
+5. Create a class for managing prices:
+   a. Price class: Define attributes like normalPrice, discount, and methods like getDiscountedPrice.
+
+6. Establish associations between classes:
+   a. Associate the Customer class with the ShoppingCart class: One customer can have one or more shopping carts.
+   b. Associate the ShopOwner class with the Product class: One shop owner can manage multiple products.
+   c. Associate the Product class with the ShoppingCart class: Products can be added and removed from the shopping cart.
+   d. Associate the Product class with the Price class: Each product has a unique price associated with it.
+
+7. Create a class for managing products:
+   a. ProductManagement class: Define methods like addProduct, updateProduct, removeProduct.
+
+8. Create a class for managing inventory:
+   a. InventoryManagement class: Define attributes for stock quantities and methods like increaseStock, decreaseStock, and viewStock.
+
+9. Create a class for order management:
+    a. Order class: Define attributes like orderID, purchasedProducts, totalPrice and methods like initiatePurchase.
+
+10. Create a class for sales analytics:
+    a. SalesAnalytics class: Define attributes like totalRevenue and methods like calculateRevenue, topSellingProducts.
+
+11. Associate the Order class with the SalesAnalytics class:
+    a. The Order class should provide data to track sales for use by the SalesAnalytics class.
+
+The UML class diagram should now reflect the relationships and attributes of the defined classes, enabling understanding and visual representation of the webshop system.
+
+### PlantUML:
+Filename: webshop_class_diagram.puml
+@startuml
+
+class Customer {
+  - name: String
+  - address: String
+  - paymentDetails: String
+}
+
+class ShopOwner {
+  - name: String
+  - address: String
+  - loginCredentials: String
+}
+
+class Product {
+  - name: String  
+  - description: String
+  - price: Double  
+  - discount: Double
+}
+
+class ShoppingCart {
+  - cartID: String
+  - totalPrice: Double
+  
+  + addProduct(): void
+  + removeProduct(): void
+}
+
+class Price {
+  - normalPrice: Double
+  - discount: Double
+  
+  + getDiscountedPrice(): Double
+}
+
+Customer "1" --> "1..*" ShoppingCart
+ShopOwner "1" --> "1..*" Product
+
+Product "1" --> "0..*" ShoppingCart
+Product --> Price
+
+class ProductManagement {
+  + addProduct(): void
+  + updateProduct(): void
+  + removeProduct(): void
+}
+
+class InventoryManagement {
+  - stockQuantity: Integer
+  
+  + increaseStock(): void
+  + decreaseStock(): void
+  + viewStock(): void
+}
+
+Class InventoryManagement{
+  host: InventoryCustomer objc <<shell>>{
+    ans = runSCRIPT[InventoryRunningCustomer.exe]}
+  host -- ownerLogContainer : inside running container
+}
+
+
+Order "1" --> "0..*" Product
+Order "1" --> SalesAnalytics
+
+class Order {
+  - orderID: String
+  - purchasedProducts: ArrayList<Product>
+  - totalPrice: Double
+  
+  + initiatePurchase(): void
+}
+
+class SalesAnalytics {
+  - totalRevenue: Double
+  
+  + calculateRevenue(): Double
+  + topSellingProducts(): ArrayList<Product>
+}
+
+@enduml

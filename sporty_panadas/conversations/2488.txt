@@ -1,0 +1,67 @@
+### Request: Our project is building a mobile app for tracking daily fitness activities including steps taken, workouts completed, and calories burned.
+### Expert 1: Okay, let's start by identifying the main entities that will be reflected in our UML class diagram. I believe we'll need a class for "User" since we'll be tracking individual fitness activities. 
+
+### Expert 2: Yes, that makes sense. We can have attributes like name, age, weight, and height in the User class. Additionally, we can include methods for calculating the Body Mass Index (BMI) and the user's target heart rate.
+
+### Expert 3: Agreed. Now, let's move on to the activities themselves. We'll need a class for "Activity" that can serve as a parent class for specific types of activities. For example, we can have subclasses like "StepsCount", "Workout", and "CalorieBurn".
+
+### Expert 1: Right. The "StepsCount" subclass will have attributes such as date and steps taken. We can also add a class-level method to calculate the average number of steps for all the steps counted.
+
+### Expert 2: For the "Workout" subclass, we can include attributes like duration, type, and location. We should also have a way to track multiple workouts throughout the day, so maybe a list of workouts.
+
+### Expert 3: Good point. Now, for the "CalorieBurn" subclass, we'll need values for calories burned during specific activities. We can store attributes like activity type, duration, and calories burned per minute.
+
+### Expert 1: Should we consider associating the "User" class with the "Activity" class? That way, we can identify which user performed which activity.
+
+### Expert 2: Absolutely, we can have a one-to-many association between "User" and "Activity". This ensures that multiple users can have multiple activities represented.
+
+### Expert 3: Correct. However, while associating User with Activity, do you think it's beneficial to also add an attribute totalTimeSpendWalking, based on the "StepsCount" class?
+
+### Expert 1: Ah, that's an interesting point. It might be more flexible to calculate each user's total time spent walking dynamically instead of storing it as an attribute. That way, we can account for any changes in the runtime values of steps count.
+
+### Expert 2: I agree with that approach. It ensures accuracy and prevents redundancies. But what about adding a separate attribute for each type of activity, like 'totalTimeSpentRunning' or 'totalTimeSpentCycling' directly in the user class?
+
+### Expert 3: I think that could potentially clutter the user class. Instead, we could have a method in the User class called 'getTotalTimeOfActivity(activityType: ActivityType)', which calculates the total time spent based on the sub classes of Activity, like running, walking, or cycling.
+
+### Expert 1: Absolutely, that sounds much cleaner and more maintainable. We can define an enumeration called "ActivityType" within the Activity class to assist in distinguishing between different kinds of activities.
+
+### Expert 2: I'm glad we agreed on that. By encapsulating functionality like that within the methods, our code remains more organized and easier to comprehend.
+
+### Expert 3: Agreed. Encapsulation ensures clean implementation and enhances the robustness of our codebase. With that, I think we've covered all the essential aspects of our UML class diagram for tracking fitness activities in the app.
+
+### Expert 1: I think so too. It's always a good idea to break down what data and functionality we need to model before we start considering the implementation details.
+
+### Expert 2: Definitely. A well-designed class diagram is crucial for the scalability and long-term maintainability of our application.
+### Instructions: Solution:
+1. Create a class named "User" with attributes: name, age, weight, height.
+2. Add the following methods to the "User" class:
+   - calculateBMI()
+   - calculateTargetHeartRate()
+3. Create an enumeration named "ActivityType" within the "Activity" class to define different types of activities.
+4. Create a parent class named "Activity" with no attributes.
+5. Create three subclasses under "Activity" for specific activity types: "StepsCount", "Workout", "CalorieBurn".
+6. In the "StepsCount" subclass, add attributes: date, stepsTaken.
+7. In the "Workout" subclass, add attributes: duration, type, location as well as a list of workouts.
+8. In the "CalorieBurn" subclass, add attributes: activityType, duration, caloriesBurned per minute.
+9. Create a one-to-many association between "User" and "Activity" classes.
+10. Remove the attribute totalTimeSpendWalking from the "User" class.
+11. Add a method in the "User" class called "getTotalTimeOfActivity(activityType: ActivityType)" to calculate total time spent on a specific activity type dynamically.
+   
+Final UML Class Diagram:
+```
+--------             --------
+| User | o­­­­­/         | Activity |
+--------          \­­­­­|   ----   |
+                  ------   |StepsCoun|
+                  |        |   t     |
+                  ------   ---- ----
+                    | ^       | inherits
+                   uses----- many
+                    | ^adapter¬ ------ 
+              | implements  - Workout -   
+                     |adopt-multiple -    
+-------         -----
+|enum   |
+|      |      | Calorie|Burn |
+-------
+

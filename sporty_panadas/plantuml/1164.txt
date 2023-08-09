@@ -1,0 +1,128 @@
+### Request: Our project is to create a mobile app where users can find and book nearby yoga classes, customize their workouts, and track their progress.
+### Expert 1: So, it looks like the user wants us to design a UML class diagram for a mobile app that allows users to find and book nearby yoga classes, customize their workouts, and track their progress. Are there any specific requirements or features that we need to consider?
+
+### Expert 2: Right, first let's think about the main entities that we should include in our class diagram. I believe we'll need a User class to represent the app users. We should also have a YogaClass class to represent the yoga classes available.
+
+### Expert 3: Agreed. In addition to that, we could have a Booking class to handle the user's bookings of yoga classes. And we will definitely need a Workout class to capture the customization of workouts. For tracking progress, perhaps we can create a Progress class.
+
+### Expert 1: Makes sense. To start, let's discuss the User class. Each User will likely have attributes such as name, email, and password. We can also think about any
+additional attributes that might be useful.
+
+### Expert 2: Well, considering the purpose of the app, perhaps it would be useful to have attributes like age, fitness level, and preferred yoga style. This information would assist with customizing workout recommendations.
+
+### Expert 3: True. It could be even more valuable if we store the user's date of birth and calculate their age dynamically with a method like getAge(). This way, we wouldn't have to update the age attribute every year.
+
+### Expert 1: Good point. What about the Booking class? Apart from attributes like booking id and date, we should also store a reference to the yoga class that was booked. But would it be better to also include a reference to the specific user who made the booking?
+
+### Expert 2: Yes, definitely. Both of those references seem necessary. By having the reference to the user, we can quickly retrieve the details of the user who made the
+booking, and with the reference to the yoga class, we can retrieve all the relevant information about that particular class.
+
+### Expert 3: Agreed. However, one clarification might be needed from the user: should the user be able to make multiple bookings for the same yoga class, or should it be limited to one booking per user per yoga class?
+
+### QUESTION: Can a user make multiple bookings for the same yoga class? 
+### Answer:  Yes, the user should be able to make multiple bookings for the same yoga class.
+### Expert 1: Alright, now that we have that clarified, let's move on to the Workout class. This class should contain attributes for things like exercise type, duration, and intensity level. Are there any additional attributes or considerations we should incorporate?
+
+### Expert 2: Along with those attributes, it would also be useful to include a list of exercises within a workout. This way, users can easily store and manage multiple exercises within a single workout.
+
+### Expert 3: I agree. Additionally, we could consider including a boolean attribute to indicate whether the workout is a favorite or not. This would allow users to save and quickly retrieve their preferred workouts.
+
+### Expert 1: That sounds like a good idea. Moving on to the Progress class, what kind of information do we want to track here? I'm thinking we could have attributes like weight, body measurements, and achievements.
+
+### Expert 2: Definitely. We can also consider having attributes like workout frequency and total hours/exercises spent on yoga. These details would provide users with a visualization of their progress over time.
+
+### Expert 3: Absolutely. Another useful feature could include a method in the Progress class that calculates and returns the average calories burned per workout based on the user's attributes and workout intensity. This would offer a valuable metric for users to monitor their fitness level.
+
+### Expert 1: Great suggestion. With these advancements, we have a good foundation for our UML class diagram. We include the User, YogaClass, Booking, Workout, and Progress classes, with all the relevant attributes and potentially some methods for calculations.
+
+### Expert 2: Yes, that covers the core functionality requested by the user. I believe we can now proceed to incorporate relationships between the classes, such as associations, aggregations, and compositions.
+
+### Expert 3: Indeed. We should also consider any possible inheritance relationships among these classes. For example, the YogaClass class could inherit from a more general Exercise class that might contain shared attributes and methods with other exercise types.
+
+### Expert 1: Agreed. It's essential to establish these relationships to ensure a solid representation of the system's structure and behavior. Since the user requested an app for yoga classes specifically, leveraging inheritance and creating a generalization relationship between Exercise and YogaClass make sense.
+
+### Expert 2: That seems like a comprehensive plan. Once we finalize the design, we can start implementing the mobile app based on this UML representation.
+### Instructions: Step 1: Create the User class. Add attributes like name, email, and password. Consider additional attributes like age, fitness level, and preferred yoga style.
+
+Step 2: Create the YogaClass class. Define attributes such as class name, instructor, duration, and location.
+
+Step 3: Create the Booking class. Include attributes like booking id and date. Add associations to the User and YogaClass classes.
+
+Step 4: Create the Workout class. Define attributes like exercise type, duration, and intensity level. Include an attribute to indicate if the workout is a favorite. Add a list of exercises within the workout.
+
+Step 5: Create the Progress class. Define attributes like weight, body measurements and achievements. Include attributes like workout frequency and total hours/reps spent on yoga. Define a method to calculate average calories burned per workout.
+
+Step 6: Establish associations between classes. Ensure that Booking has associations with both User and YogaClass. Workout can be associated with User for customization purposes, and Progress can also have an association with User for tracking progress.
+
+Step 7: Consider creating a generalization relationship between the YogaClass and Exercise classes if necessary.
+
+Follow these steps to design the class diagram successfully. In the end, you should have a clear and holistic representation of the classes, their attributes, relationships, and inheritance hierarchy.
+
+### PlantUML:
+Example 1: yoga_app.puml
+
+```plantuml
+@startuml
+
+class User {
+  - name: String
+  - email: String
+  - password: String
+  - age: int
+  - fitnessLevel: String
+  - preferredYogaStyle: String
+  # getAge(): int
+}
+
+class YogaClass {
+  - className: String
+  - instructor: String
+  - duration: int
+  - location: String
+}
+
+class Booking {
+  - bookingId: int
+  - date: Date
+}
+User "1" --> "0..*" Booking
+YogaClass "1" --> "0..*" Booking
+
+class Workout {
+  - exerciseType: String
+  - duration: int
+  - intensityLevel: String
+  - isFavorite: boolean
+  - exercises: List<Exercise>
+}
+User "1" --> "0..*" Workout
+
+class Progress {
+  - weight: double
+  - bodyMeasurements: List<BodyMeasurement>
+  - achievements: List<Achievement>
+  - workoutFrequency: int
+  - totalHoursOrReps: int
+  + calculateAverageCaloriesBurned(): double
+}
+User "1" --> "1..*" Progress
+
+class Exercise {
+  // Exercise attributes and methods
+}
+
+class BodyMeasurement {
+  // BodyMeasurement attributes and methods
+}
+
+class Achievement {
+  // Achievement attributes and methods
+}
+
+YogaClass --|> Exercise
+Workout "1" --> "*" Exercise
+
+@enduml
+```
+
+This class diagram contains classes for User, YogaClass, Booking, Workout, Exercise, Progress, BodyMeasurement, and Achievement. These classes represent the entities involved in the mobile app for finding and booking yoga classes, customizing workouts, and tracking progress. Associations and relationships between the classes have been added, such as associations between User and Booking, YogaClass and Booking, User and Workout, and User and Progress. The Workout class contains a list of Exercise objects to represent multiple exercises within a single workout. The Progress class includes attributes for weight, body measurements, achievements, workout frequency, and total hours or reps spent on yoga, along with a method to calculate the average calories burned per workout. The YogaClass is also connected to Exercise through a generalization relationship, indicating that the YogaClass inherits from the Exercise class.

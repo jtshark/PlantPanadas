@@ -1,0 +1,94 @@
+### Request: Develop a new app for mobile devices that allows users to connect with trainers for personalized workout plans, track their progress, and set goals.
+### Expert 1: I think our first step is to understand the main entities and functionalities of this app. It seems like we'll for sure need a User class and a Trainer class.  
+### Expert 2: Absolutely, those classes will be essential. We also shouldn't forget about a WorkoutPlan class that will probably have some relationship with the User and Trainer classes.
+### Expert 3: Agreed. And since the users can track their progress, let's not forget about a Progress class. So if I understood correctly, each User will have a Progress object?
+### Expert 1: Yes, I think it would make sense for each User to have its own Progress object to store their workout data and track their performance.
+### Expert 2: Just to clarify, would a User be able to connect with multiple Trainers or only one Trainer specifically?
+### QUESTION: Can a User connect with multiple Trainers or only one Trainer specifically? 
+### Answer: 
+Answer: A User can connect with multiple Trainers if they desire.
+### Expert 3: Okay, good to know! In that case, we'll need to establish a relationship between the User and Trainer classes. It could be a many-to-many relationship using an intermediate entity or a user can have a list of trainers they are connected to. What do you think?
+### Instructions: Step 1: Create the User class with the following attributes:
+- ID: unique identifier for the user
+- Name: name of the user
+- Email: email address of the user
+- Password: secure password for user authentication
+
+Step 2: Create the Trainer class with the following attributes:
+- ID: unique identifier for the trainer
+- Name: name of the trainer
+- Email: email address of the trainer
+- Specialties: list of specialties the trainer has
+
+Step 3: Create the WorkoutPlan class with the following attributes:
+- ID: unique identifier for the workout plan
+- Name: name of the workout plan
+- Description: description of the workout plan
+- ExerciseList: list of exercises in the workout plan
+
+Step 4: Create the Progress class with the following attributes:
+- ID: unique identifier for the progress entry
+- Date: date of the progress entry
+- WorkoutPlanID: identifier for the corresponding workout plan
+- Duration: duration of the workout in minutes
+- Intensity: intensity level of the workout
+- Notes: additional notes for the progress
+
+Step 5: Create association relationships between the classes:
+- User - Progress: one-to-many relationship (one user can have multiple progress entries).
+- Trainer - Task: one-to-many relationship (one trainer can create multiple workout plans).
+- User - Trainer: many-to-many relationship (a user can connect with multiple trainers, and a trainer can have multiple clients).
+
+Step 6: Finalize the class diagram by adding any additional dependencies or constraints specific to the application's requirements.
+
+Once the class diagram is finalized, it can serve as a blueprint for implementing the app's functionality, including creating the necessary database tables, modeling the app's data flow, and shaping the app's user interface.
+
+### PlantUML:
+Filename: mobile_fitness_app.puml
+
+```
+@startuml
+
+class User {
+  - id: unique int
+  - name: string
+  - email: string
+  - password: string
+}
+
+class Trainer {
+
+  - id: unique int
+  - name: string
+  - email: string
+  - specialties: string[]
+
+}
+
+class WorkoutPlan {
+  - id: unique int
+  - name: string
+  - description: string
+  - exerciseList: string[]
+}
+
+class Progress {
+   - id: unique int
+   - date: date
+   - workoutPlanID: int
+   - duration: int
+   - intensity: int
+   - notes: string
+
+}
+
+
+User *--o Progress 
+ 
+Progress *--right-- WorkoutPlan
+
+User --o Trainer
+
+@enduml
+
+```

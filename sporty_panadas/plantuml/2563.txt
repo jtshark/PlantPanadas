@@ -1,0 +1,125 @@
+### Request: Our project is a mobile app that allows users to make reservations for fitness classes, view class schedules and instructor details.
+### Expert 1: So, let's start by understanding the user requirements. They want a mobile app for making reservations for fitness classes, viewing class schedules, and accessing instructor details. Is that correct?
+
+### Expert 2: Yes, that's right. We need to create a UML class diagram for this. But before we proceed, do we have any additional information regarding the requirements? For example, can users only reserve one class at a time or can they book multiple classes?
+
+### Expert 3: That's a good point. Clarifying this will help us decide how to represent the reservation functionality in our class diagram.
+### Instructions: Solution:
+
+Step 1: Identify the main classes
+- User: Represents a user of the mobile app.
+- FitnessClass: Represents a fitness class offered by the app.
+- Instructor: Represents an instructor associated with a fitness class.
+
+Step 2: Define attributes for each class
+- User: id, name, email, password
+- FitnessClass: id, name, capacity, schedule
+- Instructor: id, name, email, qualification
+
+Step 3: Define associations between the classes
+- Each User can make Reservation(s) for one or more FitnessClass(s).
+- Each FitnessClass has one or more Instructor(s).
+
+Step 4: Define additional classes if required
+- Reservation: Represents a reservation made by a User for a FitnessClass.
+
+Step 5: Define attributes for the additional classes
+- Reservation: id, userId, fitnessClassId, datetime
+
+Step 6: Define associations involving the additional classes (if required)
+- User Reservation: Each User can have zero or more Reservations.
+- FitnessClass Reservation: Each FitnessClass can have zero or more Reservations.
+
+Step 7: Modify class associations if required based on additional classes
+- User FitnessClass: Change multiplicity from one-to-many to many-to-many based on Reservation.
+
+Step 8: Add aggregation/composition relationships, if required
+- None in this case.
+
+Step 9: Define methods/views for each class (if required)
+- User: makeReservation(Class ID), viewSchedule(), viewInstructorDetails(Instructor ID)
+- FitnessClass: getClassSchedule(), getInstructorDetails()
+- Instructor: None
+
+Step 10: Finalize the class diagram incorporating all the above changes and decisions.
+
+Class Diagram:
+------------------------------------
+User 
+- id: int
+- name: string
+- email: string
+- password: string
+- makeReservation(classId: int)
+- viewSchedule()
+- viewInstructorDetails(instructorId: int)
+
+FitnessClass 
+- id: int
+- name: string
+- capacity: int
+- schedule: string
+- getClassSchedule()
+- getInstructorDetails()
+
+Instructor 
+- id: int
+- name: string
+- email: string
+- qualification: string
+
+Reservation
+- id: int
+- userId: int
+- fitnessClassId: int
+- datetime: datetime
+
+User "makes reservations for" FitnessClass
+User -(m,n)-{constraint }- FitnessClass
+FitnessClass "offers" Instructor
+FitnessClass -1------*- Instructor
+
+### PlantUML:
+Filename: fitness_app.puml
+@startuml
+
+class User {
+    -id: int
+    -name: string
+    -email: string
+    -password: string
+    +makeReservation(classId: int)
+    +viewSchedule()
+    +viewInstructorDetails(instructorId: int)
+}
+
+class FitnessClass {
+    -id: int
+    -name: string
+    -capacity: int
+    -schedule: string
+    +getClassSchedule()
+    +getInstructorDetails()
+}
+
+class Instructor {
+    -id: int
+    -name: string
+    -email: string
+    -qualification: string
+}
+
+class Reservation {
+	  -id: int
+    -userId: int
+    -fitnessClassId: int
+    -datetime: datetime
+}
+
+User "makes reservations for" FitnessClass
+User -- Reservation
+FitnessClass --|> Reservation
+FitnessClass "offers" Instructor
+FitnessClass *-- Instructor
+
+@enduml

@@ -1,0 +1,111 @@
+### Request: My project is a booking system for a hotel, where guests can make reservations, modify their bookings and check in/out, while managers handle room assignments, inventory tracking, and customer feedback.
+### Expert 1: So our primary user is a hotel guest who wants to make reservations, modify bookings, and check in/out. Additionally, we have hotel managers who will handle room assignments, inventory tracking, and customer feedback. 
+
+### Expert 2: That's right. It sounds like we need to model two main actors: the Guest and the Hotel Manager. Should we start by identifying the attributes for each of them?
+
+### Expert 3: Yes, that makes sense. Let's start with the Guest. Some common attributes could be name, address, email, and phone number. We should also think about whether we need to store the date of birth, or whether it makes more sense to calculate the age on demand with a method.
+
+### Expert 1: Good point. Storing the date of birth would allow us to calculate the age whenever needed, and it also allows for greater flexibility if the age calculation logic changes in the future. For example, consider a scenario where different countries have different rules for calculating age. By storing the date of birth, we can easily adapt to these variations.
+
+### Expert 2: I agree. Storing the date of birth as an attribute seems like a better approach, as it provides more scalable and flexible functionality. Having a method like `getAge()` that calculates and returns the age based on the current date would be more logical within the context of a class diagram.
+
+### Expert 3: Okay. Moving on to the Hotel Manager, I think we should consider attributes like name, employee ID, and possibly a username and password for authentication purposes. We may also need to include an attribute for managing the hotel's inventory.
+
+### Expert 1: Absolutely. Including a dedicated attribute for inventory tracking allows the Hotel Manager to have a clear overview of available rooms and their statuses (e.g., vacant, occupied, reserved). This way, they can easily manage room assignments and track the inventory without needing to delve into more complex logic further down the line.
+
+### Expert 2: That's a good call. Speaking of room assignments, we might want to consider modeling a separate Room class. This way, we can define specific attributes like room number, type, and capacity which directly associate with each individual room. It would make sense for the Guest to have a reservation, which would link to a specific Room.
+
+### Expert 3: That's a great addition. To ensure consistency in our diagram, we could also specify a RoomStatus attribute within this Room class, which could tell us if a room is available, occupied, or reserved.
+
+### Expert 1: It’s important that we don't miss out on the ability for the Guest to modify their booking. One option here could be to include a CancelationPolicy attribute within the Room class, which would allow us to store the necessary information required for a modification or cancellation fee.
+
+### Expert 2: That's a good point. In terms of checking in/out, I think considering both the Guest and the Room classes again, we could include an attribute like isCheckedIn for the Guest and incorporate a status within the Room class to denote whether the room is vacant, occupied, or checked out.
+
+### Expert 3: Agreed. By including these attributes, we can easily keep track of the relevant statuses for both the guest and the room. Moreover, we should consider the relationships between these classes. For instance, we can associate a Guest with their reservation by having a Reservation attribute within the Guest class, which links to a specific Room. Similarly, we can reflect the ownership of rooms by the hotel within the Hotel Manager class.
+
+### Expert 1: Exactly. By effectively using relationships, we can clearly represent the associations between guests, reservations, rooms, and the hotel managers. It will nicely orchestrate all the functionalities required by the hotel booking system.
+
+### Expert 2: Great. So it seems like these initial attributes and class relationships cover the essential aspects of the user's request. Of course, we may need further clarification from the user if they have any specific requirements or additional features in mind.
+
+### Expert 3: Agreed. To summarize, for the Guest class, we have attributes like name, address, email, and phone number, as well as the date of birth.Commom methods could easily be getAge() andmodifyBooking().
+
+In relation to Manager class: we have attributes likename, employee ID, and another called Employee implementsUser(attribute).We also associated with Manager class objects like hotel,maded a relationship between two. 
+
+And for the Room class, we have attributes such as room number, type, capacity, room status along with knowledge of its currently GUEST(could addGuest()).COMMON method should be for check-in as status can be changed addMethod checkin(),addHost()  respectively.
+### Instructions: Here is a sequential solution for designing the class diagram for the hotel booking system:
+
+1. Create a new diagram in your UML modeling tool.
+2. Add a class called "Guest" to the diagram.
+   - Add attributes for the Guest class:
+     - name: String
+     - address: String
+     - email: String
+     - phone number: String
+     - dateOfBirth: Date (you can include a method like `getAge()` to calculate the age)
+   - Consider any other attributes specific to the guest (passport number, preferences, etc.) if required.
+   - Include methods for modifying bookings or any other guest-specific functionality.
+3. Add a class called "HotelManager" to the diagram.
+   - Add attributes for the HotelManager class:
+     - name: String
+     - employeeID: String
+     - username: String
+     - password: String
+   - Include any other attributes relevant to the hotel manager role.
+4. Add a class called "Room" to the diagram.
+   - Add attributes for the Room class:
+     - roomNumber: String
+     - type: String
+     - capacity: Integer
+     - roomStatus: String (options: vacant, occupied, reserved)
+     - addGuest(): method to associate a Guest with the Room.
+   - Include any other room-specific attributes.
+9. Create associations between the classes:
+   - Associate the Guest with their Reservation using the Reservation class or an attribute (e.g., reservation: Reservation, or reservations: List<Reservation>).
+   - Associate the Room with Guests who booked it (via an association or a List<Guest> attribute).
+   - Associate the Room with the HotelManager if necessary.
+10. Add any additional classes or relationships based on requirements discussed (e.g., Reservation, InventoryTracker, etc.).
+11. Define other methods or behaviors related to the classes, such as check-in, check-out methods.
+12. Ensure all classes, attributes, and relationships are properly labeled and visible on the diagram.
+13. Validate the diagram to ensure it is consistent and free from errors.
+14. Review and finalize the class diagram with the team or relevant stakeholders.
+
+This solution provides a step-by-step approach to achieve a clear and coherent UML class diagram for the hotel booking system, capturing the desired functionalities of guest reservations, modifications, check-in/out, manager room assignments, inventory tracking, and customer feedback handling.
+
+### PlantUML:
+Filename: hotel_booking_system.puml
+
+```plantuml
+@startuml
+
+class Guest {
+  - name: String
+  - address: String
+  - email: String
+  - phoneNumber: String
+  - dateOfBirth: Date
+  + getAge(): int
+  + modifyBooking()
+}
+
+class HotelManager {
+  - name: String
+  - employeeID: String
+  - username: String
+  - password: String
+}
+
+class Room {
+  - roomNumber: String
+  - type: String
+  - capacity: Integer
+  - roomStatus: String
+  + addGuest()
+}
+
+Guest "1" --> "0..*" Room
+Room "1" o--> "0..1" HotelManager
+
+@enduml
+```
+
+The class diagram consists of three main classes: Guest, HotelManager, and Room. Additionally, it showcases the relationships between these classes using appropriate connectors. The filename for the PlantUML diagram is "hotel_booking_system.puml."

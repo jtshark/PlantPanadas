@@ -1,0 +1,152 @@
+### Request: Our project is to create a website that allows users to book appointments with doctors, view their medical records, and receive prescription refills. The website should also enable doctors to manage their patient schedules and medical histories.
+### Expert 1: So, based on the user request, it seems like we have two main actors in our system - the users (patients) and the doctors. We will need to define the functionality these actors require. Any suggestions on where to start?
+
+### Expert 2: Let's start by identifying the key objects in the system. We have users, doctors, appointments, medical records, and prescription refills. These can be the focal points of our class diagram. 
+
+### Expert 3: Agreed. We should also think about the different types of users and how they interact with each other and the system. For example, patients can book appointments and view medical records, while doctors can manage schedules and access patient histories. Would everyone agree with this division?
+
+### Expert 1: Yes, that makes sense. Now, let's discuss the attributes and methods of these objects. Shall we start with the User class?
+
+### Expert 2: Definitely. The User class can include attributes like name, login credentials, and contact information. As for methods, we could have getters and setters for these attributes, as well as a method for viewing a user's information.
+
+### Expert 3: Good start. In addition, we might want to add functionality related specifically to patients, such as viewing medical records or booking appointments. For instance, we could have a method in the User class called viewMedicalRecords().
+
+### Expert 1: That's true. We can also include an attribute for the user type, which can help differentiate between patients and doctors. This way, we can have specialized methods based on the user type.
+
+### Expert 2: Right, we'll definitely need some way to identify whether a user is a patient or a doctor. We could use an enumeration for UserTypes, specifying PATIENT and DOCTOR as options.
+
+### Expert 3: Agreed. And talking about doctors, we can have a Doctor class that inherits from the User class. This class can have additional attributes and methods, such as managing schedules or accessing patient histories.
+
+### Expert 1: That's a good point. We could add attributes like specialization, years of experience, and available appointment slots to the Doctor class. It might also make sense to have a method called manageSchedule().
+
+### Expert 2: I think we should consider implementing an Appointment class to handle the booking functionality. This class could have attributes such as date, time, and a reference to the associated Doctor and Patient objects. The Appointment class could also have a method for rescheduling appointments.
+
+### Expert 3: It would be useful if patients could access their prescription refill history. We could add a Prescription class with attributes like medication name and date prescribed. We'll also need a way for doctors to manage prescriptions, so the Prescription class should have a method for that.
+
+### Expert 1: One final suggestion: we may also want to include a MedicalRecord class to handle the storage of patient medical histories. This class could store attributes like conditions, allergies, and medications. Additionally, we could integrate methods for adding new entries or retrieving existing ones.
+
+### Expert 2: That sounds comprehensive. We've covered most of the requested functionalities. Now, we need to decide how classes are related to one another in terms of associations, aggregations, or compositions.
+
+### Expert 3: Agreed. Let's start by connecting classes. For example, the Appointment should have a relationship with both the Patient and Doctor classes, representing their involvement in the booking process.
+
+### Expert 1: Absolutely. We could connect the Patient and Doctor classes to the User class using inheritance, denoting a specialization relationship.
+
+### Expert 2: Diving deeper, the MedicalRecord class should have a composition relationship with the Patient class since a patient can have only one medical record.
+
+### Expert 3: That makes sense. And regarding the Prescription class, it could have an association with both the Doctor and Patient classes to indicate who initiated or received the prescription.
+
+### Expert 1: Overall, this discussion has provided a great foundation for our UML class diagram. We have clearly defined the actors, key classes, attributes, and methods and have also identified their relationships.
+
+### Expert 2: I agree. We've created a solid starting point, but we should still seek confirmation from the user regarding any ambiguities or uncertainties we may have. Promptly resolving any potential misunderstandings is essential in ensuring that the resulting design aligns with their expectations.
+
+### Expert 3: Well summarized. Let's wrap up this discussion and revise our understanding of the user's requirements before moving forward with the implementation.
+### Instructions: 1. Create a User class with attributes such as name, login credentials, and contact information.
+2. Add a userType attribute to the User class with an enumeration for specifying PATIENT and DOCTOR.
+3. Create getter and setter methods for the attributes in the User class.
+4. Implement a method in the User class called viewInformation() to allow users to view their information.
+5. Create a Doctor class that inherits from the User class.
+6. Add additional attributes to the Doctor class, such as specialization, years of experience, and available appointment slots.
+7. Implement a method in the Doctor class called manageSchedule() to enable doctors to manage their patient schedules.
+8. Create an Appointment class with attributes like date, time, and references to associated Doctor and Patient objects.
+9. Implement a rescheduleAppointment() method in the Appointment class to handle appointment rescheduling.
+10. Implement a BookAppointment() method in the Patient class to allow patients to book appointments.
+11. Implement a viewBookingHistory() method in the Patient class to enable patients to view their appointment history.
+12. Create a Prescription class with attributes like medication name and date prescribed.
+13. Implement a managePrescriptions() method in the Prescription class to facilitate prescription management by doctors.
+14. Make associations between the User, Doctor, Patient, and MedicalRecord classes to establish relationships.
+15. Connect the Appointment class with both the Doctor and Patient classes to represent their involvement in the booking process.
+16. Establish a composition relationship between the MedicalRecord and Patient classes to reflect that a patient can have only one medical record.
+17. Determine associations between the Prescription class and both the Doctor and Patient classes to indicate therapists and recipients.
+18. Verify the solution provided by seeking confirmation from the user and make necessary updates based on their feedback.
+
+### PlantUML:
+Filename: appointment_website_class_diagram.puml
+
+@startuml
+class User {
+    - name: String
+    - loginCredentials: String
+    - contactInformation: String
+    - userType: UserType
+    + getName(): String
+    + setName(name: String): void
+    + getLoginCredentials(): String
+    + setLoginCredentials(loginCredentials: String): void
+    + getContactInformation(): String
+    + setContactInformation(contactInformation: String): void
+    + viewInformation(): void
+}
+
+enum UserType {
+    PATIENT
+    DOCTOR
+}
+
+class Doctor {
+    - specialization: String
+    - yearsOfExperience: int
+    - availableAppointmentSlots: int
+    + getSpecialization(): String
+    + setSpecialization(specialization: String): void
+    + getYearsOfExperience(): int
+    + setYearsOfExperience(yearsOfExperience: int): void
+    + getAvailableAppointmentSlots(): int
+    + setAvailableAppointmentSlots(availableAppointmentSlots: int): void
+    + manageSchedule(): void
+}
+
+class Patient {
+    + managePrescriptions(prescription: Prescription): void
+    + bookAppointment(date: Date, time: Time, doctor: Doctor): Appointment
+    + viewBookingHistory(): List<Appointment>
+}
+
+class Appointment {
+    - date: Date
+    - time: Time
+    - doctor: Doctor
+    - patient: Patient
+    + getDate(): Date
+    + setDate(date: Date): void
+    + getTime(): Time
+    + setTime(time: Time): void
+    + getDoctor(): Doctor
+    + setDoctor(doctor: Doctor): void
+    + getPatient(): Patient
+    + setPatient(patient: Patient): void
+    + rescheduleAppointment(date: Date, time: Time): void
+}
+
+class Prescription {
+    - medicationName: String
+    - datePrescribed: Date
+    + getMedicationName(): String
+    + setMedicationName(medicationName: String): void
+    + getDatePrescribed(): Date
+    + setDatePrescribed(datePrescribed: Date): void
+}
+
+class MedicalRecord {
+    - patient: Patient
+    - conditions: List<String>
+    - allergies: List<String>
+    - medications: Map<String, String>
+    + getPatient(): Patient
+    + setPatient(patient: Patient): void
+    + addCondition(condition: String): void
+    + removeCondition(condition: String): void
+    + addAllergy(allergy: String): void
+    + removeAllergy(allergy: String): void
+    + addMedication(medication: String, dosage: String): void
+    + removeMedication(medication: String): void
+}
+
+User *--* Doctor
+User ..> UserType
+Patient "1"--o"1" MedicalRecord
+Doctor "1" --o"{0..*}" Appointment
+Patient "1" --o"0..*" Appointment
+Doctor <.. prescriptions: Prescription
+Patient <.. prescriptions: Prescription
+
+@enduml

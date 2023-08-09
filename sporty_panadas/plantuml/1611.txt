@@ -1,0 +1,157 @@
+### Request: Our project is a website where people can sell crafts they've made from home, and customers can search and purchase different crafts from multiple artists.
+### Expert 1: So it seems that the user wants to design a UML class diagram for a website where users can sell and purchase crafts. How should we start?
+
+### Expert 2: Well, first we need to identify the main classes involved in this system. From what I understand, we'll need a User class to represent both the sellers and the customers. Then, we'll also have a Craft class to represent the different crafts being sold. Any other classes that come to mind?
+
+### Expert 3: We might also want to create a separate class for Artists, since they will be the ones selling their crafts. This way, we can include specific attributes and methods that apply only to artists. Additionally, we could have a Purchase class to track the details of each transaction.
+
+### Expert 1: That sounds reasonable. What attributes should we include in the User class?
+
+### Expert 2: We should definitely include basic attributes like name, email, and password for authentication purposes. In addition to that, we may want to consider including a unique identifier for each user, such as an ID number.
+
+### Expert 3: And don't forget about the distinction between sellers and customers. We could include a type attribute to specify whether the User is an artist or a customer.
+
+### Expert 1: Right, so in the Artist class, we can have specific attributes related to their craft business, like location and bio. We could also include a list of crafts they have for sale and a method for adding new crafts to their inventory.
+
+### Expert 2: Good point. We might also want to consider implementing a review system for both artists and customers. Each User could have a list of reviews associated with them. This would allow us to show ratings for each artist and potentially filter searches based on reviews.
+
+### Expert 3: Agreed. Now, let's move on to the Craft class. We'd definitely need attributes like name, description, and price. Additionally, attributes such as the material used, dimensions, and perhaps a reference image could be useful for potential customers.
+
+### Expert 1: Definitely. It would also be helpful to include a Discount attribute in case the seller wants to offer any promotions or sales. We could add a method to calculate the discounted price based on this attribute.
+
+### Expert 2: Good thinking. And in the Purchase class, we would need attributes like the buyer, seller, date of purchase, and quantity. We can also include a total price attribute which can be calculated using the craft's price and quantity.
+
+### Expert 3: That covers the basics of the class diagram. Now, we need to consider the relationships between these classes. The User class should have a composition relationship with the Craft class since each user can have their own crafts for sale.
+
+### Expert 1: Yes, and additionally, the User class should have an association relationship with the Purchase class since they will be involved in both the buying and selling processes.
+### Instructions: Step-by-step solution for designing the UML class diagram for the crafts selling website:
+
+1. Create the User class:
+   - Add attributes: name (string), email (string), password (string), uid (string), type (enum: Artist or Customer).
+   - Include appropriate getter and setter methods for each attribute.
+
+2. Create the Artist class:
+   - Inherit from the User class.
+   - Add specific attributes: location (string), bio (string).
+   - Add a list of associated Craft objects representing the crafts they have for sale.
+   - Include a method to add new crafts to their inventory.
+   - Include appropriate getter and setter methods for the attributes.
+
+3. Create the Customer class:
+   - Inherit from the User class.
+
+4. Create the Craft class:
+   - Add attributes: name (string), description (string), price (float), material (string), dimensions (string), imageRef (string), discount (float).
+   - Include appropriate getter and setter methods for each attribute.
+   - Add a method to calculate the discounted price based on the discount attribute.
+
+5. Create the Purchase class:
+   - Add attributes: buyer (User object), seller (Artist object), dateOfPurchase (DateTime), quantity (int), totalPrice (float).
+   - Include appropriate getter and setter methods for each attribute.
+
+6. Establish relationships between the classes:
+   - The User class should have composition association with the Craft class, indicating each user can have their own crafts for sale. Multiplicity: 1..*
+   - There should be an association between the User class and the Purchase class. Multiplicity: 0..*
+
+That's it! The step-by-step solution above should help us develop a detailed and accurate UML class diagram for the crafts selling website.
+
+### PlantUML:
+Filename: crafts_selling_website.puml
+```
+@startuml
+
+class User {
+    - name: string
+    - email: string
+    - password: string
+    - uid: string
+    - type: UserType
+    + getName(): string
+    + setName(name: string): void
+    + getEmail(): string
+    + setEmail(email: string): void
+    + getPassword(): string
+    + setPassword(password: string): void
+    + getUid(): string
+    + setUid(uid: string): void
+    + getType(): UserType
+    + setType(type: UserType): void
+}
+
+enum UserType {
+    Artist
+    Customer
+}
+
+class Artist {
+    - location: string
+    - bio: string
+    - crafts: List<Craft>
+    + getLocation(): string
+    + setLocation(location: string): string
+    + getBio(): string
+    + setBio(bio: string): void
+    + addCraft(craft: Craft): void
+    + removeCraft(craft: Craft): void
+    + getCrafts(): List<Craft>
+}
+
+class Customer {
+    // Inherits attributes and methods from User
+}
+
+class Craft {
+    - name: string
+    - description: string
+    - price: float
+    - material: string
+    - dimensions: string
+    - imageRef: string
+    - discount: float
+    + getName(): string
+    + setName(name: string): void
+    + getDescription(): string
+    + setDescription(description: string): void
+    + getPrice(): float
+    + setPrice(price: float): void
+    + getMaterial(): string
+    + setMaterial(material: string): void
+    + getDimensions(): string
+    + setDimensions(dimensions: string): void
+    + getImageRef(): string
+    + setImageRef(imageRef: string): void
+    + getDiscount(): float
+    + setDiscount(discount: float): void
+    + calculateDiscountedPrice(): float
+}
+
+class Purchase {
+    - buyer: User
+    - seller: Artist
+    - dateOfPurchase: DateTime
+    - quantity: int
+    - totalPrice: float
+    + getBuyer(): User
+    + setBuyer(buyer: User): void
+    + getSeller(): Artist
+    + setSeller(buyer: Artist): void
+    + getDateOfPurchase(): DateTime
+    + setDateOfPurchase(date: DateTime): void
+    + getQuantity(): int
+    + setQuantity(quantity: int): void
+    + getTotalPrice(): float
+    + setTotalPrice(totalPrice: float): void
+}
+
+User -- UserType
+
+User "0..*" --o{ Crafts
+Artist --|> User
+Craft <|-- Artist
+Craft -- "promotion" Discount
+Purchase "1" --> "1..*" User
+Purchase "1" --> "1" Artist
+
+@enduml
+```
+This UML class diagram represents the classes and their relationships for a crafts selling website.

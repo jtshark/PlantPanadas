@@ -1,0 +1,105 @@
+### Request: Our project is a website where users can build and customize their wedding registry, and share it with their family and friends. The website should also allow vendors to showcase and sell wedding-related products and services.
+### Expert 1: So our main user request is to design a UML class diagram for a wedding registry website, right?
+
+### Expert 2: Yes, and it should also support vendors showcasing and selling their wedding-related products and services. We'll need to consider both user and vendor functionalities.
+
+### Expert 3: Precisely. Firstly, we need to identify the main entities involved. We can start with the obvious ones like User, Vendor, and Product. In addition, we want to include features like building and customizing a registry, sharing it, and potentially purchasing items as well. 
+
+### Expert 1: That sounds about right. Let's further explore the relationships and attributes of each entity. For the User entity, we should include properties like Name, Email, and password.
+
+### Expert 2: I think we should also consider including user-generated content, such as their registry preferences or a list of previously purchased items. It can help personalize the experience for them 
+
+### Expert 3: That's a good point. Including a Date Of Birth attribute could be beneficial too; then we can have a corresponding getAge() method in the User class that calculates the current age of the user. Plus, storing age directly might become problematic if we need accurate data in the future.
+
+### Expert 1: Agreed. We need to consider the flexibility of the information stored. 
+
+### Expert 2: When it comes to the Vendor entity, we should include properties like Name, Email, Password, and maybe even a Vendor ID so that we have a unique identifier for each vendor.
+
+### Expert 3: Additionally, we could have attributes like Products, Services, and Ratings. And we can define relationships between the Vendor and Product entities by having a one-to-many association.
+
+### Expert 1: Definitely. The Product entity should have attributes like Name, Description, Price, and maybe even a Discount attribute. We could also have methods like getDiscountedPrice() to calculate the price after applying the discount.
+
+### Expert 2: I agree. Storing discount separately allows for more flexibility in case discounts change or are updated frequently.
+
+### Expert 3: Right. A Vendor could have multiple products and services, creating a one-to-many relationship between Vendor and Product entities. And the Product cl
+### Instructions: Here is a step-by-step solution for creating the UML class diagram for the wedding registry website:
+
+1. Create a class called "User" with attributes like Name, Email, Password, and Date of Birth.
+2. Add a method in the User class called getAge() to calculate the current age based on the Date of Birth. 
+
+3. Create a class called "Vendor" with attributes like Name, Email, Password, and Vendor ID.
+4. Add attributes like Products, Services, and Ratings to the Vendor class.
+
+5. Create a class called "Product" with attributes like Name, Description, Price, and Discount.
+6. Add a method called getDiscountedPrice() in the Product class to calculate the price after applying the discount.
+
+7. Establish associations between the classes:
+   - User has a one-to-many association with Product, representing the user's registry items.
+   - Vendor has a one-to-many association with Product, representing the products offered by the vendor.
+
+8. Add an association between User and Vendor, representing the relationship between users and the vendors they select for their registry.
+
+9. Include any additional classes or features as necessary, like a separate class for Order to represent the purchases made by users.
+
+10. Once the class diagram is complete, review it to ensure all relationships and attributes are accurately represented.
+
+That concludes the step-by-step solution for designing the UML class diagram for the wedding registry website.
+
+### PlantUML:
+Filename: wedding_registry.puml
+
+```
+@startuml
+
+class User {
+  - name: String
+  - email: String
+  - password: String
+  - dateOfBirth: Date
+  + getAge(): int
+}
+class Vendor {
+  - name: String
+  - email: String
+  - password: String
+  - vendorID: String
+  - products: List<Product>
+  - services: List<Service>
+  - ratings: List<Rating>
+}
+class Product {
+  - name: String
+  - description: String
+  - price: Double
+  - discount: Double
+  + getDiscountedPrice(): Double
+}
+
+class Order {
+  - user: User
+  - product: Product
+  - quantity: int
+  - orderDate: Date
+  - deliveryAddress: String
+}
+
+class Service {
+  - name: String
+  - description: String
+  - price: Double
+}
+
+class Rating {
+  - user: User
+  - vendor: Vendor
+  - value: int
+}
+
+User "1" --> "*" Product : has
+Vendor "1" --> "*" Product : offers
+User "*" --> "1" Vendor : selects
+User "1" --> "*" Order : makes or has
+Product --> "*" Order : is part of
+
+@enduml
+```

@@ -1,0 +1,171 @@
+### Request: Our project is to build a social media website where users can create profiles, share posts and photos, connect with friends, and participate in online activities like commenting and liking.
+### Expert 1: So, the user wants us to build a social media website with various functionalities like user profiles, post sharing, photo sharing, friend connections, and online activities such as commenting and liking. Before we start designing a UML class diagram, we need to understand how these functionalities will be implemented.
+
+### Expert 2: Right. Let's break it down. First, we need to focus on the user profiles. What information do we have about user profiles?
+
+### Expert 1: According to the user request, I would assume that we need to include basic details like name, username, email, and password.
+
+### Expert 3: Agreed. Those are essential attributes for a user profile. Additionally, we might want to include things like a profile picture, bio, and date of birth.
+
+### Expert 2: I have a question. Should we store the age as an attribute or calculate it dynamically based on the date of birth?
+
+### Expert 1: Storing the date of birth and calculating the age dynamically would be more logical. It allows us to automatically update the age whenever it changes without the need to directly modify the age attribute.
+
+### Expert 3: That's a good point. It also ensures that the age is always accurate, even if the user updates their date of birth.
+
+### Expert 2: I see the benefit of that approach. So, in our user profile class, we'll have attributes like name, username, email, password, profile picture, bio, and date of birth. And we can add a method, let's say getAge(), that calculates and returns the user's age based on the date of birth.
+
+### Expert 1: Exactly. Now, let's move on to post and photo sharing. How should we approach that?
+
+### Expert 3: I think we need two separate classes for posts and photos. The post class could include attributes like content, timestamp, and likes, while the photo class could have attributes like image file, caption, timestamp, and likes.
+
+### Expert 2: I agree with having separate classes. It will make it easier to manage and manipulate posts and photos individually. We could also include methods to add comments and likes to both classes.
+
+### Expert 1: Right. And in the user profile class, we would have associations to represent the relationship between users and their posts/photos. Perhaps a user can have multiple posts and photos, so we'll use a multiplicity notation indicating that.
+
+### Expert 3: Additionally, when a user comments or likes a post/photo, we would need another association to reflect that.
+
+### Expert 2: So, we will have a multi-directional relationship between users and posts/photos. That makes sense.
+
+### Expert 1: Now, what about connecting with friends? Should we create a separate class for friend connections?
+
+### Expert 3: I think representing friend connections as an association between two user profiles would be sufficient. We can indicate the type of connection as an attribute or use a separate enum class to define the types of connections like "friend," "acquaintance," or "favourite."
+
+### Expert 2: That sounds good. It's much simpler to handle the friend connections as associations between user profiles.
+
+### Expert 1: Lastly, we have online activities like commenting and liking. Should we define separate classes for them?
+
+### Expert 3: I would argue for having separate classes for commenting and liking. Both classes would have a reference to the user who made the comment or liked the post/photo. This way, we can easily track and manage these activities.
+
+### Expert 2: That makes sense. It allows us to store additional information related to comments, like the content and the timestamp, or for likes, simply the timestamp.
+
+### Expert 1: Excellent. So, to recap, we have a user profile class with attributes like name, username, email, password, profile picture, bio, and date of birth. We also include connections to posts, photos, friend connections, comments, and likes. Additionally, we have separate classes for posts, photos, comments, and likes.
+
+### Expert 2: That's a great summary. It seems like we have a solid foundation to build the UML class diagram for this social media website. Now we just need to clarify any remaining details with the user before finalizing it.
+
+### Expert 3: Agreed. Let's reach out and request confirmation on our assumptions before proceeding.
+### Instructions: 1. Start by creating the main class "User Profile" with the following attributes:
+   - name: string
+   - username: string
+   - email: string
+   - password: string
+   - profile picture: binary/object reference
+   - bio: string
+   - date of birth: string
+
+2. Use the existing Date class for the date of birth attribute and create a method "getAge()" to calculate and return the current age based on the date of birth.
+
+3. Create a class "Post" with the following attributes and methods:
+   - content: string
+   - timestamp: Date
+   - likes: int
+   - user profile reference (to identify the user who created this post)
+   - addComment(comment: Comment): void
+   - addLike(): void
+
+4. Create a class "Photo" with the following attributes and methods:
+   - image: binary/object reference
+   - caption: string
+   - timestamp: Date
+   - likes: int
+   - user profile reference (to identify the user who posted this photo)
+   - addComment(comment: Comment): void
+   - addLike(): void
+
+5. Create a class "Connection" with the following attributes and methods:
+   - user profile reference 1
+   - user profile reference 2
+   - type: enum {friend, acquaintance, favorite}
+
+6. Create a class "Comment" with the following attributes:
+   - content: string
+   - timestamp: Date
+   - user profile reference (to identify the user who commented on the post/photo)
+
+7. Create a class "Like" with the following attributes:
+   - timestamp: Date
+   - user profile reference (to identify the user who liked the post/photo)
+
+8. Create associations between classes:
+   - User Profile 1 --- 0..n Post
+   - User Profile 1 --- 0..n Photo
+   - User Profile 1 --- 0..n Comment
+   - User Profile 1 --- 0..n Like
+   - Post and Photo 1 --- 0..n Comment
+   - Post and Photo 1 --- 0..n Like
+   - User Profile 1 --- 0..n Connection
+   - Comment and Like should not be directly related to each other
+
+9. Optionally, add necessary multiplication notations to the associations to specify the multiplicity (e.g., * for many, 0..n or 1..n for specific ranges).
+
+10. Review the UML class diagram and verify that all the requirements stated by the user have been represented correctly.
+
+11. Share the final class diagram with the user for confirmation/validation.
+
+12. If requested, make modifications based on the user's feedback and repeat steps 10-11 until the final class diagram is approved.
+
+### PlantUML:
+Filename: social_media_website.puml
+
+```plantuml
+@startuml
+
+class "User Profile" {
+  - name: String
+  - username: String
+  - email: String
+  - password: String
+  - profile picture: binary/object reference
+  - bio: String
+  - date of birth: String
+  + getAge(): int
+}
+
+class Post {
+  - content: String
+  - timestamp: Date
+  - likes: int
+  ~ user profile reference
+  + addComment(comment: Comment): void
+  + addLike(): void
+}
+
+class Photo {
+  - image: binary/object reference
+  - caption: String
+  - timestamp: Date
+  - likes: int
+  ~ user profile reference
+  + addComment(comment: Comment): void
+  + addLike(): void
+}
+
+class Connection {
+  ~ user profile reference 1
+  ~ user profile reference 2
+  - type: {friend, acquaintance, favorite}
+}
+
+class Comment {
+  - content: String
+  - timestamp: Date
+  ~ user profile reference
+}
+
+class Like {
+  - timestamp: Date
+  ~ user profile reference
+}
+
+"User Profile" "1" -- "0..n" Post
+"User Profile" "1" -- "0..n" Photo
+"User Profile" "1" -- "0..n" Comment
+"User Profile" "1" -- "0..n" Like
+Post "1" -- "0..n" Comment
+Post "1" -- "0..n" Like
+Photo "1" -- "0..n" Comment
+Photo "1" -- "0..n" Like
+"User Profile" "1" -- "0..n" Connection
+
+@enduml
+```

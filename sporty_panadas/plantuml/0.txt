@@ -1,0 +1,143 @@
+### Request: Our project is to design a mobile application where users can search and chat with nearby people based on their interests, while also being able to manage their profiles and view messages.
+### Expert 1: It sounds like we'll need a few key classes for this application. Would you agree?
+### Expert 2: Absolutely. Let's start with the User class. It will have attributes like name, age, and interests.
+### Expert 3: Agreed. Additionally, we should include attributes for email, location, and perhaps a profile picture as well. And of course, a unique identifier like ID would be useful.
+### Expert 1: We'll also need a class to represent messages. Any suggestions on what we should include in that class?
+### Expert 2: We can have attributes like senderID, receiverID, message body, and a timestamp to keep track of when the message was sent.
+### Expert 3: Good points. To facilitate the searching functionality, we'll need a class for managing interests. Users should be able to add, remove, and update their interests, don't you think?
+### Expert 1: Definitely. The Interest class could have attributes like interestName and maybe a description. Users can then add interests to their profiles.
+### Expert 2: Agreed. And for the actual searching, we'll need another class. Let's call it Search. It should have methods to search for nearby people based on specific interests or parameters.
+### Expert 3: Sounds good. We should also have a class for managing profiles. This class will allow users to edit their profiles, upload/change profile pictures, view their own profile, and maybe even delete their profile.
+### Expert 1: Perfect. So the Profile class could have attributes like profilePicture, bio, phone number, and maybe even a link to any social media accounts the user wants to share.
+### Expert 2: Yes, and we can add methods like updateProfilePicture() and deleteProfile(). It might also be useful to add a method to validate that a user profile is complete before saving it.
+### Expert 3: Agreed. And finally, we should have a class to represent the Chat functionality. This class can handle sending and receiving messages, manage message history, and perhaps handle message encryption and security.
+### Expert 1: I agree, and we can include methods like sendMessage(), getMessages(), and maybe even encryptMessage() in the Chat class.
+### Expert 2: That covers the main classes we discussed. Are there any additional requirements we need to consider?
+### Expert 3: One thing that comes to mind is a class to handle geo-location. This would allow us to track the distance between users, display nearby users on a map, and apply filters for searching within a certain radius.
+### Expert 1: That's a great point. How do you envision this class interacting with the others?
+### Expert 2: We can store the user's coordinates in their User profile. Then, when searching for nearby people, we can calculate the distance between two sets of coordinates using a formula like Haversine.
+### Expert 3: Agreed. It might also be helpful to have a method in the Search class that takes a user's location and returns nearby users within a certain radius.
+### Expert 1: Sounds like a plan. I think we've covered the key classes for this user request. If we have any further uncertainties, we can ask the user for clarification. Great job, team!
+### Instructions: 1. Create a User class with attributes:
+   - ID (unique identifier for each user)
+   - Name
+   - Age
+   - Email
+   - Location
+   - Profile picture
+
+2. Create an Interests class with attributes:
+   - InterestName
+   - Description
+  
+3. Add a list attribute to the User class to store the user's interests.
+ 
+4. Create a Messages class with attributes:
+   - SenderID
+   - ReceiverID
+   - MessageBody
+   - Timestamp
+  
+5. Implement a Search class with methods:
+   - searchByLocation(User user, double radius): Searches for nearby users within a given radius and returns the search results.
+   - searchByInterest(List<User> users, String interest): Searches for users based on their interests and returns the search results.
+  
+6. Implement a Profile class with attributes:
+   - UserID
+   - Bio
+   - Phone number 
+   - Link to social media accounts
+   
+7. Modify the User class byadding:
+   - A profile attribute of type Profile
+   - A list of messages attribute to keep track of received and sent messages.
+
+8. Implement a Chat class with methods:
+   - sendMessage(User sender, User receiver, String messageBody): Sends a message from one user to another.
+   - getReceivedMessages(User user): Retrieves all the messages received by a specific user.
+   - getSentMessages(User user): Retrieves all the messages sent by a specific user.
+   - encryptMessage(String messageBody): Encrypts the message body for secure communication.
+
+9. Add associations between classes:
+   - User class has a one-to-one association with Profile class and a one-to-many association with Messages class.
+   - User class has a many-to-many association with Interests class.
+   - Search class has dependencies on User, Profile and Interests classes.
+   - Chat class has associations with User and Messages classes.
+
+10. Create a GeoLocation class with attributes:
+    - Longitude
+    - Latitude 
+
+11. Add a GeoLocation attribute to the User class.
+
+Note: These steps should provide a solid foundation for designing the class diagram. Remember to consider customizations and additional functionalities as needed for your specific implementation.
+
+### PlantUML:
+Filename:
+mobile_application_design.puml
+
+```puml
+@startuml
+
+class User {
+  - ID: int
+  - Name: string
+  - Age: int
+  - Email: string
+  - Location: string
+  - ProfilePicture: string
+  - interests: List<Interest>
+  - messages: List<Message>
+}
+
+class Interests {
+  - InterestName: string
+  - Description: string
+}
+
+class Messages {
+  - SenderID: int
+  - ReceiverID: int
+  - MessageBody: string
+  - Timestamp: string
+}
+
+class Search {
+  + searchByLocation(user: User, radius: double): List<User>
+  + searchByInterest(users: List<User>, interest: string): List<User>
+}
+
+class Profile {
+  - UserID: int
+  - Bio: string
+  - PhoneNumber: string
+  - SocialMediaLinks: List<string>
+}
+
+class Chat {
+  + sendMessage(sender: User, receiver: User, messageBody: string): void
+  + getReceivedMessages(user: User): List<Message>
+  + getSentMessages(user: User): List<Message>
+  + encryptMessage(messageBody: string): string
+}
+
+class GeoLocation {
+  - Longitude: double
+  - Latitude: double
+}
+
+User "1" -- "1" Profile: has
+User "0..*" -- "0..*" Interest: has
+User "1" o-- "0..*" Message: send and receive
+Message "1" -- "1" Chat: is involved in
+Chat "extends" --|> OfficeEmoji {
+	width 200, height 200
+}
+Chat "extends" --|> MobilePhone {
+	width 200, height 200
+}
+OfficeEmoji ||-- GeoLocation
+User "1" -- "0..1" Geolocation: has
+	
+@enduml
+```

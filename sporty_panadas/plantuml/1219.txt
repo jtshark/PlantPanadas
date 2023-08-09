@@ -1,0 +1,194 @@
+### Request: Our project is to create a social media platform where users can share pictures, videos, and stories, follow other users, like and comment on their content, and discover new content based on their interests.
+### Expert 1: So it seems like we have an interesting project on our hands - building a social media platform. To begin, I think we should start by identifying the main actors in our system. We have users, obviously, and possibly some kind of admin role. Any thoughts on that?
+
+### Expert 2: Agreed, we definitely need to cater to different user roles. In addition to regular users, we may have admin users who can manage the platform and handle reported content. Let's consider them as separate roles.
+
+### Expert 3: Absolutely, admin users play a crucial role in managing and maintaining the platform. Now, about the user profiles - what information do we need to store about each user?
+
+### Expert 1: We should at least have basic information like username, password, and email for authentication purposes. Additionally, we could include profile details such as name, bio, profile picture, and a link to external websites if the user wants to add them.
+
+### Expert 2: Good points. We could also include features like followers and following lists to establish connections between users. And, of course, the ability for users to post different types of content like pictures, videos, and stories.
+
+### Expert 3: Exactly. We should also consider including attributes for the number of likes and comments for each user's posts, so we can track engagement. And to help users discover content, we could consider implementing tags or hashtags.
+
+### Expert 1: Great suggestions. Apart from the user profile and posts, we also need to think about how each user will interact with the platform. For example, we'll need functions/methods for liking posts, leaving comments, and following other users. Any other key interactions we should be aware of?
+
+### Expert 2: I think we should allow users to report inappropriate content or accounts that violate the platform's policies. This means we need to consider a report function as well. It's always good to have checks and balances in place.
+
+### Expert 3: Definitely, dealing with inappropriate content is essential for maintaining a healthy platform. We can assign admin users the responsibility of reviewing reported content and taking necessary action. This also means we'll need to track the reported content status.
+
+### Expert 1: True. Admin users will play a crucial role in managing reported content. It seems like we are making progress, but I also have a couple of questions to seek clarity from the user.
+
+### QUESTION: Should users be allowed to delete their own posts, or should that ability be limited to admin users? 
+### Answer:  Users should be allowed to delete their own posts, although we could entertain the possibility of introducing restrictions for certain types of posts.
+### Expert 1: Thank you for the clarification. So users should be able to delete their own posts, but we may want to have some restrictions in place for certain types of posts. That makes sense.
+
+### Expert 2: Agreed. Having the ability to delete their own posts gives users more control over their content. As for the restrictions, we could consider implementing a flagging system where other users can report inappropriate posts, and then have admin users review those reported posts before deciding whether they can be deleted.
+
+### Expert 3: That sounds like a solid plan. By involving the user community in the moderation process through reporting, we can offload some of the responsibility to them, while still allowing users to maintain control over their own posts.
+
+### Expert 1: Yes, involving users in the reporting process not only lightens the load on the admin users but also empowers the user community to contribute to the platform's overall quality. It could also help us identify any potential patterns of abuse or inappropriate behavior.
+
+### Expert 2: Absolutely. With the reporting function and involvement of admin users, we should be able to maintain a positive and safe user experience on the platform.
+
+### Expert 3: Agreed. I think we have a clear understanding now. Shall we proceed with finalizing the UML class diagram? We may also need to consider other aspects, such as privacy settings for user profiles and the visibility of different content to different users.
+
+### Expert 1: Good point. We should definitely include privacy settings and access levels in our discussion and class diagram. Let's work on mapping out the final diagram, taking into account all the features, interactions, and considerations we discussed. Once we finalize it, we can present it for further feedback and validation.
+
+### Expert 2: Sounds like a plan. Let's get to work on that. I'm sure together we can create a comprehensive and user-friendly class diagram for this social media platform.
+
+### Expert 3: Agreed. I'm excited to dive in and bring all these ideas together into a cohesive UML class diagram. With our combined expertise, I have no doubt we'll create an excellent design solution.
+### Instructions: Step 1: Define the User class:
+- Add attributes: 
+   - username: String
+   - password: String
+   - email: String
+   - name: String
+   - bio: String
+   - profilePicture: String
+   - externalLinks: String[]
+- Create getters and setters for all attributes
+
+Step 2: Add behavior to User class:
+- Include methods:
+   - uploadPost(content: String, type: String): postID (Return type could be discussed)
+   - deletePost(postID: String)
+   - likePost(postID: String)
+   - commentPost(postID: String, comment: String)
+   - followUser(username: String)
+   - unfollowUser(username: String)
+   - reportPost(postID: String)
+
+Step 3: Define the Post class:
+- Add attributes:
+   - postID: String
+   - content: String
+   - userID: String
+   - likes: int
+- Create getters and setters for all attributes
+
+Step 4: Define the Comment class:
+- Add attributes:
+   - commentID: String
+   - postID: String
+   - userID: String
+   - content: String
+- Create getters and setters for all attributes
+
+Step 5: Define the Report class:
+- Add attributes:
+   - reportID: String
+   - postID: String
+   - userID: String
+   - description: String
+   - status: String
+- Create getters and setters for all attributes
+
+Step 6: Define the Admin class:
+- Add attributes:
+   - adminID: String
+   - name: String
+- Create getters and setters for all attributes
+
+Step 7: Add behavior to Admin class:
+- Include methods:
+   - reviewReportedPost(reportID: String, action: String)
+   - banUser(username: String)
+
+Step 8: Define the SocialMediaPlatform class:
+- Add attributes:
+   - users: List<User>
+   - posts: List<Post>
+   - comments: List<Comment>
+   - reports: List<Report>
+   - admins: List<Admin>
+- Create getters and setters for all attributes
+
+Step 9: Include associations between classes:
+- Connect User and Post classes:
+   - User (1) ------ < (*) Post
+- Connect User and Comment classes:
+   - User (1) ------ < (*) Comment
+- Connect User and Report classes:
+   - User (1) ------ < (*) Report
+- Connect Admin and Report classes:
+   - Admin (1) ------ < (*) Report
+
+Step 10: Define visibility and access levels:
+- Add properties to attributes and methods depending on their visibility and access levels. (for example: public, private, protected)
+
+This step-by-step solution describes the creation and further modification of different classes such as User, Post, Comment, Report, Admin, and SocialMediaPlatform. It defines their attributes, behaviors, associations, and visibility with access levels.
+
+### PlantUML:
+Filename: social_media_platform.puml
+
+```plantuml
+@startuml
+
+class User {
+  - username: String
+  - password: String
+  - email: String
+  - name: String
+  - bio: String
+  - profilePicture: String
+  - externalLinks: String[]
+  + getters and setters
+  + uploadPost(content: String, type: String): postID
+  + deletePost(postID: String)
+  + likePost(postID: String)
+  + commentPost(postID: String, comment: String)
+  + followUser(username: String)
+  + unfollowUser(username: String)
+  + reportPost(postID: String)
+}
+
+class Post {
+  - postID: String
+  - content: String
+  - userID: String
+  - likes: int
+  + getters and setters
+}
+
+class Comment {
+  - commentID: String
+  - postID: String
+  - userID: String
+  - content: String
+  + getters and setters
+}
+
+class Report {
+  - reportID: String
+  - postID: String
+  - userID: String
+  - description: String
+  - status: String
+  + getters and setters
+}
+
+class Admin {
+  - adminID: String
+  - name: String
+  + getters and setters
+  + reviewReportedPost(reportID: String, action: String)
+  + banUser(username: String)
+}
+
+class SocialMediaPlatform {
+  - users: List<User>
+  - posts: List<Post>
+  - comments: List<Comment>
+  - reports: List<Report>
+  - admins: List<Admin>
+  + getters and setters
+}
+
+User --|> Post
+User --|> Comment
+User --|> Report
+Admin --|> Report
+
+@enduml
+```

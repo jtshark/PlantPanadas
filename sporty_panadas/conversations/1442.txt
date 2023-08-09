@@ -1,0 +1,103 @@
+### Request: Our project is a social media platform where users can create profiles, search for friends, share photos and messages, and follow their favorite topics and hashtags. Additionally, administrators can moderate user content and manage the overall platform functionality.
+### Expert 1: Okay, let's start by breaking down the main entities we will need for this social media platform. User profiles clearly play a big role here, so that should be our first focus. 
+
+### Expert 2: Agreed. We'll need attributes like username, email, and password for each user. Additionally, we should include attributes like date of birth, location, and bio to provide a more detailed profile.
+
+### Expert 3: Definitely. It might also be useful to have a relationship between users for friend connections. We can then store the user IDs for each friend in another table.
+
+### Expert 1: Yes, that would be a good idea. And adding a many-to-many relationship between users will allow users to have multiple friends as well. As for searching for friends, we could use a method to search based on specific criteria like location or interests.
+
+### Expert 2: Right. And we want users to be able to upload photos as part of their profile, so we'll need an attribute for that. We might also want to consider having a separate entity called albums linked to the users, so they can organize their photos.
+
+### Expert 3: That makes sense. And for sharing messages, we could add another entity called posts. Each post will belong to a specific user and can have attributes like content and timestamp.
+
+### Expert 1: Additionally, users should also be able to follow different topics and hashtags, so we may need another entity for that. And for moderation purposes, administrators should have the ability to flag and delete user content. We can have an admin role with specific permission to perform those actions.
+
+### Expert 2: Agreed. We could add attributes like a flag status and flag reason in the post entity, which can be examined by admins for moderation.
+
+### Expert 3: Should we add an entity for comments as well, since users will be able to comment on posts?
+
+### Expert 1: Yes, definitely. Each comment can have its own content and timestamp, along with a reference to the post it belongs to.
+
+### Expert 2: One last thing to consider is notifications. Should we incorporate that into our class diagram?
+
+### Expert 3: We can have an entity for notifications, related to each user. This way, whenever there's a new comment, like, or friend request, a notification can be created.
+
+### Expert 1: Alright, we have a good foundation for our class diagram so far. Before we move on, do we have any uncertainties or points that need clarification from the user?
+### Instructions: 1. Create the User class with the following attributes:
+   - userID : int
+   - username : string
+   - email : string
+   - password : string
+   - dateOfBirth : date
+   - location : string
+   - bio : string
+
+2. Create the Friend class with the following attributes:
+   - friendshipID : int
+   - user1ID : int (foreign key referencing User.userID)
+   - user2ID : int (foreign key referencing User.userID)
+
+3. Create the Album class with the following attributes:
+   - albumID : int
+   - userID : int (foreign key referencing User.userID)
+   - albumName : string
+
+4. Create the Photo class with the following attributes:
+   - photoID : int
+   - userID : int (foreign key referencing User.userID)
+   - albumID : int (foreign key referencing Album.albumID)
+   - photoURL : string
+
+5. Create the Post class with the following attributes:
+   - postID : int
+   - userID : int (foreign key referencing User.userID)
+   - content : string
+   - timestamp : datetime
+
+6. Create the Topic class with the following attributes:
+   - topicID : int
+   - topicName : string
+
+7. Create the Follow class with the following attributes:
+   - followID : int
+   - userID : int (foreign key referencing User.userID)
+   - topicID : int (foreign key referencing Topic.topicID)
+
+8. Create the Admin class with the following attributes:
+   - adminID : int
+   - username : string
+   - email : string
+   - password : string
+
+9. Create the Flag class with the following attributes:
+   - flagID : int
+   - postID : int (foreign key referencing Post.postID)
+   - flagStatus : enum (flagged, resolved)
+   - flagReason : string
+
+10. Create the Comment class with the following attributes:
+   - commentID : int
+   - postID : int (foreign key referencing Post.postID)
+   - userID : int (foreign key referencing User.userID)
+   - content : string
+   - timestamp : datetime
+
+11. Create the Notification class with the following attributes:
+   - notificationID : int
+   - userID : int (foreign key referencing User.userID)
+   - content : string
+   - timestamp : datetime
+
+12. Define the associations between classes:
+   - User class has a one-to-many association with Friend class (one user can have many friends)
+   - User class has a one-to-many association with Album class (one user can have many albums)
+   - User class has a one-to-many association with Photo class (one user can have many photos)
+   - User class has a one-to-many association with Post class (one user can have many posts)
+   - User class has a one-to-many association with Follow class (one user can follow many topics)
+   - Admin class has a one-to-many association with Flag class (one admin can review many flags)
+   - Post class has a one-to-many association with Flag class (one post can have many flags)
+   - Post class has a one-to-many association with Comment class (one post can have many comments)
+   - User class has a one-to-many association with Notification class (one user can have many notifications)
+
+That's it! This sequential solution creates the necessary classes and attributes, defines their associations, and links them together to design the class diagram for the social media platform.

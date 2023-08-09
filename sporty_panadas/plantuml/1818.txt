@@ -1,0 +1,134 @@
+### Request: Our project is about developing a website that allows users to search for and book vacation rentals, while owners can manage their listings and rental availability.
+### Expert 1: So, our task is to design a UML class diagram for this vacation rental website. Let's identify the main entities involved in this system.
+
+### Expert 2: Definitely. We'll need classes for users, vacation rentals, owners, and bookings. Any other entities come to mind?
+
+### Expert 3: How about a class for reviews? Users could leave reviews for the vacation rentals they have booked.
+
+### Expert 1: That's a great addition. So, we have classes for users, vacation rentals, owners, bookings, and reviews. Let's start with the User class. It should have attributes like username, password, email, and maybe a profile picture.
+
+### Expert 2: Right. We should also add methods such as changePassword() and updateProfilePicture() to handle user interactions with their account.
+
+### Expert 3: Good points. Now, let's move on to the Vacation Rental class. It should include attributes like title, description, price per night, and maybe a location field.
+
+### Expert 1: Agreed. We should also consider adding methods like book() and cancelBooking() to handle the booking process.
+
+### Expert 2: I think we should also include an Owner class for users who own vacation rentals. This class would have an association with the Vacation Rental class since owners can manage their listings.
+
+### Expert 3: Yes, and maybe the Owner class should have attributes like name, contact information, and a collection of vacation rentals they own.
+
+### Expert 1: That makes sense. And let's not forget about the Booking class. It should have attributes like check-in and check-out dates, the total price, and maybe a status field indicating if it's confirmed or canceled.
+
+### Expert 2: Absolutely. The Booking class could also have methods for calculating the duration and retrieving the total price based on the dates.
+
+### Expert 3: Should we also include a Review class for users to leave feedback on the vacation rentals they have booked?
+
+### Expert 1: Yes, definitely. The Review class should have attributes like rating, comments, and a reference to the vacation rental it's associated with.
+
+### Expert 2: Agreed. Additionally, we could have methods in the Review class to allow users to edit their review, delete it, or mark it as helpful.
+
+### Expert 3: This class diagram covers all the main entities and their relationships. With this design, users can search for vacation rentals, book them, and, as owners or renters, manage their profiles and bookings. We should ensure that each class has appropriate associations and methods to fulfill these requirements.
+
+### Expert 1: Absolutely. And remember, as we continue designing the class diagram, if we come across any ambiguities or uncertainties, we should seek clarification from the user to ensure we meet their needs.
+### Instructions: Step 1: Create a User class with the following attributes:
+- username: String
+- password: String
+- email: String
+- profilePicture: String
+
+Step 2: Add methods to the User class:
+- changePassword(): void
+- updateProfilePicture(): void
+
+Step 3: Create a VacationRental class with the following attributes:
+- title: String
+- description: String
+- pricePerNight: double
+- location: String
+
+Step 4: Create associations between the User and VacationRental classes, indicating that users can book vacation rentals and owners can manage their listings. 
+
+Step 5: Create an Owner class with the following attributes:
+- name: String
+- contactInformation: String
+
+Step 6: Add a collection of Vacation Rental objects to the Owner class, representing the rentals owned by the individual.
+
+Step 7: Create a Booking class with the following attributes:
+- checkInDate: Date
+- checkOutDate: Date
+- totalPrice: double
+- status: String
+
+Step 8: Add methods to the Booking class:
+- calculateDuration(): int (calculates the number of nights between check-in and check-out dates)
+- calculateTotalPrice(): double (calculates the total price based on the duration and price per night)
+
+Step 9: Create an association between the User and Booking classes, specifying that a User can have multiple bookings.
+
+Step 10: Create a Review class with the following attributes:
+- rating: int
+- comments: String
+
+Step 11: Add a reference to the VacationRental class in the Review class, indicating which rental the review corresponds to.
+
+Step 12: Add methods to the Review class:
+- edit(): void (allows users to modify their review)
+- delete(): void (allows users to delete their review) 
+- markAsHelpful(): void (lets other users mark a review as helpful)
+
+Step 13: Refine the associations between classes, ensuring they accurately represent the relationships between users, bookings, owners, vacation rentals, and reviews.
+
+Step 14: Validate the class diagram for potential improvements or functionality enhancements.
+
+Note: It is recommended to use appropriate association labels like "owns", "books", or "leaves review", along with proper cardinality indication between appropriate classes to enhance clarity in the class diagram.
+
+### PlantUML:
+Filename: vacation_rental_website.puml
+
+@startuml
+class User {
+  - username: String
+  - password: String
+  - email: String
+  - profilePicture: String
+  + changePassword(): void
+  + updateProfilePicture(): void
+}
+
+class VacationRental {
+  - title: String
+  - description: String
+  - pricePerNight: double
+  - location: String
+}
+
+class Owner {
+  - name: String
+  - contactInformation: String
+  - vacationRentals: List<VacationRental>
+}
+
+class Booking {
+  - checkInDate: Date
+  - checkOutDate: Date
+  - totalPrice: double
+  - status: String
+  + calculateDuration(): int
+  + calculateTotalPrice(): double
+}
+
+class Review {
+  - rating: int
+  - comments: String
+  - vacationRental: VacationRental
+  + edit(): void
+  + delete(): void
+  + markAsHelpful(): void
+}
+
+User "books" -- "multiple" Booking
+User "reviews" -- "multiple" Review
+Owner "owns" -- "multiple" VacationRental
+
+@enduml

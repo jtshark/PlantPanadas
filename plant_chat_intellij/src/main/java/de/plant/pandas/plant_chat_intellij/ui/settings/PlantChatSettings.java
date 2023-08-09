@@ -4,6 +4,7 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import de.plant.pandas.chatbot.DegreeOfQuestionsFromExperts;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,10 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "PlantChatSettings", storages = {@Storage("PlantChat.xml")})
 public class PlantChatSettings implements PersistentStateComponent<PlantChatSettings> {
     public String openAIToken;
+    public String deepLToken;
+
+    public DegreeOfQuestionsFromExperts questionSetting = DegreeOfQuestionsFromExperts.NONE;
+    public LLMType llmType = LLMType.CHATGPT;
 
     public static PlantChatSettings getInstance() {
         Application app = ApplicationManager.getApplication();
@@ -29,4 +34,7 @@ public class PlantChatSettings implements PersistentStateComponent<PlantChatSett
         XmlSerializerUtil.copyBean(state, this);
     }
 
+    public enum LLMType {
+        CHATGPT, GPT4, LLaMA
+    }
 }
