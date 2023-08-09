@@ -25,37 +25,45 @@ public class UMLChatBotIoPImpl implements UMLChatBot {
 
 
     public UMLChatBotResults askQuestion(List<Message> messages, Collection<String> plantUMLs, AskQuestionParameter askQuestionParameter) throws IOException {
-        Message lastMessage = messages.get(messages.size() - 1);
-        String lang = askQuestionParameter.getTranslatorService().translateToLanguage(lastMessage.getContent(), "EN-US", true).getLang();
+        try {
+            Message lastMessage = messages.get(messages.size() - 1);
+            String lang = askQuestionParameter.getTranslatorService().translateToLanguage(lastMessage.getContent(), "EN-US", true).getLang();
 
-        messages.add(0, new Message(prompts.getIOPrompt(plantUMLs, askQuestionParameter.getLevel()), MessageRole.SYSTEM));
+            messages.add(0, new Message(prompts.getIOPrompt(plantUMLs, askQuestionParameter.getLevel()), MessageRole.SYSTEM));
 
-        if (askQuestionParameter.getOnStageChange() != null)
-            askQuestionParameter.getOnStageChange().accept(GenerationStage.GENERATE_PLANT_UML);
 
-        String output = askQuestionParameter.getLlm().prompt(messages, List.of("END", "User:"), 7000);
-        messages.add(new Message(output, MessageRole.ASSISTANT));
-        if (output.contains("QUESTION:")) {
-            messages.remove(0);
-            String question = responseParser.getQuestion(output);
-            question = askQuestionParameter.getTranslatorService().translateToLanguage(question, lang, false).getText();
-            if (askQuestionParameter.getOnStageChange() != null) askQuestionParameter.getOnStageChange().accept(null);
-            return new UMLChatBotResults.ChatBotQuestions(question);
-        } else {
-            Map<String, String> result = responseParser.umlStringToMap(output);
+            StageListener.getInstance().setGenerationStage(GenerationStage.GENERATE_PLANT_UML);
 
-            if (result.isEmpty()) {
-                messages.add(new Message(prompts.foundNoUMLPrompt(), MessageRole.SYSTEM));
-                if (askQuestionParameter.getOnStageChange() != null)
-                    askQuestionParameter.getOnStageChange().accept(GenerationStage.FIX_ERRORS);
+            String output = askQuestionParameter.getLlm().prompt(messages, List.of("END", "User:"), 7000);
+            messages.add(new Message(output, MessageRole.ASSISTANT));
+            if (output.contains("QUESTION:")) {
+                messages.remove(0);
+                String question = responseParser.getQuestion(output);
+                question = askQuestionParameter.getTranslatorService().translateToLanguage(question, lang, false).getText();
 
-                output = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 7000);
-                result = responseParser.umlStringToMap(output);
+                StageListener.getInstance().setGenerationStage(null);
+                return new UMLChatBotResults.ChatBotQuestions(question);
+            } else {
+                Map<String, String> result = responseParser.umlStringToMap(output);
+
+                if (result.isEmpty()) {
+                    messages.add(new Message(prompts.foundNoUMLPrompt(), MessageRole.SYSTEM));
+
+                    StageListener.getInstance().setGenerationStage(GenerationStage.FIX_ERRORS);
+
+
+                    output = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 7000);
+                    result = responseParser.umlStringToMap(output);
+                }
+
+                StageListener.getInstance().setGenerationStage(null);
+                return new UMLChatBotResults.GeneratedUML(result);
             }
-
-            if (askQuestionParameter.getOnStageChange() != null) askQuestionParameter.getOnStageChange().accept(null);
-            return new UMLChatBotResults.GeneratedUML(result);
+        } catch (Exception e) {
+            StageListener.getInstance().setGenerationStage(null);
+            throw e;
         }
+
 
     }
 }

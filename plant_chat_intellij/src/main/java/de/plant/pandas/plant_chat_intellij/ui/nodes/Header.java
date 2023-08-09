@@ -1,6 +1,7 @@
 package de.plant.pandas.plant_chat_intellij.ui.nodes;
 
 import de.plant.pandas.chatbot.GenerationStage;
+import de.plant.pandas.plant_chat_intellij.logic.UMLChatBotProcessor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,10 +16,9 @@ import javafx.scene.shape.Circle;
 
 public class Header extends HBox {
 
-    private final ObjectProperty<GenerationStage> stage = new SimpleObjectProperty<>(this, "stage", null);
     private final double PBSIZE = 54;
 
-    public Header() {
+    public Header(UMLChatBotProcessor umlChatBotProcessor) {
         ImageView profileImageView = getPB();
 
         VBox vBox = new VBox();
@@ -29,29 +29,29 @@ public class Header extends HBox {
 
         Label statusLabel = new Label();
         FontHelper.bindFont(statusLabel, FontHelper.FontType.SUBTITLE);
-        statusLabel.visibleProperty().bind(stage.isNotNull());
-        statusLabel.managedProperty().bind(stage.isNotNull());
+        statusLabel.visibleProperty().bind(umlChatBotProcessor.generationStageProperty().isNotNull());
+        statusLabel.managedProperty().bind(umlChatBotProcessor.generationStageProperty().isNotNull());
 
         statusLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            if (stage.get() == null) {
+            if (umlChatBotProcessor.generationStageProperty().get() == null) {
                 return null;
             }
-            return switch (stage.get()) {
+            return switch (umlChatBotProcessor.generationStageProperty().get()) {
                 case THINKING -> "is thinking...";
                 case CREATE_PLAN -> "is creating a plan...";
                 case GENERATE_PLANT_UML -> "is generating Plant UML...";
                 case FIX_ERRORS -> "is fixing errors...";
             };
-        }, stage));
+        }, umlChatBotProcessor.generationStageProperty()));
 
 
-        vBox.alignmentProperty().bind(Bindings.when(stage.isNotNull())
+        vBox.alignmentProperty().bind(Bindings.when(umlChatBotProcessor.generationStageProperty().isNotNull())
                 .then(Pos.TOP_LEFT)
                 .otherwise(Pos.CENTER_LEFT));
 
         Region placeholderRegion = new Region();
         VBox.setVgrow(placeholderRegion, Priority.ALWAYS);
-        placeholderRegion.managedProperty().bind(stage.isNotNull());
+        placeholderRegion.managedProperty().bind(umlChatBotProcessor.generationStageProperty().isNotNull());
 
         vBox.getChildren().addAll(nameLabel, placeholderRegion, statusLabel);
 
@@ -77,7 +77,4 @@ public class Header extends HBox {
         return profileImageView;
     }
 
-    public void setStage(GenerationStage stage) {
-        this.stage.set(stage);
-    }
 }

@@ -48,16 +48,16 @@ public class TestQuality {
                     .level(DegreeOfQuestionsFromExperts.NONE)
                     .llm((LLM) parameter.getValue().get(1))
                     .translatorService(new TranslatorServiceDeepL(null))
-                    .onStageChange((generationStage -> {
-                        long currentTimeMillis = System.currentTimeMillis();
-                        if (lastStage[0] != null) {
-                            timePerStage.put(lastStage[0], currentTimeMillis - time[0]);
-                        }
-                        lastStage[0] = generationStage;
-                        time[0] = currentTimeMillis;
-                    }))
                     .build();
 
+            StageListener.getInstance().registerListener((generationStage -> {
+                long currentTimeMillis = System.currentTimeMillis();
+                if (lastStage[0] != null) {
+                    timePerStage.put(lastStage[0], currentTimeMillis - time[0]);
+                }
+                lastStage[0] = generationStage;
+                time[0] = currentTimeMillis;
+            }));
 
             for (int i = 0; i < questions.size(); i++) {
 
@@ -92,6 +92,8 @@ public class TestQuality {
                     Files.write(Paths.get(folder + umlFile.getKey()), umlFile.getValue().getBytes());
                 }
             }
+
+            StageListener.getInstance().clearListeners();
 
         }
     }

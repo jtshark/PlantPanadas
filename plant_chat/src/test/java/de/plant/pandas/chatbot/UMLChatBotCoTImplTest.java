@@ -7,6 +7,7 @@ import de.plant.pandas.plantuml.ResponseParser;
 import de.plant.pandas.translation.TranslationResult;
 import de.plant.pandas.translation.TranslatorService;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -41,11 +42,17 @@ public class UMLChatBotCoTImplTest {
         askQuestionParameter = AskQuestionParameter.builder()
                 .level(DegreeOfQuestionsFromExperts.NONE)
                 .translatorService(translatorService)
-                .onStageChange(onStageChange)
                 .llm(llm)
                 .build();
 
+        StageListener.getInstance().registerListener(onStageChange);
+
         chatBot = new UMLChatBotCoTImpl(responseParser, prompts);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        StageListener.getInstance().unregisterListener(onStageChange);
     }
 
     @SneakyThrows

@@ -15,7 +15,5 @@ public class AskQuestionParameter {
     private final LLM llm;
     private final DegreeOfQuestionsFromExperts level;
     private final TranslatorService translatorService;
-
-    private final Consumer<GenerationStage> onStageChange;
-
+    private final long sleepTime = 1000;
 }

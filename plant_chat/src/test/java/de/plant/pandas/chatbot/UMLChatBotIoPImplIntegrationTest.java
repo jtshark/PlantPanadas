@@ -27,7 +27,6 @@ public class UMLChatBotIoPImplIntegrationTest {
 
         parameter = AskQuestionParameter.builder()
                 .llm(new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT))
-                .onStageChange(null)
                 .level(DegreeOfQuestionsFromExperts.NONE)
                 .translatorService(new TranslatorServiceDeepL(null));
     }

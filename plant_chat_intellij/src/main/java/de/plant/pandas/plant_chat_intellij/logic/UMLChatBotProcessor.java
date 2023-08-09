@@ -16,6 +16,9 @@ import de.plant.pandas.llm.MessageRole;
 import de.plant.pandas.llm.OpenAILLM;
 import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettings;
 import de.plant.pandas.translation.TranslatorServiceDeepL;
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,14 +33,14 @@ public class UMLChatBotProcessor {
     private final UMLChatBot umlChatBot;
     private final Consumer<Message> addChatMessage;
 
-    private final Consumer<GenerationStage> onStageChange;
+    private final SimpleObjectProperty<GenerationStage> generationStageProperty = new SimpleObjectProperty<>(null);
 
 
-    public UMLChatBotProcessor(Consumer<Message> addChatMessage, Consumer<GenerationStage> onStageChange) {
+    public UMLChatBotProcessor(Consumer<Message> addChatMessage) {
         this.addChatMessage = addChatMessage;
-        this.onStageChange = onStageChange;
 
         umlChatBot = new UMLChatBotCoTImpl();
+        StageListener.getInstance().registerListener(newValue ->  Platform.runLater(() -> generationStageProperty.set(newValue)), true);
     }
 
     private void addChatMessage(Message message, boolean addToHistory) {
@@ -118,7 +121,6 @@ public class UMLChatBotProcessor {
                         try {
                             result = umlChatBot.askQuestion(_currentMessages, currentDiagramStrings, AskQuestionParameter.builder()
                                     .translatorService(new TranslatorServiceDeepL(PlantChatSettings.getInstance().deepLToken))
-                                    .onStageChange(onStageChange)
                                     .level(PlantChatSettings.getInstance().questionSetting)
                                     .llm(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.GPT4))
                                     .build());
@@ -137,5 +139,14 @@ public class UMLChatBotProcessor {
                     }
             );
         });
+    }
+
+
+    public GenerationStage getGenerationStage() {
+        return generationStageProperty.get();
+    }
+
+    public ReadOnlyObjectProperty<GenerationStage> generationStageProperty() {
+        return generationStageProperty;
     }
 }
