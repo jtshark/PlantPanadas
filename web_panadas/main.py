@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # llama_path = hf_hub_download(repo_id="TheBloke/wizard-mega-13B-GGML", filename="wizard-mega-13B.ggmlv3.q4_1.bin")
 llm = Llama(model_path="/srv/work/QE/plant_panadas/model/plant-panadas-q5_1.bin",
-            n_gpu_layers=60, n_threads=1, n_ctx=2048)
+            n_gpu_layers=60, n_threads=1, n_ctx=2048, n_batch=128)
 
 
 def llama_model(messages):
@@ -14,7 +14,7 @@ def llama_model(messages):
     for message in messages:
 
         if message["role"] == "user":
-            role_name = "USER"
+            role_name = "Instruction"
         elif message["role"] == "assistant":
             role_name = "Assistant"
         elif message["role"] == "system":
@@ -24,6 +24,8 @@ def llama_model(messages):
 
         prompt += f"### {role_name}: {message['content']}\n"
     prompt += "### Assistant:\n"
+
+    print(prompt)
     output = llm(prompt, max_tokens=2048, temperature=0)
     return output["choices"][0]["text"]
 
@@ -49,4 +51,4 @@ def get_answer():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5632)
