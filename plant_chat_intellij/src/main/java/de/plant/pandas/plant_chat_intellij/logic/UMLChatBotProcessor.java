@@ -1,6 +1,7 @@
 package de.plant.pandas.plant_chat_intellij.logic;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -40,7 +41,7 @@ public class UMLChatBotProcessor {
         this.addChatMessage = addChatMessage;
 
         umlChatBot = new UMLChatBotCoTImpl();
-        StageListener.getInstance().registerListener(newValue ->  Platform.runLater(() -> generationStageProperty.set(newValue)), true);
+        StageListener.getInstance().registerListener(newValue -> Platform.runLater(() -> generationStageProperty.set(newValue)), true);
     }
 
     private void addChatMessage(Message message, boolean addToHistory) {
@@ -81,12 +82,16 @@ public class UMLChatBotProcessor {
         addChatMessage.accept(new Message("Here is the generated UML. Enjoy", MessageRole.ASSISTANT));
         ApplicationManager.getApplication().invokeLater(() -> {
             ApplicationManager.getApplication().runWriteAction(() -> {
-                for (Map.Entry<String, String> filenameUmlDiagramPair : answer.entrySet()) {
 
-                    String filename = filenameUmlDiagramPair.getKey();
-                    String uml = filenameUmlDiagramPair.getValue();
-                    addUML(project, filename, uml);
-                }
+                CommandProcessor.getInstance().executeCommand(project, () -> {
+                    for (Map.Entry<String, String> filenameUmlDiagramPair : answer.entrySet()) {
+
+                        String filename = filenameUmlDiagramPair.getKey();
+                        String uml = filenameUmlDiagramPair.getValue();
+                        addUML(project, filename, uml);
+                    }
+                }, "Plant Panadas Generation", null);
+
             });
         });
     }
