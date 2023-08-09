@@ -1,4 +1,4 @@
-package de.plant.pandas;
+package de.plant.pandas.llm;
 
 import de.plant.pandas.chatbot.LLaMAChatBot;
 import de.plant.pandas.chatbot.UMLChatBotResults;

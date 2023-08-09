@@ -22,7 +22,7 @@ public class ChatGPTQuality {
         Map<String, Map<String, String>> results = new HashMap<>();
         Map<String, String> tasks = new HashMap<>();
         for (File model : new File("results").listFiles()) {
-            if(model.getName().equals("points") || model.getName().equals("venv") || model.getName().equals(".idea") || model.getName().equals("plotter.py") ) {
+            if (model.getName().equals("points") || model.getName().equals("venv") || model.getName().equals(".idea") || model.getName().equals("plotter.py") || model.isFile()) {
                 continue;
             }
             for (File subfolder : model.listFiles()) {
@@ -54,8 +54,8 @@ public class ChatGPTQuality {
             List<Map.Entry<String, String>> umlFromModels = new ArrayList<>(umls.getValue().entrySet());
             Collections.shuffle(umlFromModels);
 
-            String prompt = "You are an UML teacher. You wrote an exam where the student have to answer the following question: " + question + "\n" +
-                    "Your task is now to grade the students from $1$ (very bad) to $10$ (very good). Please also explain your scoring.";
+            String prompt = "You are a UML teacher. You wrote an exam in which students have to answer the following question: " + question + "\n" +
+                    "Your task is now to grade the students from $1$ (very bad) to $10$ (very good). You should award points based on the following aspects: naming of methods, classes, etc., simplicity of the diagram, types of attributes used, correctness to the original task, and correct use of relationships between classes. Please also explain your scoring.";
 
             StringBuilder answers = new StringBuilder();
 
@@ -77,7 +77,7 @@ public class ChatGPTQuality {
             String resultFolder = "results/points";
             new File(resultFolder).mkdirs();
 
-            Files.write(Paths.get(resultFolder + "/" + name + ".txt"), (order+"\n\n"+answer).getBytes());
+            Files.write(Paths.get(resultFolder + "/" + name + ".txt"), (order + "\n\n" + answer).getBytes());
         }
     }
 }
