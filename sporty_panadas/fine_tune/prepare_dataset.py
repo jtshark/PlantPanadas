@@ -11,7 +11,7 @@ load_dotenv("tokens.env")
 
 def load_dataset():
     data = []
-    for root, dirs, files in os.walk("conversations"):
+    for root, dirs, files in os.walk("plantuml"):
         for filename in files:
             with open(os.path.join(root, filename)) as file:
                 data.append(file.read())

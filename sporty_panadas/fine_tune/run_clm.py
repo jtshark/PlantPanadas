@@ -1,4 +1,3 @@
-import os
 import argparse
 from transformers import (
     AutoModelForCausalLM,
@@ -198,13 +197,19 @@ def training_function(args):
         logging_strategy="steps",
         logging_steps=10,
         save_strategy="no",
+        report_to="wandb"
     )
+
+    split_datasets = dataset.train_test_split(test_size=0.1)
+    train_dataset = split_datasets['train']
+    eval_dataset = split_datasets['test']
 
     # Create Trainer instance
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=dataset,
+        train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
         data_collator=default_data_collator,
     )
 
