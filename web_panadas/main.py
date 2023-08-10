@@ -4,9 +4,8 @@ from llama_cpp import Llama
 
 app = Flask(__name__)
 
-# llama_path = hf_hub_download(repo_id="TheBloke/wizard-mega-13B-GGML", filename="wizard-mega-13B.ggmlv3.q4_1.bin")
-llm = Llama(model_path="/srv/work/QE/plant_panadas/model/plant-panadas-q5_1.bin",
-            n_gpu_layers=60, n_threads=1, n_ctx=2048, n_batch=128)
+llm = Llama(model_path="./model/plant-panadas-llm-q4_1.bin",
+            n_gpu_layers=60, n_threads=8, n_ctx=4096, n_batch=128)
 
 
 def llama_model(messages):
@@ -14,20 +13,20 @@ def llama_model(messages):
     for message in messages:
 
         if message["role"] == "user":
-            role_name = "Instruction"
+            role_name = "Answer"
         elif message["role"] == "assistant":
-            role_name = "Assistant"
+            role_name = ""
         elif message["role"] == "system":
-            role_name = "Instruction"
+            role_name = "Request"
         else:
             role_name = "Unknown"
 
-        prompt += f"### {role_name}: {message['content']}\n"
-    prompt += "### Assistant:\n"
+        prompt += f"### {role_name}: {message['content']}"
+    prompt += "### Expert 1:"
 
     print(prompt)
-    output = llm(prompt, max_tokens=2048, temperature=0)
-    return output["choices"][0]["text"]
+    output = llm(prompt, max_tokens=4096, temperature=0, stop=["### Answer:"])
+    return "### Expert 1:" + output["choices"][0]["text"]
 
 
 @app.route('/', methods=['POST'])

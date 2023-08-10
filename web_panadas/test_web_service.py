@@ -3,15 +3,15 @@ import json
 
 if __name__ == '__main__':
     # Define the url of the flask server
-    url = 'http://localhost:5000'
+    url = 'http://localhost:5632'
 
     # Define your data
     data = {
         'model': 'test_model',
         'messages': [
             {
-                "role": "user",
-                "content": "Hello, how are you?"
+                "role": "system",
+                "content": "42"
             }
         ],
     }
