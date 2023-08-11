@@ -21,7 +21,7 @@ def llama_model(messages):
         else:
             role_name = "Unknown"
 
-        prompt += f"### {role_name}: {message['content']}"
+        prompt += f"### {role_name}: {message['content']}\n"
     prompt += "### Expert 1:"
 
     print(prompt)

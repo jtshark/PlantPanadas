@@ -15,6 +15,8 @@ public class PlantChatSettingsUI implements Configurable {
     private JBTextField openAIAPItextField;
     private JBTextField deepLAPItextField;
 
+    private JBTextField llamaURLtextField;
+
     private ComboBox<String> degreeQuestionsUI = new ComboBox<>();
     private ComboBox<String> llmTypeUI = new ComboBox<>();
 
@@ -34,6 +36,9 @@ public class PlantChatSettingsUI implements Configurable {
         deepLAPItextField = new JBTextField();
         deepLAPItextField.setColumns(20);
 
+        llamaURLtextField = new JBTextField();
+        llamaURLtextField.setColumns(20);
+
         for (DegreeOfQuestionsFromExperts questionChoice : DegreeOfQuestionsFromExperts.values()) {
             degreeQuestionsUI.addItem(getDegreeOfQuestionsString(questionChoice));
         }
@@ -46,7 +51,8 @@ public class PlantChatSettingsUI implements Configurable {
                 .addLabeledComponent(new JBLabel("Enter your OpenAI Key: "), openAIAPItextField, 1, false)
                 .addLabeledComponent(new JBLabel("Enter your DeepL Key: "), deepLAPItextField, 1, false)
                 .addLabeledComponent(new JBLabel("Select how many questions shall be asked"), degreeQuestionsUI, 1, false)
-                .addLabeledComponent(new JBLabel("Select the type of LLM you want to use"), degreeQuestionsUI, 1, false)
+                .addLabeledComponent(new JBLabel("Select the type of LLM you want to use"), llmTypeUI, 1, false)
+                .addLabeledComponent(new JBLabel("Enter the URL for the LLaMA url:"), llamaURLtextField, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
@@ -73,7 +79,8 @@ public class PlantChatSettingsUI implements Configurable {
         return !openAIAPItextField.getText().equals(settings.openAIToken) ||
                 !deepLAPItextField.getText().equals(settings.deepLToken) ||
                 settings.questionSetting.ordinal() != degreeQuestionsUI.getSelectedIndex() ||
-                settings.llmType.ordinal() != llmTypeUI.getSelectedIndex();
+                settings.llmType.ordinal() != llmTypeUI.getSelectedIndex() ||
+                !llamaURLtextField.getText().equals(settings.llamaURL);
     }
 
     @Override
@@ -83,6 +90,7 @@ public class PlantChatSettingsUI implements Configurable {
         settings.questionSetting = DegreeOfQuestionsFromExperts.values()[degreeQuestionsUI.getSelectedIndex()];
         settings.llmType = PlantChatSettings.LLMType.values()[llmTypeUI.getSelectedIndex()];
         settings.deepLToken = deepLAPItextField.getText();
+        settings.llamaURL = llamaURLtextField.getText();
     }
 
     @Override
@@ -93,6 +101,7 @@ public class PlantChatSettingsUI implements Configurable {
         degreeQuestionsUI.setSelectedIndex(settings.questionSetting.ordinal());
         llmTypeUI.setSelectedIndex(settings.llmType.ordinal());
         deepLAPItextField.setText(settings.deepLToken);
+        llamaURLtextField.setText(settings.llamaURL);
     }
 
     @Override
@@ -102,6 +111,7 @@ public class PlantChatSettingsUI implements Configurable {
         degreeQuestionsUI = null;
         deepLAPItextField = null;
         llmTypeUI = null;
+        llamaURLtextField = null;
     }
 
 }

@@ -12,9 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import de.plant.pandas.chatbot.*;
-import de.plant.pandas.llm.Message;
-import de.plant.pandas.llm.MessageRole;
-import de.plant.pandas.llm.OpenAILLM;
+import de.plant.pandas.llm.*;
 import de.plant.pandas.plant_chat_intellij.ui.settings.PlantChatSettings;
 import de.plant.pandas.translation.TranslatorServiceDeepL;
 import javafx.application.Platform;
@@ -22,6 +20,10 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +33,6 @@ import java.util.stream.Collectors;
 
 public class UMLChatBotProcessor {
     private final List<Message> _currentMessages = new ArrayList<>();
-    private final UMLChatBot umlChatBot;
     private final Consumer<Message> addChatMessage;
 
     private final SimpleObjectProperty<GenerationStage> generationStageProperty = new SimpleObjectProperty<>(null);
@@ -40,7 +41,6 @@ public class UMLChatBotProcessor {
     public UMLChatBotProcessor(Consumer<Message> addChatMessage) {
         this.addChatMessage = addChatMessage;
 
-        umlChatBot = new UMLChatBotCoTImpl();
         StageListener.getInstance().registerListener(newValue -> Platform.runLater(() -> generationStageProperty.set(newValue)), true);
     }
 
@@ -114,6 +114,14 @@ public class UMLChatBotProcessor {
         return currentDiagramStrings;
     }
 
+    private LLM getLLM() throws MalformedURLException, URISyntaxException {
+        return switch (PlantChatSettings.getInstance().llmType) {
+            case CHATGPT -> new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.CHATGPT);
+            case GPT4 -> new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.GPT4);
+            case LLaMA -> new LLaMALLM(new URI(PlantChatSettings.getInstance().llamaURL).toURL());
+        };
+    }
+
     public void startChat(Project project, String input) {
         ApplicationManager.getApplication().runReadAction(() -> {
             Collection<String> currentDiagramStrings = getPumlFiles(project);
@@ -121,15 +129,21 @@ public class UMLChatBotProcessor {
                     () -> {
                         Message ourMessage = new Message(input, MessageRole.HUMAN);
                         addChatMessage(ourMessage, true);
+                        UMLChatBot umlChatBot;
+                        if (PlantChatSettings.getInstance().llmType == PlantChatSettings.LLMType.LLaMA) {
+                            umlChatBot = new LLaMAChatBot();
+                        } else {
+                            umlChatBot = new UMLChatBotIoPImpl();
+                        }
 
                         UMLChatBotResults result = null;
                         try {
                             result = umlChatBot.askQuestion(_currentMessages, currentDiagramStrings, AskQuestionParameter.builder()
                                     .translatorService(new TranslatorServiceDeepL(PlantChatSettings.getInstance().deepLToken))
                                     .level(PlantChatSettings.getInstance().questionSetting)
-                                    .llm(new OpenAILLM(PlantChatSettings.getInstance().openAIToken, OpenAILLM.OpenAIType.GPT4))
+                                    .llm(getLLM())
                                     .build());
-                        } catch (IOException e) {
+                        } catch (IOException | URISyntaxException e) {
                             _currentMessages.clear();
                             addChatMessage.accept(new Message("Ohhhh it seems like pandas do not like you.", MessageRole.ASSISTANT));
                             addChatMessage.accept(new Message("Ohh no what have I done?", MessageRole.HUMAN));

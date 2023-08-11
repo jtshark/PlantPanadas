@@ -17,6 +17,8 @@ public class PlantChatSettings implements PersistentStateComponent<PlantChatSett
     public DegreeOfQuestionsFromExperts questionSetting = DegreeOfQuestionsFromExperts.NONE;
     public LLMType llmType = LLMType.CHATGPT;
 
+    public String llamaURL = "http://localhost:5632";
+
     public static PlantChatSettings getInstance() {
         Application app = ApplicationManager.getApplication();
         return app.getService(PlantChatSettings.class);

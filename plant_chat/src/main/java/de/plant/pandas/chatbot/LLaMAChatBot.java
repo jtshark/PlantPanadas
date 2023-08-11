@@ -13,18 +13,16 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class LLaMAChatBot implements UMLChatBot {
 
-    final LLaMALLM lLaMALLM;
-    final OpenAILLM openAILLM;
-    final Prompts prompts;
-    final ResponseParser responseParser;
+    private final Prompts prompts;
+    private final ResponseParser responseParser;
 
     @SneakyThrows
     public LLaMAChatBot() {
-        lLaMALLM = new LLaMALLM(new URL("http://127.0.0.1:5632"));
-        openAILLM = new OpenAILLM(OpenAILLM.OpenAIType.GPT4);
+
         prompts = new PromptsImpl();
         responseParser = new ResponseParserImpl();
     }
@@ -32,13 +30,18 @@ public class LLaMAChatBot implements UMLChatBot {
     @Override
     public UMLChatBotResults askQuestion(List<Message> messages, Collection<String> plantUMLs, AskQuestionParameter askQuestionParameter) throws IOException {
 
-        String answer = lLaMALLM.prompt(messages, Collections.emptyList(), 2048);
+        if (messages.size() == 1) {
+            messages.set(0, new Message(messages.get(0).getContent(), MessageRole.SYSTEM));
+        }
 
-        System.out.println(answer);
+        String answer = askQuestionParameter.getLlm().prompt(messages, List.of("### ANSWER"), 4096);
         messages.add(new Message(answer, MessageRole.ASSISTANT));
-        messages.add(new Message(prompts.generatePlantUMLPrompt(), MessageRole.SYSTEM));
-        String result = openAILLM.prompt(messages, Collections.emptyList(), 4000);
+        if (answer.contains("### QUESTION:")) {
+            String question = responseParser.getQuestion(answer);
+            return new UMLChatBotResults.ChatBotQuestions(question);
+        }
 
-        return new UMLChatBotResults.GeneratedUML(responseParser.umlStringToMap(result));
+        Map<String, String> uml = responseParser.umlStringToMap(answer);
+        return new UMLChatBotResults.GeneratedUML(uml);
     }
 }
