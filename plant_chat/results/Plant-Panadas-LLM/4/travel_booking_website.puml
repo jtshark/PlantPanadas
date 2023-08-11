@@ -1,0 +1,89 @@
+@startuml
+class User {
+  - name : String
+  - email : String
+  - password : String
+  + searchFlights() : void
+  + searchHotels() : void
+  + searchHolidayPackages() : void
+}
+
+class Booking {
+  - departureDate : Date
+  - destination : String
+  - numberOfPassengers : int
+  
+  + calculateTotalCost() : double
+}
+
+class Flight {
+  - departureAirport : String
+  - arrivalAirport : String
+  - duration : int
+}
+
+class Hotel {
+  - location : String
+  - numberOfRooms : int
+  - amenities : List<String>
+}
+
+class HolidayPackage {
+  - itinerary : String
+  - activities : List<String>
+}
+
+class TravelAgent {
+  - name : String
+  - email : String
+  - password : String
+  
+  + manageBookings() : void
+  + managePricing() : void
+  + manageCustomerInquiries() : void
+}
+
+class BookingManager {
+  + addNewBooking(booking: Booking) : void
+  + updateExistingBooking(booking: Booking) : void
+  + retrieveBookingDetails(bookingId: int) : Booking
+}
+
+class PricingManager {
+  + calculateDiscounts() : double
+  + applyFees() : void
+}
+
+class CustomerInquiry {
+  - inquiryId : int
+  - message : String
+  - status : String
+  
+  + addNewInquiry(inquiry: CustomerInquiry) : void
+  + updateExistingInquiry(inquiry: CustomerInquiry) : void
+  + retrieveDetails(inquiryId: int) : CustomerInquiry
+}
+
+class PaymentProcessor {
+  + validatePayments() : boolean
+  + generateReceipts() : void
+}
+
+class InventoryManager {
+  + checkAvailableFlights() : List<Flight>
+  + checkAvailableHotels() : List<Hotel>
+  + checkAvailableHolidayPackages() : List<HolidayPackage>
+}
+
+User "1" -- "0..*" Booking
+BookingManager "1" -- "1" User
+BookingManager "1" -- "1" Booking
+PricingManager "1" -- "1" Flight
+PricingManager "1" -- "1" Hotel
+PricingManager "1" -- "1" HolidayPackage
+CustomerInquiry "1" -- "0..*" TravelAgent
+PaymentProcessor "1" -- "1" Booking
+InventoryManager "1" -- "1" Flight
+InventoryManager "1" -- "1" Hotel
+InventoryManager "1" -- "1" HolidayPackage
+@enduml

@@ -8,7 +8,7 @@ llm = Llama(model_path="./model/plant-panadas-llm-q4_1.bin",
             n_gpu_layers=60, n_threads=8, n_ctx=4096, n_batch=128)
 
 
-def llama_model(messages):
+def llama_model(messages, stop_tokens):
     prompt = ""
     for message in messages:
 
@@ -25,16 +25,21 @@ def llama_model(messages):
     prompt += "### Expert 1:"
 
     print(prompt)
-    output = llm(prompt, max_tokens=4096, temperature=0, stop=["### Answer:"])
+    output = llm(prompt, max_tokens=4096, temperature=0, stop=stop_tokens)
     return "### Expert 1:" + output["choices"][0]["text"]
 
 
 @app.route('/', methods=['POST'])
 def get_answer():
     data = request.get_json()
-
-    print(data)
     messages = data["messages"]
+
+    if "stop" in data:
+        stop_tokens = data["stop"]
+    else:
+        stop_tokens = []
+
+    print(stop_tokens)
 
     return jsonify({
         "choices": [
@@ -42,7 +47,7 @@ def get_answer():
                 "index": 0,
                 "message": {
                     "role": "assistant",
-                    "content": llama_model(messages)
+                    "content": llama_model(messages, stop_tokens)
                 }
             }
         ]

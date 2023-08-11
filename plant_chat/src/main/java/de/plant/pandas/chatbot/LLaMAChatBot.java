@@ -30,18 +30,29 @@ public class LLaMAChatBot implements UMLChatBot {
     @Override
     public UMLChatBotResults askQuestion(List<Message> messages, Collection<String> plantUMLs, AskQuestionParameter askQuestionParameter) throws IOException {
 
-        if (messages.size() == 1) {
-            messages.set(0, new Message(messages.get(0).getContent(), MessageRole.SYSTEM));
+        try {
+            if (messages.size() == 1) {
+                messages.set(0, new Message(messages.get(0).getContent(), MessageRole.SYSTEM));
+            }
+            List<String> stopTokens = askQuestionParameter.getLevel() == DegreeOfQuestionsFromExperts.NONE ? Collections.emptyList() : List.of("### ANSWER:");
+
+            StageListener.getInstance().setGenerationStage(GenerationStage.GENERATE_PLANT_UML);
+
+            String answer = askQuestionParameter.getLlm().prompt(messages, stopTokens, 4096);
+            messages.add(new Message(answer, MessageRole.ASSISTANT));
+            if (answer.contains("### QUESTION:") && askQuestionParameter.getLevel() != DegreeOfQuestionsFromExperts.NONE) {
+                String question = responseParser.getQuestion(answer);
+                StageListener.getInstance().setGenerationStage(null);
+                return new UMLChatBotResults.ChatBotQuestions(question);
+            }
+
+            Map<String, String> uml = responseParser.umlStringToMap(answer);
+            StageListener.getInstance().setGenerationStage(null);
+            return new UMLChatBotResults.GeneratedUML(uml);
+        } catch (Exception e) {
+            StageListener.getInstance().setGenerationStage(null);
+            throw e;
         }
 
-        String answer = askQuestionParameter.getLlm().prompt(messages, List.of("### ANSWER"), 4096);
-        messages.add(new Message(answer, MessageRole.ASSISTANT));
-        if (answer.contains("### QUESTION:")) {
-            String question = responseParser.getQuestion(answer);
-            return new UMLChatBotResults.ChatBotQuestions(question);
-        }
-
-        Map<String, String> uml = responseParser.umlStringToMap(answer);
-        return new UMLChatBotResults.GeneratedUML(uml);
     }
 }

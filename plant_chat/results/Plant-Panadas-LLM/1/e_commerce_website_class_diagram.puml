@@ -1,0 +1,51 @@
+@startuml
+class User {
+  - name : String
+  - email : String
+  - password : String
+}
+
+class Product {
+  - name : String
+  - description : String
+  - price : double
+  - quantityInStock : int
+}
+
+class Review {
+  - rating : int
+  - comment : String
+}
+
+class Order {
+  - user : User
+  - products : List<Product>
+}
+
+class Administrator {
+  + manageInventory() : void
+  + handleRefunds() : void
+  + respondToCustomerQueries() : void
+}
+
+class Inventory {
+  - productName : String
+  - quantityInStock : int
+  - reorderLevel : int
+}
+
+class Refund {
+  - reasonForReturn : String
+  - amount : double
+  - status : String
+}
+
+User "1" -- "0..*" Review
+Product "1" -- "0..*" Review
+Order "1" -- "1" User
+Order "1" -- "0..*" Product
+Administrator "1" -- "1" Inventory
+Inventory "1" -- "1" Product
+Refund "1" -- "1" Order
+
+@enduml

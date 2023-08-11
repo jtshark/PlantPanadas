@@ -1,0 +1,108 @@
+@startuml
+class Teacher {
+  - name : String
+  - email : String
+  - subjectExpertise : String
+
+  + scheduleClasses() : void
+
+  + shareMaterials() : void
+
+  + evaluateStudentWork() : void
+}
+
+class Student {
+
+  - name : String
+
+  - email : String
+
+  - enrollmentStatus : String
+
+
+  + attendClasses() : void
+
+  + submitAssignments() : void
+
+  + communicateWithPeersAndTeachers() : void
+}
+
+class Class {
+
+  - date : Date
+
+  - time : Time
+
+  - location : Location
+
+
+}
+
+class Material {
+
+  - title : String
+
+  - description : String
+
+  - fileType : String
+
+
+}
+
+class Assignment {
+
+  - title : String
+
+  - description : String
+
+  - dueDate : Date
+
+  - grade : Grade
+
+
+}
+
+class Communication {
+
+  - sender : Teacher
+
+  - receiver : Student
+
+  - messageContent : String
+
+  - fileAttachments : List<File>
+
+
+}
+
+class Grade {
+
+  - gradeValue : Double
+
+  - comments : String
+
+
+}
+
+class Attendance {
+
+  - date : Date
+
+  - time : Time
+
+  - status : String
+
+
+}
+
+Teacher "1" -- "0..*" Class : schedules
+Student "1" -- "0..*" Class : attends
+Class "1" -- "0..*" Material : shares
+Material "1" -- "0..*" Teacher : belongs to
+Assignment "1" -- "0..*" Student : submitted by
+Assignment "1" -- "1" Class : belongs to
+Communication "1" -- "0..*" Teacher : sent by
+Communication "1" -- "0..*" Student : received by
+Grade "1" -- "1" Assignment : given for
+Attendance "1" -- "1" Class : tracks
+@enduml

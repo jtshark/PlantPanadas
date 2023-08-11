@@ -1,14 +1,12 @@
 package de.plant.pandas.quality;
 
 import de.plant.pandas.chatbot.*;
-import de.plant.pandas.llm.LLM;
-import de.plant.pandas.llm.Message;
-import de.plant.pandas.llm.MessageRole;
-import de.plant.pandas.llm.OpenAILLM;
+import de.plant.pandas.llm.*;
 import de.plant.pandas.translation.TranslatorServiceDeepL;
 import lombok.SneakyThrows;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -32,7 +30,9 @@ public class TestQuality {
         Map<String, List> chatBots = Map.of(
                 "ChatGPT-4-CoT", List.of(new UMLChatBotCoTImpl(), new OpenAILLM(OpenAILLM.OpenAIType.GPT4)),
                 "ChatGPT-4-IoP", List.of(new UMLChatBotIoPImpl(), new OpenAILLM(OpenAILLM.OpenAIType.GPT4)),
-                "ChatGPT-3-CoT", List.of(new UMLChatBotCoTImpl(), new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT))
+                "ChatGPT-3-CoT", List.of(new UMLChatBotCoTImpl(), new OpenAILLM(OpenAILLM.OpenAIType.CHATGPT)),
+                "Plant-Panadas-LLM", List.of(new LLaMAChatBot(), new LLaMALLM(new URI("http://localhost:5632").toURL()))
+
         );
 
         for (Map.Entry<String, List> parameter : chatBots.entrySet()) {
@@ -66,7 +66,7 @@ public class TestQuality {
                     continue;
                 }
                 String question = questions.get(i);
-                Thread.sleep(60 * 1000);
+                Thread.sleep(10 * 1000);
 
                 lastStage[0] = null;
                 time[0] = System.currentTimeMillis();
