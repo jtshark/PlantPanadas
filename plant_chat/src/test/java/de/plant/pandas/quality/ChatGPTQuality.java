@@ -47,9 +47,20 @@ public class ChatGPTQuality {
             }
         }
 
+
+        String resultFolder = "results/points";
+        new File(resultFolder).mkdirs();
+
         for (Map.Entry<String, Map<String, String>> umls : results.entrySet()) {
-            Thread.sleep(1000 * 30);
+
             String name = umls.getKey();
+
+            String path = resultFolder + "/" + name + ".txt";
+            System.out.println(path);
+            if (new File(path).exists()) continue;
+            Thread.sleep(1000 * 30);
+
+
             String question = tasks.get(name);
             List<Map.Entry<String, String>> umlFromModels = new ArrayList<>(umls.getValue().entrySet());
             Collections.shuffle(umlFromModels);
@@ -72,12 +83,12 @@ public class ChatGPTQuality {
             messages.add(new Message(prompt, MessageRole.ASSISTANT));
             messages.add(new Message(answers.toString(), MessageRole.HUMAN));
 
-            String answer = llm.prompt(messages, Collections.emptyList(), 7000);
+            System.out.println(order);
+            System.out.println(prompt);
+            System.out.println(answers);
+            String answer = llm.prompt(messages, Collections.emptyList(), 4000);
 
-            String resultFolder = "results/points";
-            new File(resultFolder).mkdirs();
-
-            Files.write(Paths.get(resultFolder + "/" + name + ".txt"), (order + "\n\n" + answer).getBytes());
+            Files.write(Paths.get(path), (order + "\n\n" + answer).getBytes());
         }
     }
 }

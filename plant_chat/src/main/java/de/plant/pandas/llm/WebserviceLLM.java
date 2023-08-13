@@ -110,6 +110,7 @@ public abstract class WebserviceLLM implements LLM {
                 openAIConnection.disconnect();
                 return parseTextFromOpenAI(openAIResponse);
             } catch (IOException e) {
+                System.out.println(e.getMessage());
                 errorCount++;
                 if (errorCount == 6) {
                     throw e;
