@@ -33,8 +33,8 @@ public class UMLChatBotIoPImpl implements UMLChatBot {
 
 
             StageListener.getInstance().setGenerationStage(GenerationStage.GENERATE_PLANT_UML);
-
-            String output = askQuestionParameter.getLlm().prompt(messages, List.of("END", "User:"), 7000);
+ 
+            String output = askQuestionParameter.getLlm().prompt(messages, List.of("END", "User:"), 5000);
             messages.add(new Message(output, MessageRole.ASSISTANT));
             if (output.contains("QUESTION:")) {
                 messages.remove(0);
@@ -52,7 +52,7 @@ public class UMLChatBotIoPImpl implements UMLChatBot {
                     StageListener.getInstance().setGenerationStage(GenerationStage.FIX_ERRORS);
 
 
-                    output = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 7000);
+                    output = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 2000);
                     result = responseParser.umlStringToMap(output);
                 }
 

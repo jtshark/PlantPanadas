@@ -35,7 +35,7 @@ public class UMLChatBotCoTImpl implements UMLChatBot {
         StageListener.getInstance().setGenerationStage(GenerationStage.CREATE_PLAN);
 
         sleep(askQuestionParameter.getSleepTime());
-        String steps = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 4000);
+        String steps = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 2000);
 
 
         messages.add(new Message(steps, MessageRole.ASSISTANT));
@@ -43,7 +43,7 @@ public class UMLChatBotCoTImpl implements UMLChatBot {
         StageListener.getInstance().setGenerationStage(GenerationStage.GENERATE_PLANT_UML);
 
         sleep(askQuestionParameter.getSleepTime());
-        String plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 6000);
+        String plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 2000);
         System.out.println(plantUML);
         Map<String, String> result = responseParser.umlStringToMap(plantUML);
         if (result.isEmpty()) {
@@ -53,7 +53,7 @@ public class UMLChatBotCoTImpl implements UMLChatBot {
             StageListener.getInstance().setGenerationStage(GenerationStage.FIX_ERRORS);
 
             sleep(askQuestionParameter.getSleepTime());
-            plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 7000);
+            plantUML = askQuestionParameter.getLlm().prompt(messages, Collections.EMPTY_LIST, 2000);
             result = responseParser.umlStringToMap(plantUML);
         }
 
