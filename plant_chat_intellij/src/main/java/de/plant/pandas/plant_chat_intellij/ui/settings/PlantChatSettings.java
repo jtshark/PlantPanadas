@@ -15,7 +15,7 @@ public class PlantChatSettings implements PersistentStateComponent<PlantChatSett
     public String deepLToken;
 
     public DegreeOfQuestionsFromExperts questionSetting = DegreeOfQuestionsFromExperts.NONE;
-    public LLMType llmType = LLMType.CHATGPT;
+    public LLMType llmType = LLMType.GPT4;
 
     public String llamaURL = "http://localhost:5632";
 
