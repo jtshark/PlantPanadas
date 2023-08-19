@@ -133,7 +133,7 @@ public class UMLChatBotProcessor {
                         if (PlantChatSettings.getInstance().llmType == PlantChatSettings.LLMType.LLaMA) {
                             umlChatBot = new LLaMAChatBot();
                         } else {
-                            umlChatBot = new UMLChatBotIoPImpl();
+                            umlChatBot = new UMLChatBotCoTImpl();
                         }
 
                         UMLChatBotResults result = null;
