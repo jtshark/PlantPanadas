@@ -21,8 +21,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import java.awt.*;
+
 
 public class PlantChatBotUI implements ToolWindowFactory {
+    final JFXPanel fxPanel = new JFXPanel();
 
     private Node separator() {
         Region topSeparator = new Region();
@@ -33,11 +37,10 @@ public class PlantChatBotUI implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        final JFXPanel fxPanel = new JFXPanel();
-
-        Platform.setImplicitExit(false);
 
         Platform.runLater(() -> {
+            Platform.setImplicitExit(false);
+
             ChatArea chatArea = new ChatArea();
 
             UMLChatBotProcessor umlChatBotProcessor = new UMLChatBotProcessor(
@@ -45,7 +48,6 @@ public class PlantChatBotUI implements ToolWindowFactory {
             );
 
             Header header = new Header(umlChatBotProcessor);
-
 
 
             VBox root = new VBox();
@@ -68,7 +70,6 @@ public class PlantChatBotUI implements ToolWindowFactory {
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
             fxPanel.setScene(scene);
-
         });
 
 
@@ -76,4 +77,6 @@ public class PlantChatBotUI implements ToolWindowFactory {
         Content content = contentFactory.createContent(fxPanel, "", false);
         toolWindow.getContentManager().addContent(content);
     }
+
+
 }
